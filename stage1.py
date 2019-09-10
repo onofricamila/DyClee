@@ -5,6 +5,9 @@ Created on Tue Sep 10 14:35:06 2019
 
 @author: camila
 """
+
+# TODO finish uC class !!!!!!!!!!!!!!!!!!!!
+
 import numpy as np
 
 
@@ -18,8 +21,11 @@ class Stage1:
         
     
     
+    # main method
     def formUcs(self, dataset):
         
+    # ASSUMPTIONS: dataset es un vector de vectores    
+    
         aList = []
         oList = []
         processedElements = 0
@@ -31,11 +37,12 @@ class Stage1:
             # TODO receive updated lists from stage 2 !!!!!!!!!!!!!!!!!!!!
             
             # find reachable u clusters for the new element
-            reachableUcs = self.findReachableUcs(dataset, d, self.relativeSize, aList, oList)
+            reachableUcs = self.findReachableUcs(d, aList, oList)
             
             if not reachableUcs:
-                # empty list -> create u cluster from element
-                uC = self.createUc(self, d)
+                # empty list -> create u cluster from element 
+                # the uC will have the parametrized relative size
+                uC = self.createUc(self, self.relativeSize, d)
                 oList.append(uC) 
                 
             else: 
@@ -44,8 +51,31 @@ class Stage1:
                 self.updateUc(closestUc, d)
                 
             if self.timeToSendMessage(processedElements, self.tGlobal):
-                
                 # TODO send alist and olist to stage 2 !!!!!!!!!!!!!!!!!!!!
-
-
+                self.sendListsToStage2(aList, oList)
+                
+                
+      
+    # returns a list of reachable u clusters for a given element          
+    def findReachableUcs(self, d, aList, oList):
+        
+        reachableUcs = []
+        
+        self.checkReachabilityFrom(aList, d, reachableUcs)
+                       
+        if not reachableUcs:
+            # empty list -> check oList
+            self.checkReachabilityFrom(oList, d, reachableUcs)
+            
+            
+            
+    # modifies reareachableUcs iterating over a given list of u clusters
+    def checkReachabilityFrom(self, uCsList, d, reachableUcs):
+         for uC in uCsList:
+            # the uC has the parametrized relative size
+            if uC.isReachableFrom(d):
+                reachableUcs.append(uC)
+                
+                
+ 
     
