@@ -55,7 +55,7 @@ class uCluster:
         hyperboxSizePerFeature = []
         
         for bb in self.boundingBoxesList:
-            aux = bb.minimun - bb.minimun
+            aux = bb.maximun - bb.minimun
             hyperboxSizePerFeature.append(self.relativeSize * abs(aux))
         
         return hyperboxSizePerFeature
