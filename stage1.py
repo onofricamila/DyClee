@@ -75,4 +75,28 @@ class Stage1:
                 
                 
  
+    # returns the closest uC for an element, given a set of reachable uCs
+    def findClosestReachableUc(self, d, reachableUcs):
+        closestUc = None
+        minDistance = float("inf")
+        
+        for uC in reachableUcs:
+            distance = self.manhatanDistance(d, uC)
+            if distance < minDistance:
+                minDistance = distance
+                closestUc = uC
+        
+        return closestUc
+        
+        
     
+    # returns the manhatan distance between a cluster and an element
+    def manhatanDistance(self, d, uC):
+        dist = 0
+        # for every feature/dimension
+        for i in range(len(d)):
+            diff = d[i] - uC.getICentroid(i)
+            dist = dist + abs(diff)
+            
+        return dist
+        
