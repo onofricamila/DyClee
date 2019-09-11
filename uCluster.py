@@ -14,6 +14,7 @@ class uCluster:
     def __init__(self, relativeSize, d):
         self.relativeSize = relativeSize
         self.CF = self.initializeCF(d)
+        self.boundingBox = self.initBoundingBox(d)
         
         
         
@@ -42,4 +43,28 @@ class uCluster:
     
     
     
+    # initializes boundingBox with d values  
+    def initBoundingBox(self, d):
+        boundingBox = []
+        
+        for f in d:
+            res = dict()
+            res['min'] = f
+            res['max'] = f
+            boundingBox.append(res)
+        
+        return boundingBox
+    
+    
+    
+    # returns a list containing the size per feature. Indexes match those from d
+    def hyperboxSizePerFeature(self):
+        hyperboxSizePerFeature = []
+        
+        for b in self.boundingBox:
+            maxi = b.get('max')
+            mini = b.get('min')
+            hyperboxSizePerFeature.append(self.relativeSize * abs(maxi - mini))
+        
+        return hyperboxSizePerFeature
         
