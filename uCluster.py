@@ -62,7 +62,7 @@ class uCluster:
     
     
     
-    # checks if the uc is reachable from a given element
+    # retunrs true (1) if the uc is reachable from a given element
     def isReachableFrom(self, d):
         # for each feature
         for i in range(len(d)):
