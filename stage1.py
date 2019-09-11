@@ -45,7 +45,7 @@ class Stage1:
             else: 
                 # find closest reachable u cluster
                 closestUc = self.findClosestReachableUc(d, reachableUcs)
-                self.updateUc(closestUc, d)
+                closestUc.addElement(d)
                 
             if self.timeToSendMessage(processedElements):
                 # TODO send alist and olist to stage 2 !!!!!!!!!!!!!!!!!!!!
@@ -100,3 +100,8 @@ class Stage1:
             
         return dist
         
+    
+    
+    
+    def timeToSendMessage(self, processedElements):
+       return processedElements == self.tGlobal

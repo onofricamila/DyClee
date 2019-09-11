@@ -81,4 +81,19 @@ class uCluster:
     # returns the u cluster centroid for a given feature considering the feature index
     def getICentroid(self, i):
         return self.CF.LS[i] / self.CF.n
+    
+    
+    
+    # includes an element into the u cluster
+    # updates CF vector
+    def addElement(self, d):
+        
+        
+        
+        
+        
+        
+        
+        
+        
         
