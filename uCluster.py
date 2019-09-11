@@ -18,6 +18,7 @@ class uCluster:
         self.relativeSize = relativeSize
         self.CF = self.initializeCF(d)
         self.boundingBoxesList = self.initBoundingBoxesList(d)
+        self.hyperboxSizePerFeature = self.getHyperboxSizePerFeature()
         
         
         
@@ -51,7 +52,7 @@ class uCluster:
     
     
     # returns a list containing the size per feature. Indexes match those from d
-    def hyperboxSizePerFeature(self):
+    def getHyperboxSizePerFeature(self):
         hyperboxSizePerFeature = []
         
         for bb in self.boundingBoxesList:

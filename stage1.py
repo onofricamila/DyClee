@@ -6,16 +6,13 @@ Created on Tue Sep 10 14:35:06 2019
 @author: camila
 """
 
-# TODO finish uC class !!!!!!!!!!!!!!!!!!!!
-
 import numpy as np
 from uCluster import uCluster
 
 class Stage1:
     
     
-    # The __init__() function is called automatically every time the class is being used to create a new object.
-    def __init__(self, relativeSize, tGlobal):
+    def __init__(self, relativeSize, tGlobal=1):
         self.relativeSize = relativeSize
         self.tGlobal = tGlobal        
         self.aList = []
@@ -34,6 +31,7 @@ class Stage1:
             processedElements += 1
             
             # TODO receive updated lists from stage 2 !!!!!!!!!!!!!!!!!!!!
+            self.checkMsgFromStage2()
             
             # find reachable u clusters for the new element
             reachableUcs = self.findReachableUcs(d)
