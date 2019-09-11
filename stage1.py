@@ -9,7 +9,7 @@ Created on Tue Sep 10 14:35:06 2019
 # TODO finish uC class !!!!!!!!!!!!!!!!!!!!
 
 import numpy as np
-
+from uCluster import uCluster
 
 class Stage1:
     
@@ -41,7 +41,7 @@ class Stage1:
             if not reachableUcs:
                 # empty list -> create u cluster from element 
                 # the uC will have the parametrized relative size
-                uC = self.createUc(self, self.relativeSize, d)
+                uC = uCluster(self, self.relativeSize, d)
                 self.oList.append(uC) 
                 
             else: 
@@ -49,9 +49,9 @@ class Stage1:
                 closestUc = self.findClosestReachableUc(d, reachableUcs)
                 self.updateUc(closestUc, d)
                 
-            if self.timeToSendMessage(processedElements, self.tGlobal):
+            if self.timeToSendMessage(processedElements):
                 # TODO send alist and olist to stage 2 !!!!!!!!!!!!!!!!!!!!
-                self.sendListsToStage2(self.aList, self.oList)
+                self.sendListsToStage2()
                 
                 
       
