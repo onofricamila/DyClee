@@ -7,6 +7,8 @@ Created on Tue Sep 10 20:19:40 2019
 """
 import datetime
 from CF import CF
+from boundingBox import BoundingBox
+
 
 class uCluster:
     
@@ -15,7 +17,7 @@ class uCluster:
     def __init__(self, relativeSize, d):
         self.relativeSize = relativeSize
         self.CF = self.initializeCF(d)
-        self.boundingBox = self.initBoundingBox(d)
+        self.boundingBoxesList = self.initBoundingBoxesList(d)
         
         
         
@@ -37,16 +39,14 @@ class uCluster:
     
     
     # initializes boundingBox with d values  
-    def initBoundingBox(self, d):
-        boundingBox = []
+    def initBoundingBoxesList(self, d):
+        boundingBoxesList = []
         
         for f in d:
-            res = dict()
-            res['min'] = f
-            res['max'] = f
-            boundingBox.append(res)
+            boundingBox = BoundingBox(minimun=f , maximun=f)
+            boundingBoxesList.append(boundingBox)
         
-        return boundingBox
+        return boundingBoxesList
     
     
     
@@ -54,10 +54,9 @@ class uCluster:
     def hyperboxSizePerFeature(self):
         hyperboxSizePerFeature = []
         
-        for b in self.boundingBox:
-            maxi = b.get('max')
-            mini = b.get('min')
-            hyperboxSizePerFeature.append(self.relativeSize * abs(maxi - mini))
+        for bb in self.boundingBoxesList:
+            aux = bb.minimun - bb.minimun
+            hyperboxSizePerFeature.append(self.relativeSize * abs(aux))
         
         return hyperboxSizePerFeature
     
@@ -65,7 +64,7 @@ class uCluster:
     
     # checks if the uc is reachable from a given element
     def isReachableFrom(self, d):
-        return lala
+        return ""
         
     
         
