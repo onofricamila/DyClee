@@ -9,6 +9,7 @@ Created on Tue Sep 10 20:19:40 2019
 import datetime
 from CF import CF
 from boundingBox import BoundingBox
+import numpy as np
 
 class uCluster:
     
@@ -25,7 +26,7 @@ class uCluster:
        # we assume d is a list of features
        LS = d
        
-       # TODO check calculation of SS 
+       # this vector will only have d elements squared
        SS = [a*b for a,b in zip(d, d)]
         
        currentTime = datetime.datetime.now().time()
@@ -37,7 +38,7 @@ class uCluster:
     
     
     
-    # initializes boundingBox with d values  
+    # initializes boundingBox with d values 
     def initBoundingBoxesList(self, d):
         boundingBoxesList = []
         
@@ -85,6 +86,68 @@ class uCluster:
     # includes an element into the u cluster
     # updates CF vector
     def addElement(self, d):
+        self.updateCurrentTime()
+        self.updateN()
+        self.updateLS(d)
+        self.updateSS(d)
+        
+        # needs to check if bounding boxes change and recalculate hyperbox size
+        self.updateBoundingBoxesList(d)
+        self.updateHyperboxSizePerFeature()
+        
+        # and then update u cluster density
+        self.updateD(d)
+        
+        
+        
+    def updateCurrentTime(self):
+        currentTime = datetime.datetime.now().time()
+        self.CF.tl = currentTime
+        
+        
+        
+    def updateN(self):
+        self.CF.n += 1
+        
+        
+    
+    def updateLS(self, d):
+        for i in range(len(d)):
+            self.CF.LS[i] = self.CF.LS[i] + d[i]  
+            
+            
+    
+    def updateSS(self, d):
+        for i in range(len(d)):
+            self.CF.SS[i] = self.CF.SS[i] + (d[i] **2)
+        
+        
+        
+    def updateBoundingBoxesList(self, d):
+        for i in range(len(d)):
+            mini = min(d[i], self.boundingBoxesList[i].minimun)
+            maxi = min(d[i], self.boundingBoxesList[i].maximun)
+            boundingBox = BoundingBox(minimun=mini , maximun=maxi)
+            self.boundingBoxesList[i] = boundingBox
+
+        
+        
+    def updateHyperboxSizePerFeature(self):
+        self.hyperboxSizePerFeature = self.getHyperboxSizePerFeature()
+        
+        
+        
+    def updateD(self, d):
+        V = np.prod(self.hyperboxSizePerFeature)
+        self.CF.D = self.CF.n / V
+        
+        
+        
+        
+        
+        
+        
+        
         
         
         
