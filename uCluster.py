@@ -6,6 +6,7 @@ Created on Tue Sep 10 20:19:40 2019
 @author: camila
 """
 import datetime
+from CF import CF
 
 class uCluster:
     
@@ -20,26 +21,18 @@ class uCluster:
         
     # initializes CF  
     def initializeCF(self, d):  
-        CF = dict()  
+       # we assume d is a list of features
+       LS = d
+       
+       # TODO check calculation of SS 
+       SS = [a*b for a,b in zip(d, d)]
         
-        # number of elements
-        CF["n"] = 1
+       currentTime = datetime.datetime.now().time()
         
-        # we assume d is a list of features
-        CF["LS"] = d
-        
-        # TODO check calculation of SS 
-        CF["SS"] = [a*b for a,b in zip(d, d)]
-        
-        currentTime = datetime.datetime.now().time()
-        CF["tl"] = currentTime
-        CF["ts"] = currentTime
-        
-        CF["D"] = 0
-        
-        # no puse la clase ... 
-        
-        return CF
+       # CF creation
+       cf = CF(n=1, LS=LS, SS=SS, tl=currentTime, ts=currentTime, D=0)
+             
+       return cf
     
     
     
@@ -67,4 +60,15 @@ class uCluster:
             hyperboxSizePerFeature.append(self.relativeSize * abs(maxi - mini))
         
         return hyperboxSizePerFeature
+    
+    
+    
+    # checks if the uc is reachable from a given element
+    def isReachableFrom(self, d):
+        return lala
+        
+    
+        
+    def getCentroid(self):
+        return self.CF.LS / self.CF.n
         
