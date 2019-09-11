@@ -18,7 +18,8 @@ class Stage1:
     def __init__(self, relativeSize, tGlobal):
         self.relativeSize = relativeSize
         self.tGlobal = tGlobal        
-        
+        self.aList = []
+        self.oList = []
     
     
     # main method
@@ -26,8 +27,6 @@ class Stage1:
         
     # ASSUMPTIONS: dataset es un vector de vectores    
     
-        aList = []
-        oList = []
         processedElements = 0
         
         for d in dataset:
@@ -37,13 +36,13 @@ class Stage1:
             # TODO receive updated lists from stage 2 !!!!!!!!!!!!!!!!!!!!
             
             # find reachable u clusters for the new element
-            reachableUcs = self.findReachableUcs(d, aList, oList)
+            reachableUcs = self.findReachableUcs(d)
             
             if not reachableUcs:
                 # empty list -> create u cluster from element 
                 # the uC will have the parametrized relative size
                 uC = self.createUc(self, self.relativeSize, d)
-                oList.append(uC) 
+                self.oList.append(uC) 
                 
             else: 
                 # find closest reachable u cluster
@@ -52,20 +51,20 @@ class Stage1:
                 
             if self.timeToSendMessage(processedElements, self.tGlobal):
                 # TODO send alist and olist to stage 2 !!!!!!!!!!!!!!!!!!!!
-                self.sendListsToStage2(aList, oList)
+                self.sendListsToStage2(self.aList, self.oList)
                 
                 
       
     # returns a list of reachable u clusters for a given element          
-    def findReachableUcs(self, d, aList, oList):
+    def findReachableUcs(self, d):
         
         reachableUcs = []
         
-        self.checkReachabilityFrom(aList, d, reachableUcs)
+        self.checkReachabilityFrom(self.aList, d, reachableUcs)
                        
         if not reachableUcs:
             # empty list -> check oList
-            self.checkReachabilityFrom(oList, d, reachableUcs)
+            self.checkReachabilityFrom(self.oList, d, reachableUcs)
             
             
             
