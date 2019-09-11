@@ -11,7 +11,6 @@ from uCluster import uCluster
 
 class Stage1:
     
-    
     def __init__(self, relativeSize, tGlobal=1):
         self.relativeSize = relativeSize
         self.tGlobal = tGlobal        
@@ -21,7 +20,6 @@ class Stage1:
     
     # main method
     def formUcs(self, dataset):
-        
     # ASSUMPTIONS: dataset es un vector de vectores    
     
         processedElements = 0
@@ -102,6 +100,6 @@ class Stage1:
         
     
     
-    
+    # returns true if it's time to send message to stage 2
     def timeToSendMessage(self, processedElements):
        return processedElements == self.tGlobal

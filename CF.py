@@ -8,8 +8,6 @@ Created on Wed Sep 11 14:55:28 2019
 
 class CF:
     
-    
-    
     def __init__(self, n, LS, SS, tl, ts, D):
         # number of elements
         self.n = n

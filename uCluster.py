@@ -5,14 +5,12 @@ Created on Tue Sep 10 20:19:40 2019
 
 @author: camila
 """
+
 import datetime
 from CF import CF
 from boundingBox import BoundingBox
 
-
 class uCluster:
-    
-    
     
     def __init__(self, relativeSize, d):
         self.relativeSize = relativeSize

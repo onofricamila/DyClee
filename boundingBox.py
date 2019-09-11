@@ -7,8 +7,7 @@ Created on Wed Sep 11 15:16:31 2019
 """
 
 class BoundingBox:
-    
-    
+
     def __init__(self, minimun, maximun):
         self.minimun = minimun
         self.maximun = maximun
