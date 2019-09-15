@@ -111,4 +111,5 @@ class Stage1:
       
     # TODO check  
     def sendListsToStage2(self):
-      self.s2.formformClusters(self.aList + self.oList)
+      # TODO: falta obtener las listas actualizadas, eso deberia ser rapido
+      self.s2.formClusters(self.aList + self.oList)

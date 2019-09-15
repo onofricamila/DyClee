@@ -10,12 +10,9 @@ import numpy as np
 class Stage2:
   
   def __init__(self):
-        self.aList = []
-        self.oList = []
         self.currentClusterId = 1
         
         
-    
   
   def formClusters(self, uCs):
     DMC = self.findDenseUcs(uCs)
@@ -32,7 +29,7 @@ class Stage2:
         i = 0
         while i < len(connectedUcs):  
           conUc = connectedUcs[i]
-          if self.isDense(conUc):
+          if self.isDense(conUc, uCs):
             conUc.label = self.currentClusterId
             alreadySeen.append(conUc)
             conUcConnectedUcs = self.findConnectedUcsFor(conUc)
@@ -82,8 +79,8 @@ class Stage2:
   
   def auxFindConnectedUcsFor(self, uC, uCs, res):
     for x in uCs:
-        if (uC.isDirectlyConnectedWith(x)):
-          if (x not in res):
-            res.append(x)
-            self.auxFindConnectedUcsFor(x, uCs, res)
+      if (uC.isDirectlyConnectedWith(x)):
+        if (x not in res):
+          res.append(x)
+          self.auxFindConnectedUcsFor(x, uCs, res)
       
