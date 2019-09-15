@@ -8,6 +8,7 @@ Created on Tue Sep 10 14:35:06 2019
 
 import numpy as np
 from uCluster import uCluster
+from stage2 import Stage2
 
 class Stage1:
     
@@ -16,6 +17,8 @@ class Stage1:
         self.tGlobal = tGlobal        
         self.aList = []
         self.oList = []
+        self.s2 = Stage2()
+        
     
     
     # main method
@@ -28,8 +31,8 @@ class Stage1:
             # processed_elements ++
             processedElements += 1
             
-            # TODO receive updated lists from stage 2 !!!!!!!!!!!!!!!!!!!!
-            self.checkMsgFromStage2()
+            # TODO: receive updated lists from stage 2 !!!!!!!!!!!!!!!!!!!!
+            # self.checkMsgFromStage2()
             
             # find reachable u clusters for the new element
             reachableUcs = self.findReachableUcs(d)
@@ -46,7 +49,7 @@ class Stage1:
                 closestUc.addElement(d)
                 
             if self.timeToSendMessage(processedElements):
-                # TODO send alist and olist to stage 2 !!!!!!!!!!!!!!!!!!!!
+                # TODO: send alist and olist to stage 2 !!!!!!!!!!!!!!!!!!!!
                 self.sendListsToStage2()
                 
                 
@@ -103,3 +106,9 @@ class Stage1:
     # returns true if it's time to send message to stage 2
     def timeToSendMessage(self, processedElements):
        return processedElements == self.tGlobal
+     
+      
+      
+    # TODO check  
+    def sendListsToStage2(self):
+      self.s2.formformClusters(self.aList + self.oList)

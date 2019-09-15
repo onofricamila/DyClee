@@ -18,6 +18,7 @@ class uCluster:
         self.CF = self.initializeCF(d)
         self.boundingBoxesList = self.initBoundingBoxesList(d)
         self.hyperboxSizePerFeature = self.getHyperboxSizePerFeature()
+        self.label = "-1" # outlier by default; "unclass"
         
         
         
@@ -140,6 +141,26 @@ class uCluster:
     def updateD(self, d):
         V = np.prod(self.hyperboxSizePerFeature)
         self.CF.D = self.CF.n / V
+        
+        
+      
+    def isOutlier(self):
+      return (self.CF.label is not -1)
+    
+    
+    
+    # retunrs true (1) if the uc is directly connected to another uc
+    def isDirectlyConnectedWith(self, uC):
+      # for each feature
+      for i in range(len(self.CF.LS)):
+          # difference between the u cluster centroids for that feature
+          aux = abs(self.getICentroid - uC.getICentroid)
+          # if for a given feature the element doesn't match the cluster, return false
+          if aux >= (self.hyperboxSizePerFeature[i] / 2):
+              return 0
+      
+      # the element fits the u cluster
+      return 1
         
         
         
