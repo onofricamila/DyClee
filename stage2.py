@@ -18,10 +18,12 @@ class Stage2:
     while 1:
       # TODO wait till s1 sends uCs lists
       if self.listsReceivedFromS1():
+        # TODO get s1 uCs lists
         lists = self.getUcsLists()
-        self.updateLists()
+        updatedLists = self.updateLists(lists)
+        # TODO send updated uCs lists to s1
         self.sendUpdatedListsToS1()
-        self.formClusters(lists)
+        self.formClusters(updatedLists)
     
     
   
