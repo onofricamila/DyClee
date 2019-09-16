@@ -25,7 +25,8 @@ class Stage2:
         updatedLists = self.updateLists(lists)
         # TODO send updated uCs lists to s1
         self.sendUpdatedListsToS1()
-        self.formClusters(updatedLists)
+        # it's unnecessary to look for dense uCs in the oList
+        self.formClusters(updatedLists.get("aList"))
 
 
 
@@ -36,8 +37,8 @@ class Stage2:
     newAList = aList
     newOList = oList
     
-    mean = self.calculateMeanFor(aList + oList)
-    median = self.calculateMedianFor(aList + oList)
+    self.mean = self.calculateMeanFor(aList + oList)
+    self.median = self.calculateMedianFor(aList + oList)
     
     for uC in aList:
       if self.isOutlier(uC):
