@@ -12,7 +12,7 @@ from stage2 import Stage2
 
 class Stage1:
     
-    def __init__(self, relativeSize, tGlobal=1):
+    def __init__(self, relativeSize=1, tGlobal=1):
         self.relativeSize = relativeSize
         self.tGlobal = tGlobal        
         self.aList = []

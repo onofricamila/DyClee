@@ -150,17 +150,20 @@ class uCluster:
     
     # we assumw all dimensions must match
     # retunrs true (1) if the uc is directly connected to another uc
-    def isDirectlyConnectedWith(self, uC):
+    def isDirectlyConnectedWith(self, uC, uncommonDimensions):
+      featuresCount = len(self.CF.LS)
+      currentUncommonDimensions = 0
+      
       # for each feature
-      for i in range(len(self.CF.LS)):
+      for i in range(featuresCount):
           # difference between the u cluster centroids for that feature
           aux = abs(self.getICentroid(i) - uC.getICentroid(i))
           # if for a given feature the element doesn't match the cluster, return false
           if aux >= (self.hyperboxSizePerFeature[i] / 2):
-              return 0
+              currentUncommonDimensions += 1
       
       # the element fits the u cluster
-      return 1
+      return currentUncommonDimensions <= uncommonDimensions
         
         
         

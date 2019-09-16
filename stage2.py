@@ -9,10 +9,11 @@ import numpy as np
 
 class Stage2:
   
-  def __init__(self):
+  def __init__(self, uncommonDimensions = 0):
         self.currentClusterId = 1
         self.mean = 0
         self.median = 0
+        self.uncommonDimensions = uncommonDimensions
         
         
         
@@ -137,7 +138,7 @@ class Stage2:
   
   def auxFindConnectedUcsFor(self, uC, uCs, res):
     for x in uCs:
-      if (uC.isDirectlyConnectedWith(x)):
+      if (uC.isDirectlyConnectedWith(x, self.uncommonDimensions)):
         if (x not in res):
           res.append(x)
           self.auxFindConnectedUcsFor(x, uCs, res)
