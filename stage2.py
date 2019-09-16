@@ -13,6 +13,17 @@ class Stage2:
         self.currentClusterId = 1
         
         
+        
+  def start(self):
+    while 1:
+      # TODO wait till s1 sends uCs lists
+      if self.listsReceivedFromS1():
+        lists = self.getUcsLists()
+        self.updateLists()
+        self.sendUpdatedListsToS1()
+        self.formClusters(lists)
+    
+    
   
   def formClusters(self, uCs):
     DMC = self.findDenseUcs(uCs)

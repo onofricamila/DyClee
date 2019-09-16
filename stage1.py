@@ -32,7 +32,7 @@ class Stage1:
             processedElements += 1
             
             # TODO: receive updated lists from stage 2 !!!!!!!!!!!!!!!!!!!!
-            # self.checkMsgFromStage2()
+            self.checkUpdatedListsFromStage2()
             
             # find reachable u clusters for the new element
             reachableUcs = self.findReachableUcs(d)
