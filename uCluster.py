@@ -18,7 +18,7 @@ class uCluster:
         self.CF = self.initializeCF(d)
         self.boundingBoxesList = self.initBoundingBoxesList(d)
         self.hyperboxSizePerFeature = self.getHyperboxSizePerFeature()
-        self.label = -1 # outlier by default; "unclass"
+        self.label = -1 #"unclass"
         
         
         
@@ -144,7 +144,7 @@ class uCluster:
         
         
       
-    def isOutlier(self):
+    def hasUnclassLabel(self):
       return (self.CF.label is -1)
     
     
