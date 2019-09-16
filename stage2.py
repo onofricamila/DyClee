@@ -7,6 +7,7 @@ Created on Sun Sep 15 15:52:46 2019
 """
 import numpy as np
 
+# TODO plot obtained clusters
 class Stage2:
   
   def __init__(self, uncommonDimensions = 0):
