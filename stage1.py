@@ -60,9 +60,10 @@ class Stage1:
         # to avoid unnecessary waiting
         if not self.s2ToS1ComQueue.empty():
             lists = self.s2ToS1ComQueue.get()
+            aList, oList = lists
             # update both lists              
-            self.aList = lists.aList    
-            self.oList = lists.oList  
+            self.aList = aList    
+            self.oList = oList  
             
             
       
@@ -121,7 +122,5 @@ class Stage1:
      
       
       
-    # TODO check  
     def sendListsToStage2(self):
-      # TODO: falta obtener las listas actualizadas, eso deberia ser rapido
-      self.s2.formClusters(self.aList + self.oList)
+      self.s1ToS2ComQueue.put((self.aList, self.oList))
