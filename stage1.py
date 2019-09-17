@@ -33,7 +33,6 @@ class Stage1:
             # processed_elements ++
             processedElements += 1
             
-            # TODO: receive updated lists from stage 2 !!!!!!!!!!!!!!!!!!!!
             self.checkUpdatedListsFromStage2()
             
             # find reachable u clusters for the new element
@@ -53,8 +52,19 @@ class Stage1:
             if self.timeToSendMessage(processedElements):
                 # TODO: send alist and olist to stage 2 !!!!!!!!!!!!!!!!!!!!
                 self.sendListsToStage2()
-                
-                
+   
+
+
+    # checks if there's a msg from s2 so both u cluster lists must be updated
+    def checkUpdatedListsFromStage2(self):
+        # to avoid unnecessary waiting
+        if not self.s2ToS1ComQueue.empty():
+            lists = self.s2ToS1ComQueue.get()
+            # update both lists              
+            self.aList = lists.aList    
+            self.oList = lists.oList  
+            
+            
       
     # returns a list of reachable u clusters for a given element          
     def findReachableUcs(self, d):
