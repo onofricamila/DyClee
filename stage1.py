@@ -50,7 +50,6 @@ class Stage1:
                 closestUc.addElement(d)
                 
             if self.timeToSendMessage(processedElements):
-                # TODO: send alist and olist to stage 2 !!!!!!!!!!!!!!!!!!!!
                 self.sendListsToStage2()
    
 
