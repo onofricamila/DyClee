@@ -76,15 +76,15 @@ class Stage2:
           if self.isDense(conUc):
             conUc.label = self.currentClusterId
             alreadySeen.append(conUc)
-            conUcConnectedUcs = self.findConnectedUcsFor(conUc)
+            newConnectedUcs = self.findConnectedUcsFor(conUc)
           
-            for conUcConUc in conUcConnectedUcs:
-              if self.isDense(conUcConUc):
-                connectedUcs.append(conUcConUc)
+            for newNeighbour in newConnectedUcs:
+              if self.isDense(newNeighbour):
+                connectedUcs.append(newNeighbour)
               
-              conUcConUc.label = self.currentClusterId
+              newNeighbour.label = self.currentClusterId
             
-          i +=   1
+          i += 1
         
         self.currentClusterId += 1
         
