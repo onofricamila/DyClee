@@ -6,8 +6,8 @@ Created on Sun Sep 15 15:52:46 2019
 @author: camila
 """
 import numpy as np
+import matplotlib.pyplot as plt
 
-# TODO plot obtained clusters
 class Stage2:
   
   def __init__(self, s1ToS2ComQueue, s2ToS1ComQueue, uncommonDimensions = 0):
@@ -99,7 +99,10 @@ class Stage2:
         
         self.currentClusterId += 1
         
-        
+    # for loop finished -> clusters were formed 
+    self.plotClusters(updatedAList + updatedOList)
+    
+    
         
   def calculateMeanFor(self, uCs):   
      return  np.mean([c.CF.D for c in uCs])
@@ -158,4 +161,37 @@ class Stage2:
         if (x not in res):
           res.append(x)
           self.auxFindConnectedUcsFor(x, uCs, res)
+          
+          
+          
+  # plots current clusters          
+  def plotClusters(self, uCs):
+    # check if clusters are plottable
+    firstEl = uCs[0]
+    if len(firstEl.CF.Ls) != 0:
+      print("UNABLE TO DRAW CLUSTERS: IT'S NOT A 2D DATASET")
+      return
+    
+    # let's plot!
+    
+    # first get a list with u cluster labels
+    labelsPerUCluster = [uc.label for uc in uCs]
+    # clusters will be a sequence of numbers (cluster number or -1) for each point in the dataset
+    clusters = np.array(labelsPerUCluster)
+    
+    # get uCs centroids
+    centroids = [uc.getCentroid() for uc in uCs]
+    
+    # scatter needs 2 params: xs n ys (all values for dimension1 and all for d2);
+    # 2 separate lists with those values, considering same index = same element values 
+    # 1° extract centroids from centroids list
+    # 2° generate an iterator with 2 elements: a list of xs and a list of ys
+    # 3° get both lists
+    
+    # same as: 
+    # x,y = zip(*centroids) plus plt.scatter(x, y)
+    plt.scatter(*zip(*centroids), c=clusters, cmap="plasma")
+    plt.xlabel("Feature 1")
+    plt.ylabel("Feature 2")
+    plt.show()
       
