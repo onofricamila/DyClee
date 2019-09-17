@@ -6,18 +6,20 @@ Created on Tue Sep 10 14:35:06 2019
 @author: camila
 """
 
-import numpy as np
 from uCluster import uCluster
-from stage2 import Stage2
 
 class Stage1:
     
-    def __init__(self, relativeSize=1, tGlobal=1):
+    def __init__(self, s1ToS2ComQueue, s2ToS1ComQueue, relativeSize=1, tGlobal=1):
+        # communication instance variables    
+        self.s1ToS2ComQueue = s1ToS2ComQueue
+        self.s2ToS1ComQueue = s2ToS1ComQueue  
+      
+        # stage2 algo instance variables
         self.relativeSize = relativeSize
         self.tGlobal = tGlobal        
         self.aList = []
         self.oList = []
-        self.s2 = Stage2()
         
     
     

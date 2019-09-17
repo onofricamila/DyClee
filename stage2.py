@@ -10,7 +10,12 @@ import numpy as np
 # TODO plot obtained clusters
 class Stage2:
   
-  def __init__(self, uncommonDimensions = 0):
+  def __init__(self, s1ToS2ComQueue, s2ToS1ComQueue, uncommonDimensions = 0):
+        # communication instance variables    
+        self.s1ToS2ComQueue = s1ToS2ComQueue
+        self.s2ToS1ComQueue = s2ToS1ComQueue
+        
+        # stage2 algo instance variables
         self.currentClusterId = 1
         self.mean = 0
         self.median = 0
@@ -19,7 +24,7 @@ class Stage2:
         
         
   def start(self):
-    while 1:
+    while True:
       # TODO wait till s1 sends uCs lists
       if self.listsReceivedFromS1():
         # TODO get s1 uCs lists
