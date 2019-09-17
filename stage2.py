@@ -28,23 +28,24 @@ class Stage2:
       # wait for lists from s1
       lists = self.s1ToS2ComQueue.get()
       updatedLists = self.updateLists(lists)
+      self.updateMeanAndMedian()
       # send updated uCs lists to s1
       self.s2ToS1ComQueue.put(updatedLists)
-      # form clusters
-      # it's unnecessary to look for dense uCs in the oList
+      # update mean and median
       updatedAList, updatedOList = updatedLists
-      self.formClusters(updatedAList)
+      self.updateMeanAndMedian(updatedAList + updatedOList)
+      # form clusters
+      self.formClusters(updatedLists)
 
 
 
   def updateLists(self, lists):
     aList, oList = lists
     
+    self.updateMeanAndMedian(aList + oList)
+    
     newAList = aList
     newOList = oList
-    
-    self.mean = self.calculateMeanFor(aList + oList)
-    self.median = self.calculateMedianFor(aList + oList)
     
     for uC in aList:
       if self.isOutlier(uC):
@@ -55,11 +56,21 @@ class Stage2:
       if self.isDense(uC) or self.isSemiDense(uC):
         newAList.append(uC)
         newOList.remove(uC)
-        
+  
+
+
+  def updateMeanAndMedian(self, concatenatedlists):
+    self.mean = self.calculateMeanFor(concatenatedlists)
+    self.median = self.calculateMedianFor(concatenatedlists)     
     
   
-  def formClusters(self, uCs):
-    DMC = self.findDenseUcs(uCs)
+  
+  def formClusters(self, updatedLists):
+    updatedAList, updatedOList = updatedLists
+      
+    # it's unnecessary to look for dense uCs in the oList
+    DMC = self.findDenseUcs(updatedAList)
+    
     alreadySeen = []
     
     for denseUc in DMC:
