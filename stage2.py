@@ -25,21 +25,20 @@ class Stage2:
         
   def start(self):
     while True:
-      # TODO wait till s1 sends uCs lists
-      if self.listsReceivedFromS1():
-        # TODO get s1 uCs lists
-        lists = self.getUcsLists()
-        updatedLists = self.updateLists(lists)
-        # TODO send updated uCs lists to s1
-        self.sendUpdatedListsToS1()
-        # it's unnecessary to look for dense uCs in the oList
-        self.formClusters(updatedLists.get("aList"))
+      # wait for lists from s1
+      lists = self.s1ToS2ComQueue.get()
+      updatedLists = self.updateLists(lists)
+      # send updated uCs lists to s1
+      self.s2ToS1ComQueue.put(updatedLists)
+      # form clusters
+      # it's unnecessary to look for dense uCs in the oList
+      updatedAList, updatedOList = updatedLists
+      self.formClusters(updatedAList)
 
 
 
   def updateLists(self, lists):
-    aList = lists.get("aList")
-    oList = lists.get("oList")
+    aList, oList = lists
     
     newAList = aList
     newOList = oList
