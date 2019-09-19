@@ -21,3 +21,10 @@ class CF:
         self.ts = ts
         # the μ cluster density
         self.D = D
+        
+        
+        
+    def __str__(self):
+     return f'CF =>\n n: {self.n},\n LS: {self.LS},\n SS: {self.SS},\n tl: {self.tl},\n ts: {self.ts},\n D: {self.D}'
+        
+        

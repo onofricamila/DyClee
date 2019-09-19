@@ -20,15 +20,17 @@ s2ToS1ComQueue = Queue()  # s2 will write to s1 there
 s1 = Stage1(s1ToS2ComQueue, s2ToS1ComQueue) # default relative size = 1
 s2 = Stage2(s1ToS2ComQueue, s2ToS1ComQueue) # default uncommon dimensions = 0
 
-dataset = "vetor of equal-feature vectors"
-
-# start s2
-s2 = Process(target=s2.start(), args=())
-s2.daemon = True
-s2.start()     # launch the stage2 process
+dataset = [[10, 20]]
 
 s1.formUcs(dataset) # send dataset to s1
-s2.join()   # wait till the stage2 process finishes
+
+# start s2
+s2p = Process(target=s2.start(), args=())
+s2p.daemon = True
+s2p.start()     # launch the stage2 process
+
+
+s2p.join()   # wait till the stage2 process finishes
     
 
 

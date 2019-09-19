@@ -7,7 +7,7 @@ Created on Sun Sep 15 15:52:46 2019
 """
 import numpy as np
 import matplotlib.pyplot as plt
-
+import time
 class Stage2:
   
   def __init__(self, s1ToS2ComQueue, s2ToS1ComQueue, uncommonDimensions = 0):
@@ -20,10 +20,11 @@ class Stage2:
         self.mean = 0
         self.median = 0
         self.uncommonDimensions = uncommonDimensions
-        
+        print("S2 init")
         
         
   def start(self):
+    print("S2 start")
     while True:
       # wait for lists from s1
       lists = self.s1ToS2ComQueue.get()
@@ -31,6 +32,7 @@ class Stage2:
       self.updateMeanAndMedian(lists)
       # update lists
       updatedLists = self.updateLists(lists)
+      print("S2 updatedLists: ", updatedLists)
       # send updated uCs lists to s1
       self.s2ToS1ComQueue.put(updatedLists)
       # form clusters
@@ -39,6 +41,7 @@ class Stage2:
 
 
   def updateLists(self, lists):
+    print("S2 updateLists")
     aList, oList = lists
     
     newAList = aList
@@ -53,10 +56,12 @@ class Stage2:
       if self.isDense(uC) or self.isSemiDense(uC):
         newAList.append(uC)
         newOList.remove(uC)
-  
+        
 
 
-  def updateMeanAndMedian(self, concatenatedLists):
+  def updateMeanAndMedian(self, lists):
+    aList, oList = lists
+    concatenatedLists = aList + oList
     self.mean = self.calculateMeanFor(concatenatedLists)
     self.median = self.calculateMedianFor(concatenatedLists)     
     

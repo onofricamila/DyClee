@@ -20,16 +20,17 @@ class Stage1:
         self.tGlobal = tGlobal        
         self.aList = []
         self.oList = []
-        
+        print("S1 init")
     
     
     # main method
     def formUcs(self, dataset):
     # ASSUMPTIONS: dataset es un vector de vectores    
-    
+        print("S1 formUcs")
         processedElements = 0
         
         for d in dataset:
+            print(d)
             # processed_elements ++
             processedElements += 1
             
@@ -37,32 +38,38 @@ class Stage1:
             
             # find reachable u clusters for the new element
             reachableUcs = self.findReachableUcs(d)
-            
+            print("S1 reachables: ", reachableUcs)
             if not reachableUcs:
                 # empty list -> create u cluster from element 
                 # the uC will have the parametrized relative size
-                uC = uCluster(self, self.relativeSize, d)
-                self.oList.append(uC) 
+                uC = uCluster(self.relativeSize, d)
+                self.oList.append(uC)
+                print("S1 se creo u cluster: ", uC)
                 
             else: 
                 # find closest reachable u cluster
                 closestUc = self.findClosestReachableUc(d, reachableUcs)
                 closestUc.addElement(d)
-                
+                print("S1 closestUc: ", closestUc)
             if self.timeToSendMessage(processedElements):
+                print("S1 time to send msg to s2")
                 self.sendListsToStage2()
    
 
 
     # checks if there's a msg from s2 so both u cluster lists must be updated
     def checkUpdatedListsFromStage2(self):
+        print("S1 checkUpdatedListsFromStage2")
         # to avoid unnecessary waiting
         if not self.s2ToS1ComQueue.empty():
+            print("S1 receiving lists from s2")
             lists = self.s2ToS1ComQueue.get()
             aList, oList = lists
             # update both lists              
             self.aList = aList    
             self.oList = oList  
+            print("alist: ", aList)
+            print("olist: ", oList)
             
             
       
@@ -118,7 +125,7 @@ class Stage1:
     
     # returns true if it's time to send message to stage 2
     def timeToSendMessage(self, processedElements):
-       return processedElements == self.tGlobal
+       return processedElements >= self.tGlobal
      
       
       

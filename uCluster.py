@@ -20,7 +20,11 @@ class uCluster:
         self.hyperboxSizePerFeature = self.getHyperboxSizePerFeature()
         self.label = -1 #"unclass"
         self.centroid = self.getCentroid()
-        
+    
+    
+    
+    def __str__(self):
+     return f'uCluster =>\n rel siz: {self.relativeSize},\n label: {self.label},\n centroid: {self.centroid},\n CF: {self.CF}'
         
         
     # initializes CF  
