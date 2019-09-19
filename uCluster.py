@@ -24,7 +24,7 @@ class uCluster:
     
     
     def __repr__(self):
-     return f'uCluster =>\n rel siz: {self.relativeSize},\n label: {self.label},\n centroid: {self.centroid},\n CF: {self.CF}, \n hyperboxSizePerFeature: {self.hyperboxSizePerFeature}, \n boundingBoxesList: {self.boundingBoxesList}'
+     return f'\n\t uCluster =>\n\t rel siz: {self.relativeSize},\n\t label: {self.label},\n\t centroid: {self.centroid},\n\t CF: {self.CF}, \n\t hyperboxSizePerFeature: {self.hyperboxSizePerFeature}, \n\t boundingBoxesList: {self.boundingBoxesList}'
         
         
     # initializes CF  

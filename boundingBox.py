@@ -15,4 +15,4 @@ class BoundingBox:
         
     
     def __repr__(self):
-     return f'BoundingBox =>\n minimun: {self.minimun},\n maximun: {self.maximun}'
+     return f'\n\t\t BoundingBox =>\n\t\t\tminimun: {self.minimun},\n\t\t\tmaximun: {self.maximun}'

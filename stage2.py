@@ -7,7 +7,7 @@ Created on Sun Sep 15 15:52:46 2019
 """
 import numpy as np
 import matplotlib.pyplot as plt
-import time
+
 class Stage2:
   
   def __init__(self, s1ToS2ComQueue, s2ToS1ComQueue, uncommonDimensions = 0):
@@ -20,15 +20,18 @@ class Stage2:
         self.mean = 0
         self.median = 0
         self.uncommonDimensions = uncommonDimensions
-        print("S2 init")
         
         
   def start(self):
     print("S2 start")
     while True:
       # wait for lists from s1
-      lists = self.s1ToS2ComQueue.get()
-      print("s2 received lists: ",lists)
+      msg = self.s1ToS2ComQueue.get()
+      if msg == "DONE":
+        break
+      # uC lists were received 
+      lists = msg
+      print("s2 received lists: ", lists)
       # update mean and median
       self.updateMeanAndMedian(lists)
       print("S2 mean: ", self.mean)
@@ -183,6 +186,7 @@ class Stage2:
     labelsPerUCluster = [uC.label for uC in uCs]
     # clusters will be a sequence of numbers (cluster number or -1) for each point in the dataset
     clusters = np.array(labelsPerUCluster)
+    print("S2 plotclusters uCs CLUSTERS: ", clusters)
     
     # get uCs centroids
     centroids = [uC.getCentroid() for uC in uCs]
@@ -195,6 +199,9 @@ class Stage2:
     
     # same as: 
     # x,y = zip(*centroids) plus plt.scatter(x, y)
+    x,y = zip(*centroids)
+    print("S2 plotclusters uCs x: ", x)
+    print("S2 plotclusters uCs y: ", y)
     plt.scatter(*zip(*centroids), c=clusters, cmap="plasma")
     plt.xlabel("Feature 1")
     plt.ylabel("Feature 2")

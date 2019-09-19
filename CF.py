@@ -25,6 +25,6 @@ class CF:
         
         
     def __repr__(self):
-     return f'CF =>\n n: {self.n},\n LS: {self.LS},\n SS: {self.SS},\n tl: {self.tl},\n ts: {self.ts},\n D: {self.D}'
+     return f'CF =>\n\t\tn: {self.n},\n\t\tLS: {self.LS},\n\t\tSS: {self.SS},\n\t\ttl: {self.tl},\n\t\tts: {self.ts},\n\t\tD: {self.D}'
         
         

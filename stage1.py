@@ -20,19 +20,18 @@ class Stage1:
         self.tGlobal = tGlobal        
         self.aList = []
         self.oList = []
-        print("S1 init")
+        self.processedElements = 0
     
     
     # main method
     def formUcs(self, dataset):
     # ASSUMPTIONS: dataset es un vector de vectores    
         print("S1 formUcs")
-        processedElements = 0
         
         for d in dataset:
-            print(d)
+            print("S1 dataset element: ", d)
             # processed_elements ++
-            processedElements += 1
+            self.processedElements += 1
             
             self.checkUpdatedListsFromStage2()
             
@@ -51,10 +50,13 @@ class Stage1:
                 closestUc = self.findClosestReachableUc(d, reachableUcs)
                 closestUc.addElement(d)
                 print("S1 closestUc: ", closestUc)
-            if self.timeToSendMessage(processedElements):
+            if self.timeToSendMessage():
                 print("S1 time to send msg to s2")
                 self.sendListsToStage2()
+                self.resetProcessedElements()
    
+        self.sendEndMsgToStage2()
+
 
 
     # checks if there's a msg from s2 so both u cluster lists must be updated
@@ -124,10 +126,20 @@ class Stage1:
     
     
     # returns true if it's time to send message to stage 2
-    def timeToSendMessage(self, processedElements):
-       return processedElements >= self.tGlobal
+    def timeToSendMessage(self):
+       return self.processedElements == self.tGlobal
      
       
       
     def sendListsToStage2(self):
       self.s1ToS2ComQueue.put((self.aList, self.oList))
+      
+      
+      
+    def resetProcessedElements(self):
+      self.processedElements = 0
+      
+      
+      
+    def sendEndMsgToStage2(self):
+      self.s1ToS2ComQueue.put("DONE")
