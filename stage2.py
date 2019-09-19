@@ -76,7 +76,7 @@ class Stage2:
         if denseUc.hasUnclassLabel():
           denseUc.label = self.currentClusterId
           
-        connectedUcs = self.findConnectedUcsFor(denseUc)
+        connectedUcs = self.findConnectedUcsFor(denseUc, updatedAList + updatedOList)
         
         i = 0
         while i < len(connectedUcs):  
@@ -84,13 +84,14 @@ class Stage2:
           if self.isDense(conUc):
             conUc.label = self.currentClusterId
             alreadySeen.append(conUc)
-            newConnectedUcs = self.findConnectedUcsFor(conUc)
+            newConnectedUcs = self.findConnectedUcsFor(conUc, updatedAList + updatedOList)
           
             for newNeighbour in newConnectedUcs:
-              if self.isDense(newNeighbour):
-                connectedUcs.append(newNeighbour)
+              if self.hasntBeenSeen(newNeighbour, connectedUcs):
+                if self.isDense(newNeighbour):
+                  connectedUcs.append(newNeighbour)
               
-              newNeighbour.label = self.currentClusterId
+                newNeighbour.label = self.currentClusterId
             
           i += 1
         
