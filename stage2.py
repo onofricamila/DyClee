@@ -27,11 +27,13 @@ class Stage2:
     while True:
       # wait for lists from s1
       lists = self.s1ToS2ComQueue.get()
+      # update mean and median
+      self.updateMeanAndMedian(lists)
+      # update lists
       updatedLists = self.updateLists(lists)
-      self.updateMeanAndMedian()
       # send updated uCs lists to s1
       self.s2ToS1ComQueue.put(updatedLists)
-      # update mean and median
+      
       updatedAList, updatedOList = updatedLists
       self.updateMeanAndMedian(updatedAList + updatedOList)
       # form clusters
@@ -41,8 +43,6 @@ class Stage2:
 
   def updateLists(self, lists):
     aList, oList = lists
-    
-    self.updateMeanAndMedian(aList + oList)
     
     newAList = aList
     newOList = oList
