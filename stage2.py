@@ -16,7 +16,7 @@ class Stage2:
         self.s2ToS1ComQueue = s2ToS1ComQueue
         
         # stage2 algo instance variables
-        self.currentClusterId = 1
+        self.currentClusterId = 0
         self.mean = 0
         self.median = 0
         self.uncommonDimensions = uncommonDimensions
@@ -76,8 +76,12 @@ class Stage2:
   
   
   def formClusters(self, updatedLists):
+    # reset currentClusterId
+    self.currentClusterId = 0
+    # extract lists
     updatedAList, updatedOList = updatedLists
     print("s2 formClusters")
+    # join lists to get all the u clusters together
     uCs = updatedAList + updatedOList
     
     # it's unnecessary to look for dense uCs in the oList
@@ -89,6 +93,7 @@ class Stage2:
       if self.hasntBeenSeen(denseUc, alreadySeen):
         alreadySeen.append(denseUc)
         if denseUc.hasUnclassLabel():
+          self.currentClusterId += 1
           denseUc.label = self.currentClusterId
           
         connectedUcs = self.findDirectlyConnectedUcsFor(denseUc, uCs)
@@ -109,8 +114,6 @@ class Stage2:
                 newNeighbour.label = self.currentClusterId
             
           i += 1
-        
-        self.currentClusterId += 1
         
     # for loop finished -> clusters were formed 
     self.plotClusters(uCs)
