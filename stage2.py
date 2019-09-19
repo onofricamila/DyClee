@@ -64,7 +64,8 @@ class Stage2:
   
   def formClusters(self, updatedLists):
     updatedAList, updatedOList = updatedLists
-      
+    uCs = updatedAList + updatedOList
+    
     # it's unnecessary to look for dense uCs in the oList
     DMC = self.findDenseUcs(updatedAList)
     
@@ -76,7 +77,7 @@ class Stage2:
         if denseUc.hasUnclassLabel():
           denseUc.label = self.currentClusterId
           
-        connectedUcs = self.findConnectedUcsFor(denseUc, updatedAList + updatedOList)
+        connectedUcs = self.findConnectedUcsFor(denseUc, uCs)
         
         i = 0
         while i < len(connectedUcs):  
@@ -84,7 +85,7 @@ class Stage2:
           if self.isDense(conUc):
             conUc.label = self.currentClusterId
             alreadySeen.append(conUc)
-            newConnectedUcs = self.findConnectedUcsFor(conUc, updatedAList + updatedOList)
+            newConnectedUcs = self.findConnectedUcsFor(conUc, uCs)
           
             for newNeighbour in newConnectedUcs:
               if self.hasntBeenSeen(newNeighbour, connectedUcs):
@@ -98,7 +99,7 @@ class Stage2:
         self.currentClusterId += 1
         
     # for loop finished -> clusters were formed 
-    self.plotClusters(updatedAList + updatedOList)
+    self.plotClusters(uCs)
     
     
         
