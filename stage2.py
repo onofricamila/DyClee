@@ -28,8 +28,11 @@ class Stage2:
     while True:
       # wait for lists from s1
       lists = self.s1ToS2ComQueue.get()
+      print("s2 received lists: ",lists)
       # update mean and median
       self.updateMeanAndMedian(lists)
+      print("S2 mean: ", self.mean)
+      print("S2 median: ", self.median)
       # update lists
       updatedLists = self.updateLists(lists)
       print("S2 updatedLists: ", updatedLists)
@@ -57,6 +60,8 @@ class Stage2:
         newAList.append(uC)
         newOList.remove(uC)
         
+    return (newAList, newOList)
+        
 
 
   def updateMeanAndMedian(self, lists):
@@ -69,6 +74,7 @@ class Stage2:
   
   def formClusters(self, updatedLists):
     updatedAList, updatedOList = updatedLists
+    print("s2 formClusters")
     uCs = updatedAList + updatedOList
     
     # it's unnecessary to look for dense uCs in the oList
@@ -164,8 +170,10 @@ class Stage2:
   # plots current clusters          
   def plotClusters(self, uCs):
     # check if clusters are plottable
+    print("S2 plotclusters uCs", uCs)
     firstEl = uCs[0]
-    if len(firstEl.CF.Ls) != 2:
+    print("S2 plotclusters uCs firstEl", firstEl)
+    if len(firstEl.CF.LS) != 2:
       print("UNABLE TO DRAW CLUSTERS: IT'S NOT A 2D DATASET")
       return
     

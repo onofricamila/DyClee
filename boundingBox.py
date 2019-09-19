@@ -12,3 +12,7 @@ class BoundingBox:
         self.minimun = minimun
         self.maximun = maximun
         
+        
+    
+    def __repr__(self):
+     return f'BoundingBox =>\n minimun: {self.minimun},\n maximun: {self.maximun}'

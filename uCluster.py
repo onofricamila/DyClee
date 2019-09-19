@@ -23,8 +23,8 @@ class uCluster:
     
     
     
-    def __str__(self):
-     return f'uCluster =>\n rel siz: {self.relativeSize},\n label: {self.label},\n centroid: {self.centroid},\n CF: {self.CF}'
+    def __repr__(self):
+     return f'uCluster =>\n rel siz: {self.relativeSize},\n label: {self.label},\n centroid: {self.centroid},\n CF: {self.CF}, \n hyperboxSizePerFeature: {self.hyperboxSizePerFeature}, \n boundingBoxesList: {self.boundingBoxesList}'
         
         
     # initializes CF  
@@ -163,7 +163,7 @@ class uCluster:
         
       
     def hasUnclassLabel(self):
-      return (self.CF.label is -1)
+      return (self.label is -1)
     
     
     # we assumw all dimensions must match
