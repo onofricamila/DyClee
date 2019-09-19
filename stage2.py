@@ -173,12 +173,12 @@ class Stage2:
     # let's plot!
     
     # first get a list with u cluster labels
-    labelsPerUCluster = [uc.label for uc in uCs]
+    labelsPerUCluster = [uC.label for uC in uCs]
     # clusters will be a sequence of numbers (cluster number or -1) for each point in the dataset
     clusters = np.array(labelsPerUCluster)
     
     # get uCs centroids
-    centroids = [uc.getCentroid() for uc in uCs]
+    centroids = [uC.getCentroid() for uC in uCs]
     
     # scatter needs 2 params: xs n ys (all values for dimension1 and all for d2);
     # 2 separate lists with those values, considering same index = same element values 
