@@ -88,7 +88,7 @@ class Stage2:
             newConnectedUcs = self.findDirectlyConnectedUcsFor(conUc, uCs)
           
             for newNeighbour in newConnectedUcs:
-              if self.hasntBeenSeen(newNeighbour, connectedUcs):
+              if self.hasntBeenSeen(newNeighbour, alreadySeen):
                 if self.isDense(newNeighbour):
                   connectedUcs.append(newNeighbour)
               
