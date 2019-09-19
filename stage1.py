@@ -15,7 +15,7 @@ class Stage1:
         self.s1ToS2ComQueue = s1ToS2ComQueue
         self.s2ToS1ComQueue = s2ToS1ComQueue  
       
-        # stage2 algo instance variables
+        # stage1 algo instance variables
         self.relativeSize = relativeSize
         self.tGlobal = tGlobal        
         self.aList = []
