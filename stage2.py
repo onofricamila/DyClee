@@ -146,20 +146,20 @@ class Stage2:
     return (uC not in alreadySeen)
     
      
-    
-  def findConnectedUcsFor(self, uC, uCs):
-    res = []
-    self.auxFindConnectedUcsFor(uC, uCs, res)
-    return res
-  
-  
-  
-  def auxFindConnectedUcsFor(self, uC, uCs, res):
-    for x in uCs:
-      if (uC.isDirectlyConnectedWith(x, self.uncommonDimensions)):
-        if (x not in res):
-          res.append(x)
-          self.auxFindConnectedUcsFor(x, uCs, res)
+# TODO: CAMBIAR ESTOS METODOS    
+#  def findConnectedUcsFor(self, uC, uCs):
+#    res = []
+#    self.auxFindConnectedUcsFor(uC, uCs, res)
+#    return res
+#  
+#  
+#  
+#  def auxFindConnectedUcsFor(self, uC, uCs, res):
+#    for x in uCs:
+#      if (uC.isDirectlyConnectedWith(x, self.uncommonDimensions)):
+#        if (x not in res):
+#          res.append(x)
+#          self.auxFindConnectedUcsFor(x, uCs, res)
           
           
           
