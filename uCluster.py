@@ -19,6 +19,7 @@ class uCluster:
         self.boundingBoxesList = self.initBoundingBoxesList(d)
         self.hyperboxSizePerFeature = self.getHyperboxSizePerFeature()
         self.label = -1 #"unclass"
+        self.centroid = self.getCentroid()
         
         
         
@@ -65,10 +66,12 @@ class uCluster:
     
     # retunrs true if the uc is reachable from a given element
     def isReachableFrom(self, d):
+        myCentroid = self.getCentroid()
+        
         # for each feature
         for i in range(len(d)):
             # difference between the element feature and the cluster centroid for that feature
-            aux = abs(d[i] - self.getICentroid(i))
+            aux = abs(d[i] - myCentroid[i])
             # if for a given feature the element doesn't match the cluster, return false
             if aux >= (self.hyperboxSizePerFeature[i] / 2):
                 return False
@@ -98,7 +101,7 @@ class uCluster:
     # includes an element into the u cluster
     # updates CF vector
     def addElement(self, d):
-        self.updateCurrentTime()
+        self.updateTl()
         self.updateN()
         self.updateLS(d)
         self.updateSS(d)
@@ -112,7 +115,7 @@ class uCluster:
         
         
         
-    def updateCurrentTime(self):
+    def updateTl(self):
         currentTime = datetime.datetime.now().time()
         self.CF.tl = currentTime
         
@@ -165,10 +168,13 @@ class uCluster:
       featuresCount = len(self.CF.LS)
       currentUncommonDimensions = 0
       
+      myCentroid = self.getCentroid()
+      uCCentroid = uC.getCentroid()
+      
       # for each feature
       for i in range(featuresCount):
           # difference between the u cluster centroids for that feature
-          aux = abs(self.getICentroid(i) - uC.getICentroid(i))
+          aux = abs(myCentroid[i] - uCCentroid[i])
           # if for a given feature the element doesn't match the cluster, return false
           if aux >= (self.hyperboxSizePerFeature[i] / 2):
               currentUncommonDimensions += 1
