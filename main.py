@@ -27,7 +27,7 @@ s2 = Process(target=s2.start(), args=())
 s2.daemon = True
 s2.start()     # launch the stage2 process
 
-s1.formUcs(dataset, s1ToS2ComQueue, s2ToS1ComQueue) # send dataset to s1
+s1.formUcs(dataset) # send dataset to s1
 s2.join()   # wait till the stage2 process finishes
     
 
