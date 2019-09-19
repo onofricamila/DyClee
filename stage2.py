@@ -59,9 +59,9 @@ class Stage2:
   
 
 
-  def updateMeanAndMedian(self, concatenatedlists):
-    self.mean = self.calculateMeanFor(concatenatedlists)
-    self.median = self.calculateMedianFor(concatenatedlists)     
+  def updateMeanAndMedian(self, concatenatedLists):
+    self.mean = self.calculateMeanFor(concatenatedLists)
+    self.median = self.calculateMedianFor(concatenatedLists)     
     
   
   
@@ -105,31 +105,31 @@ class Stage2:
     
         
   def calculateMeanFor(self, uCs):   
-     return  np.mean([c.CF.D for c in uCs])
+     return  np.mean([uC.CF.D for uC in uCs])
      
    
     
   def calculateMedianFor(self, uCs):   
-     return  np.median([c.CF.D for c in uCs])
+     return  np.median([uC.CF.D for uC in uCs])
    
           
         
   # returns true if a given u cluster is considered dense
   def isDense(self, uC):   
-     return (uC >= self.mean and uC >= self.median)
+     return (uC.CF.D >= self.mean and uC.CF.D >= self.median)
      
    
   
   # returns true if a given u cluster is considered semi dense
   def isSemiDense(self, uC):   
      # xor
-     return (uC >= self.mean) != (uC >= self.median)
+     return (uC.CF.D >= self.mean) != (uC.CF.D >= self.median)
    
     
     
   # returns true if a given u cluster is considered outlier
   def isOutlier(self, uC):   
-     return (uC < self.mean and uC < self.median) 
+     return (uC.CF.D < self.mean and uC.CF.D < self.median) 
   
   
   
