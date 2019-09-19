@@ -33,9 +33,6 @@ class Stage2:
       updatedLists = self.updateLists(lists)
       # send updated uCs lists to s1
       self.s2ToS1ComQueue.put(updatedLists)
-      
-      updatedAList, updatedOList = updatedLists
-      self.updateMeanAndMedian(updatedAList + updatedOList)
       # form clusters
       self.formClusters(updatedLists)
 
