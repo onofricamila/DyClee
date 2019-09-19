@@ -166,7 +166,7 @@ class Stage2:
   def plotClusters(self, uCs):
     # check if clusters are plottable
     firstEl = uCs[0]
-    if len(firstEl.CF.Ls) != 0:
+    if len(firstEl.CF.Ls) != 2:
       print("UNABLE TO DRAW CLUSTERS: IT'S NOT A 2D DATASET")
       return
     
