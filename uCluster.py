@@ -179,7 +179,6 @@ class uCluster:
           if aux >= (self.hyperboxSizePerFeature[i] / 2):
               currentUncommonDimensions += 1
       
-      # the element fits the u cluster
       return currentUncommonDimensions <= uncommonDimensions
         
         
