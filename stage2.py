@@ -77,7 +77,7 @@ class Stage2:
         if denseUc.hasUnclassLabel():
           denseUc.label = self.currentClusterId
           
-        connectedUcs = self.findConnectedUcsFor(denseUc, uCs)
+        connectedUcs = self.findDirectlyConnectedUcsFor(denseUc, uCs)
         
         i = 0
         while i < len(connectedUcs):  
@@ -85,7 +85,7 @@ class Stage2:
           if self.isDense(conUc):
             conUc.label = self.currentClusterId
             alreadySeen.append(conUc)
-            newConnectedUcs = self.findConnectedUcsFor(conUc, uCs)
+            newConnectedUcs = self.findDirectlyConnectedUcsFor(conUc, uCs)
           
             for newNeighbour in newConnectedUcs:
               if self.hasntBeenSeen(newNeighbour, connectedUcs):
@@ -146,22 +146,15 @@ class Stage2:
     return (uC not in alreadySeen)
     
      
-# TODO: CAMBIAR ESTOS METODOS    
-#  def findConnectedUcsFor(self, uC, uCs):
-#    res = []
-#    self.auxFindConnectedUcsFor(uC, uCs, res)
-#    return res
-#  
-#  
-#  
-#  def auxFindConnectedUcsFor(self, uC, uCs, res):
-#    for x in uCs:
-#      if (uC.isDirectlyConnectedWith(x, self.uncommonDimensions)):
-#        if (x not in res):
-#          res.append(x)
-#          self.auxFindConnectedUcsFor(x, uCs, res)
-          
-          
+
+  def findDirectlyConnectedUcsFor(self, uC, uCs):
+    res = []
+    for u in uCs:
+      if uC.isDirectlyConnectedWith(u, self.uncommonDimensions):
+        res.append(u)
+    return res
+  
+  
           
   # plots current clusters          
   def plotClusters(self, uCs):
