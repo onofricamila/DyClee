@@ -63,7 +63,7 @@ class uCluster:
     
     
     
-    # retunrs true (1) if the uc is reachable from a given element
+    # retunrs true if the uc is reachable from a given element
     def isReachableFrom(self, d):
         # for each feature
         for i in range(len(d)):
@@ -71,10 +71,10 @@ class uCluster:
             aux = abs(d[i] - self.getICentroid(i))
             # if for a given feature the element doesn't match the cluster, return false
             if aux >= (self.hyperboxSizePerFeature[i] / 2):
-                return 0
+                return False
         
         # the element fits the u cluster
-        return 1
+        return True
         
         
     
