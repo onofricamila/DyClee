@@ -106,9 +106,10 @@ class Stage1:
     # returns the manhatan distance between a cluster and an element
     def manhatanDistance(self, d, uC):
         dist = 0
+        uCCentroid = uC.getCentroid()
         # for every feature/dimension
         for i in range(len(d)):
-            diff = d[i] - uC.getICentroid(i)
+            diff = d[i] - uCCentroid[i]
             dist = dist + abs(diff)
             
         return dist

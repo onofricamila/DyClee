@@ -81,12 +81,6 @@ class uCluster:
         
         
     
-    # returns the u cluster centroid for a given feature considering the feature index
-    def getICentroid(self, i):
-        return self.CF.LS[i] / self.CF.n
-    
-    
-    
     # returns the u cluster centroid
     def getCentroid(self):
         centroid = []
@@ -105,12 +99,13 @@ class uCluster:
         self.updateN()
         self.updateLS(d)
         self.updateSS(d)
+        self.updateCentroid()
         
         # needs to check if bounding boxes change and recalculate hyperbox size
         self.updateBoundingBoxesList(d)
         self.updateHyperboxSizePerFeature()
         
-        # and then update u cluster density
+        # then update u cluster density
         self.updateD(d)
         
         
@@ -136,7 +131,12 @@ class uCluster:
         for i in range(len(d)):
             self.CF.SS[i] = self.CF.SS[i] + (d[i] **2)
         
-        
+    
+
+    def updateCentroid(self):
+      self.centroid = self.getCentroid()
+      
+      
         
     def updateBoundingBoxesList(self, d):
         for i in range(len(d)):
