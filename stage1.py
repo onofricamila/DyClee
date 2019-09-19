@@ -69,23 +69,23 @@ class Stage1:
     # returns a list of reachable u clusters for a given element          
     def findReachableUcs(self, d):
         
-        reachableUcs = []
-        
-        self.checkReachabilityFrom(self.aList, d, reachableUcs)
+        reachableUcs = self.getReachableUcsFrom(self.aList, d)
                        
         if not reachableUcs:
             # empty list -> check oList
-            self.checkReachabilityFrom(self.oList, d, reachableUcs)
-            
+            reachableUcs = self.getReachableUcsFrom(self.oList, d)
+        return reachableUcs
+      
             
             
     # modifies reareachableUcs iterating over a given list of u clusters
-    def checkReachabilityFrom(self, uCsList, d, reachableUcs):
-         for uC in uCsList:
+    def getReachableUcsFrom(self, uCsList, d):
+      res = []   
+      for uC in uCsList:
             # the uC has the parametrized relative size
             if uC.isReachableFrom(d):
-                reachableUcs.append(uC)
-                
+                res.append(uC)
+      return res        
                 
  
     # returns the closest uC for an element, given a set of reachable uCs
