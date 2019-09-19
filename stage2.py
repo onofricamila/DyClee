@@ -198,5 +198,7 @@ class Stage2:
     plt.scatter(*zip(*centroids), c=clusters, cmap="plasma")
     plt.xlabel("Feature 1")
     plt.ylabel("Feature 2")
+    plt.grid(color='k', linestyle=':', linewidth=1)
+    plt.axes().set_aspect('equal','datalim')
     plt.show()
       
