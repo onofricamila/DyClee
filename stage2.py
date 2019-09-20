@@ -7,6 +7,8 @@ Created on Sun Sep 15 15:52:46 2019
 """
 import numpy as np
 import matplotlib.pyplot as plt
+from customizedPrinting import printInMagentaForDebugging
+
 
 class Stage2:
   
@@ -24,7 +26,7 @@ class Stage2:
         
         
   def start(self):
-    print("S2 start")
+    printInMagentaForDebugging("S2 start")
     while True:
       # wait for lists from s1
       msg = self.s1ToS2ComQueue.get()
@@ -32,14 +34,14 @@ class Stage2:
         break
       # uC lists were received 
       lists = msg
-      print("s2 received lists: ", lists)
+      printInMagentaForDebugging("s2 received lists: " + lists.__repr__())
       # update mean and median
       self.updateMeanAndMedian(lists)
-      print("S2 mean: ", self.mean)
-      print("S2 median: ", self.median)
+      printInMagentaForDebugging("S2 mean: " + self.mean.__repr__())
+      printInMagentaForDebugging("S2 median: " + self.median.__repr__())
       # update lists
       updatedLists = self.updateLists(lists)
-      print("S2 updatedLists: ", updatedLists)
+      printInMagentaForDebugging("S2 updatedLists: " + updatedLists.__repr__())
       # send updated uCs lists to s1
       self.s2ToS1ComQueue.put(updatedLists)
       # form clusters
@@ -48,26 +50,31 @@ class Stage2:
 
 
   def updateLists(self, lists):
-    print("S2 updateLists")
+    printInMagentaForDebugging("S2 updateLists")
     aList, oList = lists
     
-    print("S2 updateLists original aList: ", aList)
-    print("S2 updateLists original oList: ", oList)
+    printInMagentaForDebugging("S2 updateLists original aList: " + aList.__repr__())
+    printInMagentaForDebugging("S2 updateLists original oList: " + oList.__repr__())
 
     newAList = []
     newOList = []
     
     for uC in aList:
-      print("S2 updateLists aList: uC", uC)
+      printInMagentaForDebugging("S2 updateLists aList: uC" + uC.__repr__())
       if self.isOutlier(uC):
-        print("S2 updateLists aList: uC debe ir a oList")
+        printInMagentaForDebugging("S2 updateLists aList: uC debe ir a oList")
         newOList.append(uC)
+      else:
+        newAList.append(uC)
+        
         
     for uC in oList:
-      print("S2 updateLists oList: uC", uC)
+      printInMagentaForDebugging("S2 updateLists oList: uC" + uC.__repr__())
       if self.isDense(uC) or self.isSemiDense(uC):
-        print("S2 updateLists oList: uC debe ir a aList")
+        printInMagentaForDebugging("S2 updateLists oList: uC debe ir a aList")
         newAList.append(uC)
+      else:
+        newOList.append(uC)
         
     return (newAList, newOList)
         
@@ -86,13 +93,13 @@ class Stage2:
     self.currentClusterId = 0
     # extract lists
     updatedAList, updatedOList = updatedLists
-    print("s2 formClusters")
+    printInMagentaForDebugging("s2 formClusters")
     # join lists to get all the u clusters together
     uCs = updatedAList + updatedOList
     
     # it's unnecessary to look for dense uCs in the oList
     DMC = self.findDenseUcs(updatedAList)
-    print("s2 formClusters DMC", DMC)
+    printInMagentaForDebugging("s2 formClusters DMC" + DMC.__repr__())
     alreadySeen = []
     
     for denseUc in DMC:
@@ -182,7 +189,7 @@ class Stage2:
   # plots current clusters          
   def plotClusters(self, uCs):
     # check if clusters are plottable
-    print("S2 plotclusters uCs", uCs)
+    printInMagentaForDebugging("S2 plotclusters uCs" + uCs.__repr__())
     firstEl = uCs[0]
     if len(firstEl.CF.LS) != 2:
       print("UNABLE TO DRAW CLUSTERS: IT'S NOT A 2D DATASET")
@@ -194,7 +201,7 @@ class Stage2:
     labelsPerUCluster = [uC.label for uC in uCs]
     # clusters will be a sequence of numbers (cluster number or -1) for each point in the dataset
     clusters = np.array(labelsPerUCluster)
-    print("S2 plotclusters uCs CLUSTERS: ", clusters)
+    printInMagentaForDebugging("S2 plotclusters uCs CLUSTERS: " + clusters.__repr__())
     
     # get uCs centroids
     centroids = [uC.getCentroid() for uC in uCs]
@@ -208,8 +215,8 @@ class Stage2:
     # same as: 
     # x,y = zip(*centroids) plus plt.scatter(x, y)
     x,y = zip(*centroids)
-    print("S2 plotclusters uCs x: ", x)
-    print("S2 plotclusters uCs y: ", y)
+    printInMagentaForDebugging("S2 plotclusters uCs x: " + x.__repr__())
+    printInMagentaForDebugging("S2 plotclusters uCs y: " + y.__repr__())
     plt.scatter(x,y, c=clusters, cmap="nipy_spectral", marker="s", s=100)
     
     # set axes limits

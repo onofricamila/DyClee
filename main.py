@@ -16,7 +16,7 @@ s1ToS2ComQueue = Queue()  # s1 will write to s2 there
 # s2 to s1 communication queue
 s2ToS1ComQueue = Queue()  # s2 will write to s1 there
 
-dataset = [[80, 100], [2, 10],]
+dataset = [[80, 100], [2, 10]]
 # min and max for each feature
 dataContext = [[0, 100], [0, 100]]
 

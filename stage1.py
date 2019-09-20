@@ -7,7 +7,9 @@ Created on Tue Sep 10 14:35:06 2019
 """
 
 from uCluster import uCluster
+from customizedPrinting import printInBlueForDebugging
 
+  
 class Stage1:
     
     def __init__(self, s1ToS2ComQueue, s2ToS1ComQueue, dataContext, relativeSize=1, tGlobal=1):
@@ -27,10 +29,10 @@ class Stage1:
     # main method
     def formUcs(self, dataset):
     # ASSUMPTIONS: dataset es un vector de vectores    
-        print("S1 formUcs")
+        printInBlueForDebugging("S1 formUcs")
         
         for d in dataset:
-            print("S1 dataset element: ", d)
+            printInBlueForDebugging("S1 dataset element: " + d.__repr__())
             # processed_elements ++
             self.processedElements += 1
             
@@ -38,21 +40,21 @@ class Stage1:
             
             # find reachable u clusters for the new element
             reachableUcs = self.findReachableUcs(d)
-            print("S1 reachables: ", reachableUcs)
+            printInBlueForDebugging("S1 reachables: " + reachableUcs.__repr__())
             if not reachableUcs:
                 # empty list -> create u cluster from element 
                 # the uC will have the parametrized relative size
                 uC = uCluster(self.relativeSize, d, self.dataContext)
                 self.oList.append(uC)
-                print("S1 se creo u cluster: ", uC)
+                printInBlueForDebugging("S1 se creo u cluster: " + uC.__repr__())
                 
             else: 
                 # find closest reachable u cluster
                 closestUc = self.findClosestReachableUc(d, reachableUcs)
                 closestUc.addElement(d)
-                print("S1 closestUc: ", closestUc)
+                printInBlueForDebugging("S1 closestUc: " + closestUc.__repr__())
             if self.timeToSendMessage():
-                print("S1 lists sendt to s2")
+                printInBlueForDebugging("S1 lists sendt to s2")
                 self.sendListsToStage2()
                 self.resetProcessedElements()
         self.sendEndMsgToStage2()
@@ -61,17 +63,17 @@ class Stage1:
 
     # checks if there's a msg from s2 so both u cluster lists must be updated
     def checkUpdatedListsFromStage2(self):
-        print("S1 checkUpdatedListsFromStage2")
+        printInBlueForDebugging("S1 checkUpdatedListsFromStage2")
         # to avoid unnecessary waiting
         if not self.s2ToS1ComQueue.empty():
-            print("S1 receiving lists from s2")
+            printInBlueForDebugging("S1 receiving lists from s2")
             lists = self.s2ToS1ComQueue.get()
             aList, oList = lists
             # update both lists              
             self.aList = aList    
             self.oList = oList  
-            print("alist: ", aList)
-            print("olist: ", oList)
+            printInBlueForDebugging("alist: ", aList)
+            printInBlueForDebugging("olist: ", oList)
             
             
       
@@ -143,3 +145,6 @@ class Stage1:
       
     def sendEndMsgToStage2(self):
       self.s1ToS2ComQueue.put("DONE")
+      
+      
+    
