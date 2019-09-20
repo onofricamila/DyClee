@@ -31,6 +31,7 @@ class Stage2:
       # wait for lists from s1
       msg = self.s1ToS2ComQueue.get()
       if msg == "DONE":
+        printInMagentaForDebugging("s2 received DONE !!!!!!!!")
         break
       # uC lists were received 
       lists = msg
