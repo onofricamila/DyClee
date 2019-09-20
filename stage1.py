@@ -54,7 +54,7 @@ class Stage1:
                 closestUc.addElement(d)
                 printInBlueForDebugging("S1 closestUc: " + closestUc.__repr__())
             if self.timeToSendMessage():
-                printInBlueForDebugging("S1 lists sendt to s2")
+                printInBlueForDebugging("S1 lists sent to s2")
                 self.sendListsToStage2()
                 self.resetProcessedElements()
         self.sendEndMsgToStage2()
