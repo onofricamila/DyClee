@@ -54,25 +54,18 @@ class Stage2:
     printInMagentaForDebugging("S2 updateLists")
     aList, oList = lists
     
-    printInMagentaForDebugging("S2 updateLists original aList: " + aList.__repr__())
-    printInMagentaForDebugging("S2 updateLists original oList: " + oList.__repr__())
-
     newAList = []
     newOList = []
     
     for uC in aList:
-      printInMagentaForDebugging("S2 updateLists aList: uC" + uC.__repr__())
       if self.isOutlier(uC):
-        printInMagentaForDebugging("S2 updateLists aList: uC debe ir a oList")
         newOList.append(uC)
       else:
         newAList.append(uC)
         
         
     for uC in oList:
-      printInMagentaForDebugging("S2 updateLists oList: uC" + uC.__repr__())
       if self.isDense(uC) or self.isSemiDense(uC):
-        printInMagentaForDebugging("S2 updateLists oList: uC debe ir a aList")
         newAList.append(uC)
       else:
         newOList.append(uC)
@@ -190,7 +183,6 @@ class Stage2:
   # plots current clusters          
   def plotClusters(self, uCs):
     # check if clusters are plottable
-    printInMagentaForDebugging("S2 plotclusters uCs" + uCs.__repr__())
     firstEl = uCs[0]
     if len(firstEl.CF.LS) != 2:
       print("UNABLE TO DRAW CLUSTERS: IT'S NOT A 2D DATASET")

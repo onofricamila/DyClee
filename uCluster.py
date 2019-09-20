@@ -74,12 +74,10 @@ class uCluster:
     # retunrs true if the uc is reachable from a given element
     def isReachableFrom(self, d):
         myCentroid = self.getCentroid()
-        printInBlueForDebugging("S1 isReachableFrom uc Centorid: " + myCentroid.__repr__())
         # for each feature
         for i in range(len(d)):
             # difference between the element feature and the cluster centroid for that feature
             aux = abs(d[i] - myCentroid[i])
-            printInBlueForDebugging("S1 isReachableFrom dif " + aux.__repr__())
             # if for a given feature the element doesn't match the cluster, return false
             if aux > (self.hyperboxSizePerFeature[i] / 2):
                 return False

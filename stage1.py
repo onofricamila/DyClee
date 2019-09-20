@@ -36,8 +36,6 @@ class Stage1:
             # processed_elements ++
             self.processedElements += 1
             
-            self.checkUpdatedListsFromStage2()
-            
             # find reachable u clusters for the new element
             reachableUcs = self.findReachableUcs(d)
             printInBlueForDebugging("S1 reachables: " + reachableUcs.__repr__())
@@ -46,34 +44,30 @@ class Stage1:
                 # the uC will have the parametrized relative size
                 uC = uCluster(self.relativeSize, d, self.dataContext)
                 self.oList.append(uC)
-                printInBlueForDebugging("S1 se creo u cluster: " + uC.__repr__())
                 
             else: 
                 # find closest reachable u cluster
                 closestUc = self.findClosestReachableUc(d, reachableUcs)
                 closestUc.addElement(d)
-                printInBlueForDebugging("S1 closestUc: " + closestUc.__repr__())
             if self.timeToSendMessage():
                 printInBlueForDebugging("S1 lists sent to s2")
                 self.sendListsToStage2()
                 self.resetProcessedElements()
+                self.checkUpdatedListsFromStage2()
         self.sendEndMsgToStage2()
 
 
 
     # checks if there's a msg from s2 so both u cluster lists must be updated
     def checkUpdatedListsFromStage2(self):
-        printInBlueForDebugging("S1 checkUpdatedListsFromStage2")
-        # to avoid unnecessary waiting
-        if not self.s2ToS1ComQueue.empty():
-            printInBlueForDebugging("S1 receiving lists from s2")
-            lists = self.s2ToS1ComQueue.get()
-            aList, oList = lists
-            # update both lists              
-            self.aList = aList    
-            self.oList = oList  
-            printInBlueForDebugging("alist: " + aList.__repr__())
-            printInBlueForDebugging("olist: " + oList.__repr__())
+          printInBlueForDebugging("S1 receiving lists from s2")
+          lists = self.s2ToS1ComQueue.get()
+          aList, oList = lists
+          # update both lists              
+          self.aList = aList    
+          self.oList = oList  
+          printInBlueForDebugging("alist: " + aList.__repr__())
+          printInBlueForDebugging("olist: " + oList.__repr__())
             
             
       
