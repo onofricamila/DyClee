@@ -205,7 +205,7 @@ class Stage2:
     x,y = zip(*centroids)
     print("S2 plotclusters uCs x: ", x)
     print("S2 plotclusters uCs y: ", y)
-    plt.scatter(*zip(*centroids), c=clusters, cmap="viridis", marker="s", s=100)
+    plt.scatter(*zip(*centroids), c=clusters, cmap="nipy_spectral", marker="s", s=100)
     plt.xlabel("Feature 1")
     plt.ylabel("Feature 2")
     plt.grid(color='k', linestyle=':', linewidth=1)
