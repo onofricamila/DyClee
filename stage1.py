@@ -54,7 +54,6 @@ class Stage1:
                 print("S1 time to send msg to s2")
                 self.sendListsToStage2()
                 self.resetProcessedElements()
-   
         self.sendEndMsgToStage2()
 
 

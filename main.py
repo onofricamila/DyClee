@@ -17,10 +17,10 @@ s1ToS2ComQueue = Queue()  # s1 will write to s2 there
 s2ToS1ComQueue = Queue()  # s2 will write to s1 there
 
 # stages
-s1 = Stage1(s1ToS2ComQueue, s2ToS1ComQueue, relativeSize=0.2) # default relative size = 1
-s2 = Stage2(s1ToS2ComQueue, s2ToS1ComQueue) # default uncommon dimensions = 0
+s1 = Stage1(s1ToS2ComQueue, s2ToS1ComQueue, relativeSize=1) # default relative size = 1
+s2 = Stage2(s1ToS2ComQueue, s2ToS1ComQueue, uncommonDimensions=1) # default uncommon dimensions = 0
 
-dataset = [[80, 100], [81, 101]]
+dataset = [[80, 100], [80, 101]]
 
 s1.formUcs(dataset) # send dataset to s1
 
