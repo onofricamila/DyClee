@@ -20,17 +20,20 @@ s2ToS1ComQueue = Queue()  # s2 will write to s1 there
 s1 = Stage1(s1ToS2ComQueue, s2ToS1ComQueue, relativeSize=1) # default relative size = 1
 s2 = Stage2(s1ToS2ComQueue, s2ToS1ComQueue, uncommonDimensions=1) # default uncommon dimensions = 0
 
-dataset = [[80, 100], [80, 101]]
-
-s1.formUcs(dataset) # send dataset to s1
+dataset = [[80, 100], [80, 101],]
 
 # start s2
-s2p = Process(target=s2.start(), args=())
+s2p = Process(target=s2.start, args=())
 s2p.daemon = True
 s2p.start()     # launch the stage2 process
 
+# start s1
+s1p = Process(target=s1.formUcs, args=(dataset,))
+s1p.daemon = True
+s1p.start()     # launch the stage1 process
 
-s2p.join()   # wait till the stage2 process finishes
     
+s1p.join()   # wait till the stage1 process finishes
+s2p.join()   # wait till the stage2 process finishes
 
 
