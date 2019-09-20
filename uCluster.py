@@ -13,7 +13,8 @@ import numpy as np
 
 class uCluster:
     
-    def __init__(self, relativeSize, d):
+    def __init__(self, relativeSize, d, dataContext):
+        self.dataContext = dataContext
         self.relativeSize = relativeSize
         self.CF = self.initializeCF(d)
         self.boundingBoxesList = self.initBoundingBoxesList(d)
@@ -48,8 +49,9 @@ class uCluster:
     def initBoundingBoxesList(self, d):
         boundingBoxesList = []
         
-        for f in d:
-            boundingBox = BoundingBox(minimun=f , maximun=f)
+        for i in range(len(d)):
+            offsetForF = ( self.dataContext[i][1] - self.dataContext[i][0] ) * 5/100
+            boundingBox = BoundingBox(minimun=d[i]-offsetForF , maximun=d[i]+offsetForF)
             boundingBoxesList.append(boundingBox)
         
         return boundingBoxesList

@@ -10,12 +10,13 @@ import matplotlib.pyplot as plt
 
 class Stage2:
   
-  def __init__(self, s1ToS2ComQueue, s2ToS1ComQueue, uncommonDimensions = 0):
+  def __init__(self, s1ToS2ComQueue, s2ToS1ComQueue, dataContext, uncommonDimensions = 0):
         # communication instance variables    
         self.s1ToS2ComQueue = s1ToS2ComQueue
         self.s2ToS1ComQueue = s2ToS1ComQueue
         
         # stage2 algo instance variables
+        self.dataContext = dataContext
         self.currentClusterId = 0
         self.mean = 0
         self.median = 0
@@ -205,10 +206,21 @@ class Stage2:
     x,y = zip(*centroids)
     print("S2 plotclusters uCs x: ", x)
     print("S2 plotclusters uCs y: ", y)
-    plt.scatter(*zip(*centroids), c=clusters, cmap="nipy_spectral", marker="s", s=100)
+    plt.scatter(x,y, c=clusters, cmap="nipy_spectral", marker="s", s=100)
+    
+    # set axes limits
+    unitX = ( self.dataContext[0][1] - self.dataContext[0][0] ) * 10/100
+    minAndMaxX = [self.dataContext[0][0] - unitX, self.dataContext[0][1] + unitX] 
+    
+    unitY = ( self.dataContext[1][1] - self.dataContext[1][0] ) * 10/100
+    minAndMaxY = [self.dataContext[1][0] - unitX, self.dataContext[1][1] + unitY] 
+    
+    axes = plt.gca()
+    axes.set_xlim(minAndMaxX)
+    axes.set_ylim(minAndMaxY)
+   
     plt.xlabel("Feature 1")
     plt.ylabel("Feature 2")
     plt.grid(color='k', linestyle=':', linewidth=1)
-    plt.axes().set_aspect('equal','datalim')
     plt.show()
       

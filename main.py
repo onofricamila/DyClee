@@ -16,11 +16,13 @@ s1ToS2ComQueue = Queue()  # s1 will write to s2 there
 # s2 to s1 communication queue
 s2ToS1ComQueue = Queue()  # s2 will write to s1 there
 
-# stages
-s1 = Stage1(s1ToS2ComQueue, s2ToS1ComQueue, relativeSize=1) # default relative size = 1
-s2 = Stage2(s1ToS2ComQueue, s2ToS1ComQueue, uncommonDimensions=1) # default uncommon dimensions = 0
+dataset = [[80, 100], [10, 105]]
+# min and max for each feature
+dataContext = [[0, 100], [0, 100]]
 
-dataset = [[80, 100], [80, 101],]
+# stages
+s1 = Stage1(s1ToS2ComQueue, s2ToS1ComQueue, dataContext, relativeSize=1) # default relative size = 1
+s2 = Stage2(s1ToS2ComQueue, s2ToS1ComQueue, dataContext, uncommonDimensions=0) # default uncommon dimensions = 0
 
 # start s2
 s2p = Process(target=s2.start, args=())

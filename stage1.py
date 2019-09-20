@@ -10,12 +10,13 @@ from uCluster import uCluster
 
 class Stage1:
     
-    def __init__(self, s1ToS2ComQueue, s2ToS1ComQueue, relativeSize=1, tGlobal=1):
+    def __init__(self, s1ToS2ComQueue, s2ToS1ComQueue, dataContext, relativeSize=1, tGlobal=1):
         # communication instance variables    
         self.s1ToS2ComQueue = s1ToS2ComQueue
         self.s2ToS1ComQueue = s2ToS1ComQueue  
       
         # stage1 algo instance variables
+        self.dataContext = dataContext
         self.relativeSize = relativeSize
         self.tGlobal = tGlobal        
         self.aList = []
@@ -41,7 +42,7 @@ class Stage1:
             if not reachableUcs:
                 # empty list -> create u cluster from element 
                 # the uC will have the parametrized relative size
-                uC = uCluster(self.relativeSize, d)
+                uC = uCluster(self.relativeSize, d, self.dataContext)
                 self.oList.append(uC)
                 print("S1 se creo u cluster: ", uC)
                 
