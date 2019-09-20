@@ -72,8 +72,8 @@ class Stage1:
             # update both lists              
             self.aList = aList    
             self.oList = oList  
-            printInBlueForDebugging("alist: ", aList)
-            printInBlueForDebugging("olist: ", oList)
+            printInBlueForDebugging("alist: " + aList.__repr__())
+            printInBlueForDebugging("olist: " + oList.__repr__())
             
             
       
