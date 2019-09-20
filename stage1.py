@@ -52,7 +52,7 @@ class Stage1:
                 closestUc.addElement(d)
                 print("S1 closestUc: ", closestUc)
             if self.timeToSendMessage():
-                print("S1 time to send msg to s2")
+                print("S1 lists sendt to s2")
                 self.sendListsToStage2()
                 self.resetProcessedElements()
         self.sendEndMsgToStage2()

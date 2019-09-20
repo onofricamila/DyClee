@@ -51,18 +51,23 @@ class Stage2:
     print("S2 updateLists")
     aList, oList = lists
     
-    newAList = aList
-    newOList = oList
+    print("S2 updateLists original aList: ", aList)
+    print("S2 updateLists original oList: ", oList)
+
+    newAList = []
+    newOList = []
     
     for uC in aList:
+      print("S2 updateLists aList: uC", uC)
       if self.isOutlier(uC):
-        newAList.remove(uC)
+        print("S2 updateLists aList: uC debe ir a oList")
         newOList.append(uC)
         
     for uC in oList:
+      print("S2 updateLists oList: uC", uC)
       if self.isDense(uC) or self.isSemiDense(uC):
+        print("S2 updateLists oList: uC debe ir a aList")
         newAList.append(uC)
-        newOList.remove(uC)
         
     return (newAList, newOList)
         
@@ -87,7 +92,7 @@ class Stage2:
     
     # it's unnecessary to look for dense uCs in the oList
     DMC = self.findDenseUcs(updatedAList)
-    
+    print("s2 formClusters DMC", DMC)
     alreadySeen = []
     
     for denseUc in DMC:
@@ -179,7 +184,6 @@ class Stage2:
     # check if clusters are plottable
     print("S2 plotclusters uCs", uCs)
     firstEl = uCs[0]
-    print("S2 plotclusters uCs firstEl", firstEl)
     if len(firstEl.CF.LS) != 2:
       print("UNABLE TO DRAW CLUSTERS: IT'S NOT A 2D DATASET")
       return
