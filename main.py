@@ -9,6 +9,7 @@ Created on Sun Sep 15 15:56:58 2019
 from stage1 import Stage1
 from stage2 import Stage2
 from multiprocessing import Process, Queue
+from datasets import pilot, forming2uCs, addingElToUc, choosingClosestReachableUc, fromUcToNoise, fromUcToNoiseV2, formingManyUcs, dataContext
 
 # s1 to s2 communication queue
 s1ToS2ComQueue = Queue()  # s1 will write to s2 there
@@ -16,29 +17,7 @@ s1ToS2ComQueue = Queue()  # s1 will write to s2 there
 # s2 to s1 communication queue
 s2ToS1ComQueue = Queue()  # s2 will write to s1 there
 
-# pilot 
-#dataset = [[2, 10]]
-
-# test se forman 2 uC distintos
-#dataset = [[2, 10], [80, 100]]
-
-# test elemento added to uC (ver cambio en densidad)
-#dataset = [[2, 10], [1, 9]]
-
-# test closest reachable
-#dataset = [[2, 10], [11, 19], [7, 15]]
-
-# test primero son 2 uc y luego el uc 2 se combierte en ruido
-#dataset = [[2, 10], [80, 100], [1, 9]]
-
-# test primero son 2 uc y luego el uc 2 se combierte en ruido con mas datos
-dataset = [[2, 10], [1, 9], [80, 100], [83, 98], [5, 13]]
-
-# test pasaje uc a ruido con mas elementos
-#dataset = [[2, 10], [30, 40], [1, 9], [80, 100]]
-
-# min and max for each feature
-dataContext = [[0, 100], [0, 100]]
+dataset = fromUcToNoiseV2
 
 # stages
 s1 = Stage1(s1ToS2ComQueue, s2ToS1ComQueue, dataContext, relativeSize=1) # default relative size = 1
