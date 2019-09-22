@@ -18,8 +18,10 @@ s2ToS1ComQueue = Queue()  # s2 will write to s1 there
 
 #dataset = [[2, 10]]
 #dataset = [[2, 10], [80, 100]]
+dataset = [[2, 10], [1, 9]]
 #dataset = [[2, 10], [80, 100], [1, 9]]
-dataset = [[2, 10], [30, 40], [1, 9], [80, 100]]
+#dataset = [[2, 10], [1, 9], [80, 100]]
+#dataset = [[2, 10], [30, 40], [1, 9], [80, 100]]
 
 # min and max for each feature
 dataContext = [[0, 100], [0, 100]]

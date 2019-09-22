@@ -147,7 +147,7 @@ class uCluster:
     def updateBoundingBoxesList(self, d):
         for i in range(len(d)):
             mini = min(d[i], self.boundingBoxesList[i].minimun)
-            maxi = min(d[i], self.boundingBoxesList[i].maximun)
+            maxi = max(d[i], self.boundingBoxesList[i].maximun)
             boundingBox = BoundingBox(minimun=mini , maximun=maxi)
             self.boundingBoxesList[i] = boundingBox
 

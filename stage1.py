@@ -60,7 +60,7 @@ class Stage1:
 
     # checks if there's a msg from s2 so both u cluster lists must be updated
     def checkUpdatedListsFromStage2(self):
-          printInBlueForDebugging("S1 receiving lists from s2")
+          printInBlueForDebugging("S1 waiting for lists from s2")
           lists = self.s2ToS1ComQueue.get()
           aList, oList = lists
           # update both lists              
