@@ -31,8 +31,8 @@ s2ToS1ComQueue = Queue()  # s2 will write to s1 there
 # test primero son 2 uc y luego el uc 2 se combierte en ruido
 #dataset = [[2, 10], [80, 100], [1, 9]]
 
-# test no importa el orden para lo anterior
-#dataset = [[2, 10], [1, 9], [80, 100]]
+# test primero son 2 uc y luego el uc 2 se combierte en ruido con mas datos
+dataset = [[2, 10], [1, 9], [80, 100], [83, 98], [5, 13]]
 
 # test pasaje uc a ruido con mas elementos
 #dataset = [[2, 10], [30, 40], [1, 9], [80, 100]]
