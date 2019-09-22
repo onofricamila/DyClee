@@ -16,11 +16,19 @@ s1ToS2ComQueue = Queue()  # s1 will write to s2 there
 # s2 to s1 communication queue
 s2ToS1ComQueue = Queue()  # s2 will write to s1 there
 
+# pilot 
 #dataset = [[2, 10]]
+# test se forman 2 uC distintos
 #dataset = [[2, 10], [80, 100]]
-dataset = [[2, 10], [1, 9]]
+# test elemento added to uC (ver cambio en densidad)
+#dataset = [[2, 10], [1, 9]]
+# test closest reachable
+dataset = [[2, 10], [1, 9], [2, 9]]
+# test primero son 2 uc y luego el uc 2 se combierte en ruido
 #dataset = [[2, 10], [80, 100], [1, 9]]
+# test no importa el orden para lo anterior
 #dataset = [[2, 10], [1, 9], [80, 100]]
+# test pasaje uc a ruido con mas elementos
 #dataset = [[2, 10], [30, 40], [1, 9], [80, 100]]
 
 # min and max for each feature
