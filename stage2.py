@@ -210,7 +210,7 @@ class Stage2:
     x,y = zip(*centroids)
     printInMagentaForDebugging("S2 plotclusters uCs x: " + x.__repr__())
     printInMagentaForDebugging("S2 plotclusters uCs y: " + y.__repr__())
-    plt.scatter(x,y, c=clusters, cmap="nipy_spectral", marker="s", s=100)
+    plt.scatter(x,y, c=clusters, cmap="nipy_spectral", marker="s", s=75)
     
     # set axes limits
     unitX = ( self.dataContext[0][1] - self.dataContext[0][0] ) * 10/100

@@ -38,7 +38,7 @@ testingDatasetsContext = [[0, 100], [0, 100]]
 
 # Sklearn datasets ------------------------------------------------------------
 
-nSamples = 1000
+nSamples = 100
 noise = None
 
 
@@ -60,7 +60,7 @@ noisyCirclesDatasetContext = [[minX, maxX], [minY, maxY]]
 
 # noisy moons
 noisy_moons = datasets.make_moons(n_samples=nSamples, noise=noise)[0]
-noisyMoonsDataset = noisy_circles.tolist()
+noisyMoonsDataset = noisy_moons.tolist()
 
 x,y = zip(*noisyMoonsDataset)
 
