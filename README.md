@@ -9,7 +9,7 @@ Note that this implementation only takes a few possible configurations into acco
 The subset of parameters that can be passed to the algorithm are listed below:
 * relative size
 * t global
-* uncommonDimensions
+* uncommon dimensions
 
 Finally, the global approach is used in the density-based stage. 
 
