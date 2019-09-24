@@ -5,6 +5,9 @@ Created on Sun Sep 22 20:03:56 2019
 
 @author: camila
 """
+from sklearn import datasets
+
+# Datasets for testing --------------------------------------------------------
 
 # pilot 
 pilot = [[2, 10]]
@@ -29,4 +32,76 @@ formingManyUcs = [[2, 10], [30, 40], [1, 9], [80, 100]]
 
 
 # min and max for each feature
-dataContext = [[0, 100], [0, 100]]
+testingDatasetsContext = [[0, 100], [0, 100]]
+
+
+
+# Sklearn datasets ------------------------------------------------------------
+
+nSamples = 1000
+noise = None
+
+
+
+# noisy circles
+noisy_circles = datasets.make_circles(n_samples=nSamples, factor=.5, noise=noise)[0]
+noisyCirclesDataset = noisy_circles.tolist()
+
+x,y = zip(*noisyCirclesDataset)
+
+maxX = max(x)
+maxY = max(y)
+minX = min(x)
+minY = min(y)
+
+noisyCirclesDatasetContext = [[minX, maxX], [minY, maxY]]
+
+
+
+# noisy moons
+noisy_moons = datasets.make_moons(n_samples=nSamples, noise=noise)[0]
+noisyMoonsDataset = noisy_circles.tolist()
+
+x,y = zip(*noisyMoonsDataset)
+
+maxX = max(x)
+maxY = max(y)
+minX = min(x)
+minY = min(y)
+
+noisyMoonsDatasetContext = [[minX, maxX], [minY, maxY]]
+
+
+
+# blobs
+noisy_circles = datasets.make_blobs(n_samples=nSamples)[0]
+blobsDataset = noisy_circles.tolist()
+
+x,y = zip(*blobsDataset)
+
+maxX = max(x)
+maxY = max(y)
+minX = min(x)
+minY = min(y)
+
+blobsDatasetContext = [[minX, maxX], [minY, maxY]]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -9,7 +9,10 @@ Created on Sun Sep 15 15:56:58 2019
 from stage1 import Stage1
 from stage2 import Stage2
 from multiprocessing import Process, Queue
-from datasets import pilot, forming2uCs, addingElToUc, choosingClosestReachableUc, fromUcToNoise, fromUcToNoiseV2, formingManyUcs, dataContext
+from datasets import pilot, forming2uCs, addingElToUc, choosingClosestReachableUc, fromUcToNoise, fromUcToNoiseV2, formingManyUcs, testingDatasetsContext
+from datasets import noisyCirclesDataset, noisyCirclesDatasetContext
+from datasets import noisyMoonsDataset, noisyMoonsDatasetContext
+from datasets import blobsDataset, blobsDatasetContext
 
 # s1 to s2 communication queue
 s1ToS2ComQueue = Queue()  # s1 will write to s2 there
@@ -17,7 +20,9 @@ s1ToS2ComQueue = Queue()  # s1 will write to s2 there
 # s2 to s1 communication queue
 s2ToS1ComQueue = Queue()  # s2 will write to s1 there
 
-dataset = fromUcToNoiseV2
+# chosen dataset
+dataset = blobsDataset
+dataContext = blobsDatasetContext
 
 # stages
 s1 = Stage1(s1ToS2ComQueue, s2ToS1ComQueue, dataContext, relativeSize=1) # default relative size = 1
