@@ -35,12 +35,42 @@ class Stage1:
     def start(self, dataset):
         self.calculateMeanAndSD(dataset)
         printInBlueForDebugging("S1 updated mean: " + self.meanList.__repr__() + " n sd: " + self.SDList.__repr__())
-        exit()
-        self.formUcs(dataset)
+        scaledDataset = self.scaleDataset(dataset)
+        printInBlueForDebugging("S1 scaled dataset: " + scaledDataset.__repr__())
+        self.formUcs(scaledDataset)
         
         
         
         
+    def scaleDataset(self, dataset):
+        res = []
+        # for each element
+        for i in range(len(dataset)):
+            scaledEl = self.scaleDatasetElement(dataset[i])
+            res.append(scaledEl) 
+        return res
+    
+
+          
+              
+    def scaleDatasetElement(self, el):
+        scaledEl = []
+        # for each dimension
+        for fIndex in range(len(el)):
+            fValue = el[fIndex]
+            scaledFeature = self.scaleDatasetElementFeature(fValue, fIndex)
+            scaledEl.append(scaledFeature)
+        return scaledEl
+    
+    
+    
+    
+    def scaleDatasetElementFeature(self, fValue, fIndex):
+        return (fValue - self.meanList[fIndex]) / self.SDList[fIndex]
+        
+    
+    
+    
     def formUcs(self, dataset):
     # ASSUMPTIONS: dataset es un vector de vectores    
         printInBlueForDebugging("S1 formUcs")
