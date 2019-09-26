@@ -32,12 +32,17 @@ class Stage1:
     
     
     # main method
-    def formUcs(self, dataset):
-    # ASSUMPTIONS: dataset es un vector de vectores    
-        # calculate mean and SD
+    def start(self, dataset):
         self.calculateMeanAndSD(dataset)
         printInBlueForDebugging("S1 updated mean: " + self.meanList.__repr__() + " n sd: " + self.SDList.__repr__())
         exit()
+        self.formUcs(dataset)
+        
+        
+        
+        
+    def formUcs(self, dataset):
+    # ASSUMPTIONS: dataset es un vector de vectores    
         printInBlueForDebugging("S1 formUcs")
         
         for d in dataset:

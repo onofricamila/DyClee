@@ -7,10 +7,14 @@ Created on Thu Sep 26 12:30:17 2019
 """
 
 # helper functions
+
 def _ss(data, mean):
     """Return sum of square deviations of sequence data."""
     ss = sum((x-mean)**2 for x in data)
     return ss
+
+
+
 
 def stddev(data, mean, ddof=0):
     """Calculates the population standard deviation

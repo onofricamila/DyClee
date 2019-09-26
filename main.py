@@ -29,7 +29,7 @@ s1 = Stage1(s1ToS2ComQueue, s2ToS1ComQueue, dataContext, relativeSize=1, tGlobal
 s2 = Stage2(s1ToS2ComQueue, s2ToS1ComQueue, dataContext, uncommonDimensions=0) # default uncommon dimensions = 0
 
 # start s1
-s1p = Process(target=s1.formUcs, args=(dataset,))
+s1p = Process(target=s1.start, args=(dataset,))
 s1p.daemon = True
 s1p.start()     # launch the stage1 process
 
