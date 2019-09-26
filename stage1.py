@@ -37,6 +37,7 @@ class Stage1:
         printInBlueForDebugging("S1 updated mean: " + self.meanList.__repr__() + " n sd: " + self.SDList.__repr__())
         scaledDataset = self.scaleDataset(dataset)
         printInBlueForDebugging("S1 scaled dataset: " + scaledDataset.__repr__())
+        exit()
         self.formUcs(scaledDataset)
         
         
