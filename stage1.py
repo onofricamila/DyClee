@@ -8,7 +8,7 @@ Created on Tue Sep 10 14:35:06 2019
 
 from uCluster import uCluster
 from customizedPrinting import printInBlueForDebugging
-
+from mathHelperFunctions import stddev
   
 class Stage1:
     
@@ -24,11 +24,20 @@ class Stage1:
         self.aList = []
         self.oList = []
         self.processedElements = 0
+        
+        # to be calculated when the dataset is received
+        self.meanList = []
+        self.SDList = []
+
     
     
     # main method
     def formUcs(self, dataset):
     # ASSUMPTIONS: dataset es un vector de vectores    
+        # calculate mean and SD
+        self.calculateMeanAndSD(dataset)
+        printInBlueForDebugging("S1 updated mean: " + self.meanList.__repr__() + " n sd: " + self.SDList.__repr__())
+        exit()
         printInBlueForDebugging("S1 formUcs")
         
         for d in dataset:
@@ -56,6 +65,37 @@ class Stage1:
                 self.checkUpdatedListsFromStage2()
         self.sendEndMsgToStage2()
 
+
+
+
+    def calculateMeanAndSD(self, dataset):
+        n = len(dataset)
+        printInBlueForDebugging("n: " + n.__repr__())
+        # sample taken to get the ammount of features
+        anElement = dataset[0]
+        printInBlueForDebugging("anElement: " + anElement.__repr__())
+        # for each feature
+        for fIndex in range(len(anElement)):
+            acPerFeature = 0
+            fValuesList = []
+            # for each element in dataset
+            for i in range(n):  
+                el = dataset[i]
+                fValue = el[fIndex]
+                printInBlueForDebugging("fValue: " + fValue.__repr__())
+                acPerFeature += fValue
+                # to later obtain ssdev
+                fValuesList.append(fValue)
+            
+            printInBlueForDebugging("fValuesList: " + fValuesList.__repr__())
+                
+            featureMean = acPerFeature / n
+            printInBlueForDebugging("featureMean: " + featureMean.__repr__())
+            self.meanList.append(featureMean)
+            featureSD = stddev(data=fValuesList, mean=featureMean)
+            self.SDList.append(featureSD)
+
+        
 
 
     # checks if there's a msg from s2 so both u cluster lists must be updated
