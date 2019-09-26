@@ -51,8 +51,7 @@ class uCluster:
         boundingBoxesList = []
         
         for i in range(len(d)):
-            offsetForF = ( self.dataContext[i][1] - self.dataContext[i][0] ) * 5/100
-            boundingBox = BoundingBox(minimun=d[i]-offsetForF , maximun=d[i]+offsetForF)
+            boundingBox = BoundingBox(minimun=-2 , maximun=2)
             boundingBoxesList.append(boundingBox)
         
         return boundingBoxesList
