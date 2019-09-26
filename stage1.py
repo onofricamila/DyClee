@@ -12,13 +12,12 @@ from mathHelperFunctions import stddev
   
 class Stage1:
     
-    def __init__(self, s1ToS2ComQueue, s2ToS1ComQueue, dataContext, relativeSize=1, tGlobal=1):
+    def __init__(self, s1ToS2ComQueue, s2ToS1ComQueue, relativeSize=1, tGlobal=1):
         # communication instance variables    
         self.s1ToS2ComQueue = s1ToS2ComQueue
         self.s2ToS1ComQueue = s2ToS1ComQueue  
       
         # stage1 algo instance variables
-        self.dataContext = dataContext
         self.relativeSize = relativeSize
         self.tGlobal = tGlobal        
         self.aList = []
@@ -37,7 +36,6 @@ class Stage1:
         printInBlueForDebugging("S1 updated mean: " + self.meanList.__repr__() + " n sd: " + self.SDList.__repr__())
         scaledDataset = self.scaleDataset(dataset)
         printInBlueForDebugging("S1 scaled dataset: " + scaledDataset.__repr__())
-        exit()
         self.formUcs(scaledDataset)
         
         
@@ -87,7 +85,7 @@ class Stage1:
             if not reachableUcs:
                 # empty list -> create u cluster from element 
                 # the uC will have the parametrized relative size
-                uC = uCluster(self.relativeSize, d, self.dataContext)
+                uC = uCluster(self.relativeSize, d)
                 self.oList.append(uC)
                 
             else: 

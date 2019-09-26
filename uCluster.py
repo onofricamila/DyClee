@@ -14,8 +14,7 @@ from customizedPrinting import printInBlueForDebugging
 
 class uCluster:
     
-    def __init__(self, relativeSize, d, dataContext):
-        self.dataContext = dataContext
+    def __init__(self, relativeSize, d):
         self.relativeSize = relativeSize
         self.CF = self.initializeCF(d)
         self.boundingBoxesList = self.initBoundingBoxesList(d)

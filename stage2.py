@@ -12,13 +12,12 @@ from customizedPrinting import printInMagentaForDebugging
 
 class Stage2:
   
-  def __init__(self, s1ToS2ComQueue, s2ToS1ComQueue, dataContext, uncommonDimensions = 0):
+  def __init__(self, s1ToS2ComQueue, s2ToS1ComQueue, uncommonDimensions = 0):
         # communication instance variables    
         self.s1ToS2ComQueue = s1ToS2ComQueue
         self.s2ToS1ComQueue = s2ToS1ComQueue
         
         # stage2 algo instance variables
-        self.dataContext = dataContext
         self.currentClusterId = 0
         self.mean = 0
         self.median = 0
@@ -199,30 +198,18 @@ class Stage2:
     # get uCs centroids
     centroids = [uC.getCentroid() for uC in uCs]
     
-    # scatter needs 2 params: xs n ys (all values for dimension1 and all for d2);
-    # 2 separate lists with those values, considering same index = same element values 
-    # 1° extract centroids from centroids list
-    # 2° generate an iterator with 2 elements: a list of xs and a list of ys
-    # 3° get both lists
-    
-    # same as: 
-    # x,y = zip(*centroids) plus plt.scatter(x, y)
     x,y = zip(*centroids)
     printInMagentaForDebugging("S2 plotclusters uCs x: " + x.__repr__())
     printInMagentaForDebugging("S2 plotclusters uCs y: " + y.__repr__())
     plt.scatter(x,y, c=clusters, cmap="nipy_spectral", marker="s", s=75)
     
     # set axes limits
-    unitX = ( self.dataContext[0][1] - self.dataContext[0][0] ) * 10/100
-    minAndMaxX = [self.dataContext[0][0] - unitX, self.dataContext[0][1] + unitX] 
-    
-    unitY = ( self.dataContext[1][1] - self.dataContext[1][0] ) * 10/100
-    minAndMaxY = [self.dataContext[1][0] - unitX, self.dataContext[1][1] + unitY] 
+    minAndMaxDeviations = [-6, 6]
     
     axes = plt.gca()
-    axes.set_xlim(minAndMaxX)
-    axes.set_ylim(minAndMaxY)
-   
+    axes.set_xlim(minAndMaxDeviations)
+    axes.set_ylim(minAndMaxDeviations)
+    
     plt.xlabel("Feature 1")
     plt.ylabel("Feature 2")
     plt.grid(color='k', linestyle=':', linewidth=1)
