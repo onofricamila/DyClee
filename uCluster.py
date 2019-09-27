@@ -82,8 +82,8 @@ class uCluster:
               maxDiff = diff
               featureIndex = i
         # if for the max diff feature the element doesn't match the cluster, return false
-        if maxDiff > (self.hyperboxSizePerFeature[featureIndex] / 2):
-          return False
+        if maxDiff >= (self.hyperboxSizePerFeature[featureIndex] / 2):
+            return False
         # the element fits the u cluster
         return True
         
@@ -109,9 +109,9 @@ class uCluster:
         self.updateSS(d)
         self.updateCentroid()
         
-        # needs to check if bounding boxes change and recalculate hyperbox size
-        self.updateBoundingBoxesList(d)
-        self.updateHyperboxSizePerFeature()
+#        # needs to check if bounding boxes change and recalculate hyperbox size
+#        self.updateBoundingBoxesList(d)
+#        self.updateHyperboxSizePerFeature()
         
         # then update u cluster density
         self.updateD(d)
