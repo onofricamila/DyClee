@@ -38,13 +38,13 @@ testingDatasetsContext = [[0, 100], [0, 100]]
 
 # Sklearn datasets ------------------------------------------------------------
 
-nSamples = 100
+nSamples = 1500
 noise = None
 
 
 
 # noisy circles
-noisy_circles = datasets.make_circles(n_samples=nSamples, factor=.5, noise=noise)[0]
+noisy_circles = datasets.make_circles(n_samples=nSamples, factor=0.3, noise=noise)[0]
 noisyCirclesDataset = noisy_circles.tolist()
 
 x,y = zip(*noisyCirclesDataset)

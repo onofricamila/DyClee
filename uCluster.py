@@ -170,8 +170,7 @@ class uCluster:
       return (self.label is -1)
     
     
-    # we assumw all dimensions must match
-    # retunrs true (1) if the uc is directly connected to another uc
+    # retunrs true if the uC is directly connected to another uC
     def isDirectlyConnectedWith(self, uC, uncommonDimensions):
       featuresCount = len(self.CF.LS)
       currentUncommonDimensions = 0
