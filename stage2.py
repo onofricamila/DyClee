@@ -201,10 +201,10 @@ class Stage2:
     x,y = zip(*centroids)
     printInMagentaForDebugging("S2 plotclusters uCs x: " + x.__repr__())
     printInMagentaForDebugging("S2 plotclusters uCs y: " + y.__repr__())
-    plt.scatter(x,y, c=clusters, cmap="nipy_spectral", marker="s", s=75)
+    plt.scatter(x,y, c=clusters, cmap="nipy_spectral", marker="s", s=50)
     
     # set axes limits
-    minAndMaxDeviations = [-6, 6]
+    minAndMaxDeviations = [-3, 3]
     
     axes = plt.gca()
     axes.set_xlim(minAndMaxDeviations)
