@@ -81,6 +81,8 @@ class Stage2:
     updatedAList, updatedOList = updatedLists
     # join lists to get all the u clusters together
     uCs = updatedAList + updatedOList
+    # reset uCs labels as -1
+    self.resetLabelsAsUnclass(updatedAList)
     # it's unnecessary to look for dense uCs in the oList
     DMC = self.findDenseUcs(updatedAList)
     alreadySeen = []
@@ -117,6 +119,13 @@ class Stage2:
     
     
         
+  def resetLabelsAsUnclass(self, uCs):
+    for uC in uCs:
+      uC.label = -1
+    
+  
+  
+  
   def calculateMeanFor(self, uCs):   
      return  np.mean([uC.CF.D for uC in uCs])
      

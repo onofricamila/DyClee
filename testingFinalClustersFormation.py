@@ -5,6 +5,7 @@ Created on Sat Sep 28 12:54:58 2019
 
 @author: camila
 """
+# todas las pruebas de aca se hacen con u clusters de = densidad
 
 from uCluster import uCluster
 from stage2 import Stage2
@@ -65,10 +66,22 @@ print(uC1.isDirectlyConnectedWith(uC6, 0)) # --> false
 # TESTING FORM CLUSTERS S2 METHOD --> 
 s2 = Stage2(s1ToS2ComQueue, s2ToS1ComQueue)
 
+# uL1
 aL1 = [uC1, uC2, uC4]
 oL1 = []
 uL1 = [aL1, oL1] 
 
-# TEST 1°: 3 u clusters forman un cluster final por transicion: uc1 -> uc2 -> 4 
-s2.formClusters(uL1) # --> :)
+# uL2
+aL2 = [uC1, uC2, uC3, uC4, uC5, uC6]
+oL2 = []
+uL2 = [aL2, oL2] 
 
+
+
+# TEST 1°: 3 u clusters forman un cluster final por transicion: uc1 -> uc2 -> 4 
+s2.formClusters(uL1) # --> 1 cluster :)
+
+# TEST 2°: 5 u clusters forman 3 clusters finales:
+# uc1 -> uc2 -> uc4     , uc5,  uc6
+#     -> u3
+s2.formClusters(uL2) # --> 3 clusters :)
