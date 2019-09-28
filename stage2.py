@@ -53,18 +53,14 @@ class Stage2:
     newAList = []
     newOList = []
     
-    for uC in aList:
+    concatenatedLists = aList + oList
+    
+    for uC in concatenatedLists:
       if self.isOutlier(uC):
         newOList.append(uC)
       else:
+        # uC is dense or semi dense
         newAList.append(uC)
-        
-        
-    for uC in oList:
-      if self.isDense(uC) or self.isSemiDense(uC):
-        newAList.append(uC)
-      else:
-        newOList.append(uC)
         
     return (newAList, newOList)
         
