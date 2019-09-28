@@ -91,6 +91,9 @@ class Stage1:
                 self.sendListsToStage2()
                 self.resetProcessedElements()
                 self.checkUpdatedListsFromStage2()
+        # TODO: remove the following block when workiing w streams
+        if len(dataset) < self.tGlobal:
+          self.sendListsToStage2()
         self.sendEndMsgToStage2()
 
 

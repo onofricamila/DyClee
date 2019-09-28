@@ -38,7 +38,7 @@ testingDatasetsContext = [[0, 100], [0, 100]]
 
 # Sklearn datasets ------------------------------------------------------------
 
-nSamples = 1500
+nSamples = 3
 noise = None # 0.05
 
 
