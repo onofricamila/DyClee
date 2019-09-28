@@ -71,3 +71,4 @@ uL1 = [aL1, oL1]
 
 # TEST 1°: 3 u clusters forman un cluster final por transicion: uc1 -> uc2 -> 4 
 s2.formClusters(uL1) # --> :)
+
