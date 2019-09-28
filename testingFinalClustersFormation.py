@@ -96,9 +96,14 @@ oL4 = [uC2, uC3]
 uL4 = (aL4, oL4) 
 
 # uL5
-aL5 = [uC1, uC4, uC5, uC6, uC7, uC8, uC9]
+aL5 = [uC1, uC3, uC4, uC5, uC6, uC7, uC8, uC9]
 oL5 = [uC2]
 uL5 = (aL5, oL5) 
+
+# uL6
+aL6 = [uC1, uC2, uC3, uC4, uC5, uC6, uC7, uC8, uC9]
+oL6 = []
+uL6 = (aL6, oL6) 
 
 # TEST 1°: 
 # oList vacia
@@ -129,6 +134,12 @@ s2.formClusters(uL4) # --> 4 clusters + noise v2
 # TEST 5°:
 # oList con uC2 -> el uC1 no tiene como llegar al 4
 # deberian formarse 4 clusters
-# uC1,    uC4 -> uC3,    uC5,    uC6
-# + uC2 como outliers
-s2.formClusters(uL5) # --> 4 clusters + noise v2
+# uC1,    uC4 -> uC7 -> uC8 -> uC9,    uC5,    uC6
+# + uC2 como outlier
+s2.formClusters(uL5) # --> 4 clusters + noise v3
+
+# TEST 6°:
+# oList vacia
+# uC1 -> uC2 -> uC4 -> uC7 -> uC8 -> uC9,   uC3,    uC5,    uC6
+s2.formClusters(uL6) # --> 
+
