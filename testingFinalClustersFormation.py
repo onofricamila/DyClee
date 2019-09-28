@@ -104,4 +104,9 @@ s2.formClusters(uL2) # --> 3 clusters :)
 # + uC2 como outlier
 s2.formClusters(uL3) # --> 4 clusters + noise
 
+# TEST 4°:
+# oList con uC3 y uC2 -> el uC1 no tiene como llegar al 4
+# deberian formarse 4 clusters
+# uC1,    uC4,    uC5,    uC6
+# + uC2 y uC3 como outliers
 s2.formClusters(uL4) # --> 4 clusters + noise v2
