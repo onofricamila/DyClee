@@ -116,7 +116,7 @@ class uCluster:
 #        self.updateHyperboxSizePerFeature()
         
         # then update u cluster density
-        self.CF.D = self.updateD()
+        self.updateD()
         
         
         
@@ -163,7 +163,7 @@ class uCluster:
         
         
     def updateD(self):
-      return self.getD(n = self.CF.n)
+      self.CF.D = self.getD(n = self.CF.n)
     
     
       
