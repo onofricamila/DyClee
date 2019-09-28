@@ -54,6 +54,11 @@ uC8 = uCluster(rs, d8)
 d9 = [0, 1.60]
 uC9 = uCluster(rs, d9)
 
+# uc10
+d10 = [-0.05, 1.60]
+uC10 = uCluster(rs, d10)
+
+
 # TESTING IS DIRECTECTLY CONNECTED U CLUSTER METHOD --> all tests passed :)
 # TEST 1°: uC2 llega a ser directly conn con uC1
 print(uC1.isDirectlyConnectedWith(uC2, 0)) # --> true
@@ -70,6 +75,8 @@ print(uC1.isDirectlyConnectedWith(uC5, 0)) # --> false
 # TEST 4°: uC6 no llega a ser directly conn con uC1 por lo que vale la dim 2
 print(uC1.isDirectlyConnectedWith(uC6, 0)) # --> false
 
+# TEST 5°: uC8 y uC10 estan directamente conectados
+print(uC10.isDirectlyConnectedWith(uC8, 0)) # --> true
 
 
 # TESTING FORM CLUSTERS S2 METHOD --> 
