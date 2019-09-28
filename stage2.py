@@ -24,6 +24,8 @@ class Stage2:
         self.uncommonDimensions = uncommonDimensions
         
         
+        
+        
   def start(self):
     while True:
       # wait for lists from s1
@@ -41,6 +43,7 @@ class Stage2:
       self.s2ToS1ComQueue.put(updatedLists)
       # form clusters
       self.formClusters(updatedLists)
+
 
 
 
@@ -67,12 +70,14 @@ class Stage2:
         
 
 
+
   def updateMeanAndMedian(self, lists):
     aList, oList = lists
     concatenatedLists = aList + oList
     self.mean = self.calculateMeanFor(concatenatedLists)
     self.median = self.calculateMedianFor(concatenatedLists)     
     
+  
   
   
   def formClusters(self, updatedLists):
@@ -119,10 +124,12 @@ class Stage2:
     self.plotClusters(uCs)
     
     
+    
         
   def calculateMeanFor(self, uCs):   
      return  np.mean([uC.CF.D for uC in uCs])
      
+   
    
     
   def calculateMedianFor(self, uCs):   
@@ -159,10 +166,12 @@ class Stage2:
   
   
   
+  
   def hasntBeenSeen(self, uC, alreadySeen):
     return (uC not in alreadySeen)
     
      
+  
 
   def findDirectlyConnectedUcsFor(self, uC, uCs):
     res = []
