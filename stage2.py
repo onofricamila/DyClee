@@ -18,7 +18,6 @@ class Stage2:
         self.s2ToS1ComQueue = s2ToS1ComQueue
         
         # stage2 algo instance variables
-        self.currentClusterId = 0
         self.densityMean = 0
         self.densityMedian = 0
         self.uncommonDimensions = uncommonDimensions
@@ -31,7 +30,6 @@ class Stage2:
       # wait for lists from s1
       msg = self.s1ToS2ComQueue.get()
       if msg == "DONE":
-        printInMagentaForDebugging("s2 received DONE !!!!!!!!")
         break
       # uC lists were received 
       lists = msg
@@ -77,33 +75,30 @@ class Stage2:
   
   
   def formClusters(self, updatedLists):
-    # reset currentClusterId
-    self.currentClusterId = 0
+    # init currentClusterId
+    currentClusterId = 0
     # extract lists
     updatedAList, updatedOList = updatedLists
-    printInMagentaForDebugging("s2 formClusters")
     # join lists to get all the u clusters together
     uCs = updatedAList + updatedOList
-    
     # it's unnecessary to look for dense uCs in the oList
     DMC = self.findDenseUcs(updatedAList)
-    printInMagentaForDebugging("s2 formClusters DMC" + DMC.__repr__())
     alreadySeen = []
     
     for denseUc in DMC:
       if self.hasntBeenSeen(denseUc, alreadySeen):
         alreadySeen.append(denseUc)
         if denseUc.hasUnclassLabel():
-          self.currentClusterId += 1
-          denseUc.label = self.currentClusterId
-          
+          currentClusterId += 1
+          denseUc.label = currentClusterId
+
         connectedUcs = self.findDirectlyConnectedUcsFor(denseUc, uCs)
         
         i = 0
         while i < len(connectedUcs):  
           conUc = connectedUcs[i]
           if self.isDense(conUc):
-            conUc.label = self.currentClusterId
+            conUc.label = currentClusterId
             alreadySeen.append(conUc)
             newConnectedUcs = self.findDirectlyConnectedUcsFor(conUc, uCs)
           
@@ -112,7 +107,7 @@ class Stage2:
                 if self.isDense(newNeighbour):
                   connectedUcs.append(newNeighbour)
               
-                newNeighbour.label = self.currentClusterId
+                newNeighbour.label = currentClusterId
             
           i += 1
         
@@ -192,15 +187,15 @@ class Stage2:
     labelsPerUCluster = [uC.label for uC in uCs]
     # clusters will be a sequence of numbers (cluster number or -1) for each point in the dataset
     clusters = np.array(labelsPerUCluster)
-    printInMagentaForDebugging("S2 plotclusters uCs CLUSTERS: " + clusters.__repr__())
+    printInMagentaForDebugging("S2 plotclusters uCs CLUSTERS: " + '\n' + clusters.__repr__() + '\n')
     
     # get uCs centroids
     centroids = [uC.getCentroid() for uC in uCs]
     
     x,y = zip(*centroids)
-    printInMagentaForDebugging("S2 plotclusters uCs x: " + x.__repr__())
-    printInMagentaForDebugging("S2 plotclusters uCs y: " + y.__repr__())
-    plt.scatter(x,y, c=clusters, cmap="nipy_spectral", marker="s", s=50)
+    printInMagentaForDebugging("S2 plotclusters uCs x: " + '\n' + x.__repr__() + '\n')
+    printInMagentaForDebugging("S2 plotclusters uCs y: " + '\n' + y.__repr__())
+    plt.scatter(x,y, c=clusters, cmap="nipy_spectral", marker="s")
     
     # set axes limits
     minAndMaxDeviations = [-3, 3]
