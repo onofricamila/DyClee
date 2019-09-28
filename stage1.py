@@ -33,9 +33,7 @@ class Stage1:
     # main method
     def start(self, dataset):
         self.calculateMeanAndSD(dataset)
-        printInBlueForDebugging("S1 updated mean: " + self.meanList.__repr__() + " n sd: " + self.SDList.__repr__())
         scaledDataset = self.scaleDataset(dataset)
-        printInBlueForDebugging("S1 scaled dataset: " + scaledDataset.__repr__())
         self.formUcs(scaledDataset)
         
         
@@ -72,16 +70,12 @@ class Stage1:
     
     def formUcs(self, dataset):
     # ASSUMPTIONS: dataset es un vector de vectores    
-        printInBlueForDebugging("S1 formUcs")
-        
         for d in dataset:
-            printInBlueForDebugging("S1 dataset element: " + d.__repr__())
             # processed_elements ++
             self.processedElements += 1
             
             # find reachable u clusters for the new element
             reachableUcs = self.findReachableUcs(d)
-            printInBlueForDebugging("S1 reachables: " + reachableUcs.__repr__())
             if not reachableUcs:
                 # empty list -> create u cluster from element 
                 # the uC will have the parametrized relative size
@@ -104,10 +98,8 @@ class Stage1:
 
     def calculateMeanAndSD(self, dataset):
         n = len(dataset)
-        printInBlueForDebugging("n: " + n.__repr__())
         # sample taken to get the ammount of features
         anElement = dataset[0]
-        printInBlueForDebugging("anElement: " + anElement.__repr__())
         # for each feature
         for fIndex in range(len(anElement)):
             acPerFeature = 0
@@ -116,15 +108,11 @@ class Stage1:
             for i in range(n):  
                 el = dataset[i]
                 fValue = el[fIndex]
-                printInBlueForDebugging("fValue: " + fValue.__repr__())
                 acPerFeature += fValue
                 # to later obtain ssdev
                 fValuesList.append(fValue)
-            
-            printInBlueForDebugging("fValuesList: " + fValuesList.__repr__())
                 
             featureMean = acPerFeature / n
-            printInBlueForDebugging("featureMean: " + featureMean.__repr__())
             self.meanList.append(featureMean)
             featureSD = stddev(data=fValuesList, mean=featureMean)
             self.SDList.append(featureSD)
@@ -140,8 +128,6 @@ class Stage1:
           # update both lists              
           self.aList = aList    
           self.oList = oList  
-          printInBlueForDebugging("alist: " + aList.__repr__())
-          printInBlueForDebugging("olist: " + oList.__repr__())
             
             
       

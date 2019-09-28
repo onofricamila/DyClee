@@ -25,7 +25,6 @@ class Stage2:
         
         
   def start(self):
-    printInMagentaForDebugging("S2 start")
     while True:
       # wait for lists from s1
       msg = self.s1ToS2ComQueue.get()
@@ -34,14 +33,10 @@ class Stage2:
         break
       # uC lists were received 
       lists = msg
-      printInMagentaForDebugging("s2 received lists: " + lists.__repr__())
       # update mean and median
       self.updateMeanAndMedian(lists)
-      printInMagentaForDebugging("S2 mean: " + self.mean.__repr__())
-      printInMagentaForDebugging("S2 median: " + self.median.__repr__())
       # update lists
       updatedLists = self.updateLists(lists)
-      printInMagentaForDebugging("S2 updatedLists: " + updatedLists.__repr__())
       # send updated uCs lists to s1
       self.s2ToS1ComQueue.put(updatedLists)
       # form clusters
@@ -50,7 +45,6 @@ class Stage2:
 
 
   def updateLists(self, lists):
-    printInMagentaForDebugging("S2 updateLists")
     aList, oList = lists
     
     newAList = []
