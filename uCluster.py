@@ -16,9 +16,9 @@ class uCluster:
     
     def __init__(self, relativeSize, d):
         self.relativeSize = relativeSize
-        self.CF = self.initializeCF(d)
         self.boundingBoxesList = self.initBoundingBoxesList(d)
         self.hyperboxSizePerFeature = self.getHyperboxSizePerFeature()
+        self.CF = self.initializeCF(d)
         self.label = -1 #"unclass"
         self.centroid = self.getCentroid()
     
@@ -38,8 +38,10 @@ class uCluster:
         
        currentTime = datetime.datetime.now().time()
         
+       D = self.getD()
+       
        # CF creation
-       cf = CF(n=1, LS=LS, SS=SS, tl=currentTime, ts=currentTime, D=0)
+       cf = CF(n=1, LS=LS, SS=SS, tl=currentTime, ts=currentTime, D=D)
              
        return cf
     
@@ -114,7 +116,7 @@ class uCluster:
 #        self.updateHyperboxSizePerFeature()
         
         # then update u cluster density
-        self.updateD(d)
+        self.CF.D = self.updateD()
         
         
         
@@ -160,14 +162,20 @@ class uCluster:
         
         
         
-    def updateD(self, d):
-        V = np.prod(self.hyperboxSizePerFeature)
-        self.CF.D = self.CF.n / V
+    def updateD(self):
+      return self.getD(n = self.CF.n)
+    
+    
+      
+    def getD(self, n=1): 
+      V = np.prod(self.hyperboxSizePerFeature)
+      return n / V
         
         
       
     def hasUnclassLabel(self):
       return (self.label is -1)
+    
     
     
     # retunrs true if the uC is directly connected to another uC
