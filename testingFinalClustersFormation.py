@@ -42,7 +42,17 @@ uC5 = uCluster(rs, d5)
 d6 = [0.15, 1]
 uC6 = uCluster(rs, d6)
 
+# uc7
+d7 = [0.10, 1.40]
+uC7 = uCluster(rs, d7)
 
+# uc8
+d8 = [0.05, 1.51]
+uC8 = uCluster(rs, d8)
+
+# uc9
+d9 = [0, 1.60]
+uC9 = uCluster(rs, d9)
 
 # TESTING IS DIRECTECTLY CONNECTED U CLUSTER METHOD --> all tests passed :)
 # TEST 1°: uC2 llega a ser directly conn con uC1
@@ -85,6 +95,11 @@ aL4 = [uC1, uC4, uC5, uC6]
 oL4 = [uC2, uC3]
 uL4 = (aL4, oL4) 
 
+# uL5
+aL5 = [uC1, uC4, uC5, uC6, uC7, uC8, uC9]
+oL5 = [uC2]
+uL5 = (aL5, oL5) 
+
 # TEST 1°: 
 # oList vacia
 # 3 u clusters forman un cluster final por transicion: uC1 -> uC2 -> uC4 
@@ -110,3 +125,10 @@ s2.formClusters(uL3) # --> 4 clusters + noise
 # uC1,    uC4,    uC5,    uC6
 # + uC2 y uC3 como outliers
 s2.formClusters(uL4) # --> 4 clusters + noise v2
+
+# TEST 5°:
+# oList con uC2 -> el uC1 no tiene como llegar al 4
+# deberian formarse 4 clusters
+# uC1,    uC4 -> uC3,    uC5,    uC6
+# + uC2 como outliers
+s2.formClusters(uL5) # --> 4 clusters + noise v2
