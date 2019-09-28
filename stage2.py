@@ -79,10 +79,12 @@ class Stage2:
     currentClusterId = 0
     # extract lists
     updatedAList, updatedOList = updatedLists
-    # join lists to get all the u clusters together
-    uCs = updatedAList + updatedOList
     # reset uCs labels as -1
     self.resetLabelsAsUnclass(updatedAList)
+    self.resetLabelsAsUnclass(updatedOList)
+    # join lists to get all the u clusters together
+    uCs = updatedAList + updatedOList
+   
     # it's unnecessary to look for dense uCs in the oList
     DMC = self.findDenseUcs(updatedAList)
     alreadySeen = []
@@ -94,7 +96,7 @@ class Stage2:
           currentClusterId += 1
           denseUc.label = currentClusterId
 
-        connectedUcs = self.findDirectlyConnectedUcsFor(denseUc, uCs)
+        connectedUcs = self.findDirectlyConnectedUcsFor(denseUc, updatedAList)
         
         i = 0
         while i < len(connectedUcs):  
@@ -102,7 +104,7 @@ class Stage2:
           if self.isDense(conUc):
             conUc.label = currentClusterId
             alreadySeen.append(conUc)
-            newConnectedUcs = self.findDirectlyConnectedUcsFor(conUc, uCs)
+            newConnectedUcs = self.findDirectlyConnectedUcsFor(conUc, updatedAList)
           
             for newNeighbour in newConnectedUcs:
               if self.hasntBeenSeen(newNeighbour, alreadySeen):

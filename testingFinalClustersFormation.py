@@ -5,7 +5,6 @@ Created on Sat Sep 28 12:54:58 2019
 
 @author: camila
 """
-# todas las pruebas de aca se hacen con u clusters de = densidad
 
 from uCluster import uCluster
 from stage2 import Stage2
@@ -69,19 +68,33 @@ s2 = Stage2(s1ToS2ComQueue, s2ToS1ComQueue)
 # uL1
 aL1 = [uC1, uC2, uC4]
 oL1 = []
-uL1 = [aL1, oL1] 
+uL1 = (aL1, oL1)
 
 # uL2
 aL2 = [uC1, uC2, uC3, uC4, uC5, uC6]
 oL2 = []
-uL2 = [aL2, oL2] 
+uL2 = (aL2, oL2) 
 
+# uL3
+aL3 = [uC1, uC3, uC4, uC5, uC6]
+oL3 = [uC2,]
+uL3 = (aL3, oL3) 
 
-
-# TEST 1°: 3 u clusters forman un cluster final por transicion: uc1 -> uc2 -> 4 
+# TEST 1°: 
+# oList vacia
+# 3 u clusters forman un cluster final por transicion: uC1 -> uC2 -> uC4 
 s2.formClusters(uL1) # --> 1 cluster :)
 
-# TEST 2°: 5 u clusters forman 3 clusters finales:
-# uc1 -> uc2 -> uc4     , uc5,  uc6
-#     -> u3
+# TEST 2°:
+# oList vacia
+# 6 u clusters forman 3 clusters finales:
+# uC1 -> uC2 -> uC4,    uC5,    uC6
+#     -> uC3
 s2.formClusters(uL2) # --> 3 clusters :)
+
+# TEST 3°:
+# oList con uC2 -> el uC1 no tiene como llegar al 4
+# deberian formarse 4 clusters
+# uC1 -> uC3,    uC4,    uC5,    uC6
+# + uC2 como outlier
+s2.formClusters(uL3) # --> 4 clusters + noise
