@@ -19,8 +19,8 @@ class Stage2:
         
         # stage2 algo instance variables
         self.currentClusterId = 0
-        self.mean = 0
-        self.median = 0
+        self.densityMean = 0
+        self.densityMedian = 0
         self.uncommonDimensions = uncommonDimensions
         
         
@@ -74,8 +74,8 @@ class Stage2:
   def updateMeanAndMedian(self, lists):
     aList, oList = lists
     concatenatedLists = aList + oList
-    self.mean = self.calculateMeanFor(concatenatedLists)
-    self.median = self.calculateMedianFor(concatenatedLists)     
+    self.densityMean = self.calculateMeanFor(concatenatedLists)
+    self.densityMedian = self.calculateMedianFor(concatenatedLists)     
     
   
   
@@ -139,20 +139,20 @@ class Stage2:
         
   # returns true if a given u cluster is considered dense
   def isDense(self, uC):   
-     return (uC.CF.D >= self.mean and uC.CF.D >= self.median)
+     return (uC.CF.D >= self.densityMean and uC.CF.D >= self.densityMedian)
      
    
   
   # returns true if a given u cluster is considered semi dense
   def isSemiDense(self, uC):   
      # xor
-     return (uC.CF.D >= self.mean) != (uC.CF.D >= self.median)
+     return (uC.CF.D >= self.densityMean) != (uC.CF.D >= self.densityMedian)
    
     
     
   # returns true if a given u cluster is considered outlier
   def isOutlier(self, uC):   
-     return (uC.CF.D < self.mean and uC.CF.D < self.median) 
+     return (uC.CF.D < self.densityMean and uC.CF.D < self.densityMedian) 
   
   
   
