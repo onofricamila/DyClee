@@ -209,7 +209,7 @@ class Stage2:
     plt.scatter(x,y, c=clusters, cmap="nipy_spectral", marker="s")
     
     # set axes limits
-    minAndMaxDeviations = [-3, 3]
+    minAndMaxDeviations = [-2.2, 2.2]
     
     axes = plt.gca()
     axes.set_xlim(minAndMaxDeviations)
