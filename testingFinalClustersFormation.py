@@ -80,6 +80,11 @@ aL3 = [uC1, uC3, uC4, uC5, uC6]
 oL3 = [uC2,]
 uL3 = (aL3, oL3) 
 
+# uL4
+aL4 = [uC1, uC4, uC5, uC6]
+oL4 = [uC2, uC3]
+uL4 = (aL4, oL4) 
+
 # TEST 1°: 
 # oList vacia
 # 3 u clusters forman un cluster final por transicion: uC1 -> uC2 -> uC4 
@@ -98,3 +103,5 @@ s2.formClusters(uL2) # --> 3 clusters :)
 # uC1 -> uC3,    uC4,    uC5,    uC6
 # + uC2 como outlier
 s2.formClusters(uL3) # --> 4 clusters + noise
+
+s2.formClusters(uL4) # --> 4 clusters + noise v2
