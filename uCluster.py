@@ -191,10 +191,14 @@ class uCluster:
           # difference between the u cluster centroids for that feature
           aux = abs(myCentroid[i] - uCCentroid[i])
           # if for a given feature the element doesn't match the cluster, return false
-          if aux >= (self.hyperboxSizePerFeature[i] / 2):
+          limit = self.hyperboxSizePerFeature[i] / 2
+          printInBlueForDebugging('limit: ' + limit.__repr__())
+          if aux >= (limit):
               currentUncommonDimensions += 1
-      
-      return currentUncommonDimensions <= uncommonDimensions
+      printInBlueForDebugging('currentUncommonDimensions: ' + currentUncommonDimensions.__repr__())
+      res = currentUncommonDimensions <= uncommonDimensions
+      printInBlueForDebugging('res: ' + res.__repr__())
+      return res
         
         
         

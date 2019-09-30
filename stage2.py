@@ -87,6 +87,7 @@ class Stage2:
    
     # it's unnecessary to look for dense uCs in the oList
     DMC = self.findDenseUcs(updatedAList)
+    printInMagentaForDebugging('DMC: ' + DMC.__repr__())
     alreadySeen = []
     
     for denseUc in DMC:
@@ -97,7 +98,8 @@ class Stage2:
           denseUc.label = currentClusterId
 
         connectedUcs = self.findDirectlyConnectedUcsFor(denseUc, updatedAList)
-        
+        printInMagentaForDebugging('connectedUcs: ' + connectedUcs.__repr__())
+
         i = 0
         while i < len(connectedUcs):  
           conUc = connectedUcs[i]
@@ -114,7 +116,7 @@ class Stage2:
                 newNeighbour.label = currentClusterId
             
           i += 1
-        
+        printInMagentaForDebugging('connectedUcs: ' + connectedUcs.__repr__())
     # for loop finished -> clusters were formed 
     self.plotClusters(uCs)
     
