@@ -84,7 +84,7 @@ class uCluster:
               maxDiff = diff
               featureIndex = i
         # if for the max diff feature the element doesn't match the cluster, return false
-        if maxDiff >= (self.hyperboxSizePerFeature[featureIndex] / 2):
+        if maxDiff >= (self.limit(featureIndex)):
             return False
         # the element fits the u cluster
         return True
@@ -178,6 +178,11 @@ class uCluster:
     
     
     
+    def limit(self, i):
+      return self.hyperboxSizePerFeature[i] /2
+    
+    
+    
     # retunrs true if the uC is directly connected to another uC
     def isDirectlyConnectedWith(self, uC, uncommonDimensions):
       featuresCount = len(self.CF.LS)
@@ -191,15 +196,10 @@ class uCluster:
           # difference between the u cluster centroids for that feature
           aux = abs(myCentroid[i] - uCCentroid[i])
           # if for a given feature the element doesn't match the cluster, return false
-          limit = self.hyperboxSizePerFeature[i] / 2
-          printInBlueForDebugging('limit: ' + limit.__repr__())
-          if aux >= (limit):
+          limit = self.limit(i)
+          if aux >= (limit*2):
               currentUncommonDimensions += 1
-      printInBlueForDebugging('currentUncommonDimensions: ' + currentUncommonDimensions.__repr__())
-      res = currentUncommonDimensions <= uncommonDimensions
-      printInBlueForDebugging('res: ' + res.__repr__())
-      return res
-        
+      return currentUncommonDimensions <= uncommonDimensions
         
         
         
