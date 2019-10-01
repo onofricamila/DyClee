@@ -108,10 +108,10 @@ class Stage2:
           
             for newNeighbour in newConnectedUcs:
               if self.hasntBeenSeen(newNeighbour, alreadySeen):
-                if self.isDense(newNeighbour) or not conUc.hasUnclassLabel():
+                if self.isDense(newNeighbour):
                   connectedUcs.append(newNeighbour)
               
-                newNeighbour.label = currentClusterId
+                  newNeighbour.label = currentClusterId
             
           i += 1
     # for loop finished -> clusters were formed 
