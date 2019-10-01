@@ -98,27 +98,31 @@ class Stage2:
 
         connectedUcs = self.findDirectlyConnectedUcsFor(denseUc, uCs)
 
-        i = 0
-        while i < len(connectedUcs):  
-          conUc = connectedUcs[i]
-          if self.isDense(conUc) or not conUc.hasUnclassLabel():
-            conUc.label = currentClusterId
-            alreadySeen.append(conUc)
-            newConnectedUcs = self.findDirectlyConnectedUcsFor(conUc, uCs)
-          
-            for newNeighbour in newConnectedUcs:
-              if self.hasntBeenSeen(newNeighbour, alreadySeen):
-                if self.isDense(newNeighbour):
-                  connectedUcs.append(newNeighbour)
-              
-                  newNeighbour.label = currentClusterId
-            
-          i += 1
-    # for loop finished -> clusters were formed 
+        self.growCluster(currentClusterId, alreadySeen, connectedUcs, uCs)
+    # for loop finished -> clusters were formed
     self.plotClusters(uCs)
+
+
+
+
+  def growCluster(self, currentClusterId, alreadySeen, connectedUcs, uCs):
+    i = 0
+    while i < len(connectedUcs):
+      conUc = connectedUcs[i]
+      # if self.isDense(conUc) or not conUc.hasUnclassLabel():
+      if self.hasntBeenSeen(conUc, alreadySeen):
+        if self.isDense(conUc):
+          conUc.label = currentClusterId
+          alreadySeen.append(conUc)
+          newConnectedUcs = self.findDirectlyConnectedUcsFor(conUc, uCs)
+          for newNeighbour in newConnectedUcs:
+            if self.isDense(newNeighbour):
+              connectedUcs.append(newNeighbour)
+            newNeighbour.label = currentClusterId
+      i += 1
     
-    
-    
+
+
         
   def resetLabelsAsUnclass(self, uCs):
     for uC in uCs:
