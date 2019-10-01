@@ -194,10 +194,10 @@ class Stage2:
         res.append(5)
       elif self.isDense(uC):
         # big marker
-        res.append(10)
+        res.append(25)
       elif self.isSemiDense(uC):
         # medium size marker
-        res.append(35)
+        res.append(50)
     return res
 
 

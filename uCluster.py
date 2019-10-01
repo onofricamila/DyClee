@@ -197,7 +197,7 @@ class uCluster:
           aux = abs(myCentroid[i] - uCCentroid[i])
           # if for a given feature the element doesn't match the cluster, return false
           limit = self.limit(i)
-          if aux >= (limit):
+          if aux >= (limit*2):
               currentUncommonDimensions += 1
       return currentUncommonDimensions <= uncommonDimensions
         
