@@ -9,7 +9,7 @@ from termcolor import colored
 
 
 def printInBlueForDebugging(msg):
-  printInBold(msg, 'blue')
+  printInBold(msg, 'cyan')
   
   
   
