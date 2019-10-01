@@ -47,19 +47,15 @@ class Stage2:
 
   def updateLists(self, lists):
     aList, oList = lists
-    
     newAList = []
     newOList = []
-    
     concatenatedLists = aList + oList
-    
     for uC in concatenatedLists:
       if self.isOutlier(uC):
         newOList.append(uC)
       else:
         # uC is dense or semi dense
         newAList.append(uC)
-        
     return (newAList, newOList)
         
 
@@ -69,11 +65,63 @@ class Stage2:
     aList, oList = lists
     concatenatedLists = aList + oList
     self.densityMean = self.calculateMeanFor(concatenatedLists)
-    self.densityMedian = self.calculateMedianFor(concatenatedLists)     
-    
-  
-  
-  
+    self.densityMedian = self.calculateMedianFor(concatenatedLists)
+
+
+
+
+  def resetLabelsAsUnclass(self, uCs):
+    for uC in uCs:
+      uC.label = -1
+
+
+
+
+  def calculateMeanFor(self, uCs):
+    return np.mean([uC.CF.D for uC in uCs])
+
+  def calculateMedianFor(self, uCs):
+    return np.median([uC.CF.D for uC in uCs])
+
+
+
+
+  # returns true if a given u cluster is considered dense
+  def isDense(self, uC):
+    return (uC.CF.D >= self.densityMean and uC.CF.D >= self.densityMedian)
+
+  # returns true if a given u cluster is considered semi dense
+  def isSemiDense(self, uC):
+    # xor
+    return (uC.CF.D >= self.densityMean) != (uC.CF.D >= self.densityMedian)
+
+  # returns true if a given u cluster is considered outlier
+  def isOutlier(self, uC):
+    return (uC.CF.D < self.densityMean and uC.CF.D < self.densityMedian)
+
+  # returns only dense u clusters from a set of u clusters
+  def findDenseUcs(self, uCs):
+    return [uC for uC in uCs if self.isDense(uC)]
+
+
+
+
+  def hasntBeenSeen(self, uC, alreadySeen):
+    return (uC not in alreadySeen)
+
+
+
+
+  def findDirectlyConnectedUcsFor(self, uC, uCs):
+    res = []
+    for u in uCs:
+      if uC.isDirectlyConnectedWith(u, self.uncommonDimensions):
+        res.append(u)
+    return res
+
+
+
+
   def formClusters(self, updatedLists):
     # init currentClusterId
     currentClusterId = 0
@@ -84,7 +132,6 @@ class Stage2:
     self.resetLabelsAsUnclass(updatedOList)
     # join lists to get all the u clusters together
     uCs = updatedAList + updatedOList
-   
     # it's unnecessary to look for dense uCs in the oList
     DMC = self.findDenseUcs(updatedAList)
     alreadySeen = []
@@ -95,10 +142,8 @@ class Stage2:
         if denseUc.hasUnclassLabel():
           currentClusterId += 1
           denseUc.label = currentClusterId
-
-        connectedUcs = self.findDirectlyConnectedUcsFor(denseUc, uCs)
-
-        self.growCluster(currentClusterId, alreadySeen, connectedUcs, uCs)
+        connectedUcs = self.findDirectlyConnectedUcsFor(denseUc, updatedAList)
+        self.growCluster(currentClusterId, alreadySeen, connectedUcs, updatedAList)
     # for loop finished -> clusters were formed
     self.plotClusters(uCs)
 
@@ -110,12 +155,12 @@ class Stage2:
     while i < len(connectedUcs):
       conUc = connectedUcs[i]
       # if self.isDense(conUc) or not conUc.hasUnclassLabel():
-      if self.hasntBeenSeen(conUc, alreadySeen):
-        if self.isDense(conUc):
-          conUc.label = currentClusterId
-          alreadySeen.append(conUc)
-          newConnectedUcs = self.findDirectlyConnectedUcsFor(conUc, uCs)
-          for newNeighbour in newConnectedUcs:
+      if self.isDense(conUc):
+        conUc.label = currentClusterId
+        alreadySeen.append(conUc)
+        newConnectedUcs = self.findDirectlyConnectedUcsFor(conUc, uCs)
+        for newNeighbour in newConnectedUcs:
+          if self.hasntBeenSeen(newNeighbour, alreadySeen):
             if self.isDense(newNeighbour):
               connectedUcs.append(newNeighbour)
             newNeighbour.label = currentClusterId
@@ -123,103 +168,70 @@ class Stage2:
     
 
 
-        
-  def resetLabelsAsUnclass(self, uCs):
-    for uC in uCs:
-      uC.label = -1
-    
-  
-  
-  
-  def calculateMeanFor(self, uCs):   
-     return  np.mean([uC.CF.D for uC in uCs])
-     
-   
-   
-    
-  def calculateMedianFor(self, uCs):   
-     return  np.median([uC.CF.D for uC in uCs])
-   
-          
-        
-  # returns true if a given u cluster is considered dense
-  def isDense(self, uC):   
-     return (uC.CF.D >= self.densityMean and uC.CF.D >= self.densityMedian)
-     
-   
-  
-  # returns true if a given u cluster is considered semi dense
-  def isSemiDense(self, uC):   
-     # xor
-     return (uC.CF.D >= self.densityMean) != (uC.CF.D >= self.densityMedian)
-   
-    
-    
-  # returns true if a given u cluster is considered outlier
-  def isOutlier(self, uC):   
-     return (uC.CF.D < self.densityMean and uC.CF.D < self.densityMedian) 
-  
-  
-  
-  # returns only dense u clusters from a set of u clusters
-  def findDenseUcs(self, uCs):
-    res = []
-    for uC in uCs:
-      if self.isDense(uC):
-        res.append(uC)
-    return res
-  
-  
-  
-  
-  def hasntBeenSeen(self, uC, alreadySeen):
-    return (uC not in alreadySeen)
-    
-     
-  
-
-  def findDirectlyConnectedUcsFor(self, uC, uCs):
-    res = []
-    for u in uCs:
-      if uC.isDirectlyConnectedWith(u, self.uncommonDimensions):
-        res.append(u)
-    return res
-  
-  
           
   # plots current clusters          
   def plotClusters(self, uCs):
-    # check if clusters are plottable
-    firstEl = uCs[0]
-    if len(firstEl.CF.LS) != 2:
-      print("UNABLE TO DRAW CLUSTERS: IT'S NOT A 2D DATASET")
-      return
-    
-    # let's plot!
-    
-    # first get a list with u cluster labels
-    labelsPerUCluster = [uC.label for uC in uCs]
-    # clusters will be a sequence of numbers (cluster number or -1) for each point in the dataset
-    clusters = np.array(labelsPerUCluster)
-    printInMagentaForDebugging("S2 plotclusters uCs CLUSTERS: " + '\n' + clusters.__repr__() + '\n')
-    
-    # get uCs centroids
-    centroids = [uC.getCentroid() for uC in uCs]
-    
-    x,y = zip(*centroids)
-    printInMagentaForDebugging("S2 plotclusters uCs x: " + '\n' + x.__repr__() + '\n')
-    printInMagentaForDebugging("S2 plotclusters uCs y: " + '\n' + y.__repr__())
-    plt.scatter(x,y, c=clusters, cmap="nipy_spectral", marker="s")
-    
+    self.scatter(uCs)
     # set axes limits
-    minAndMaxDeviations = [-2.2, 2.2]
-    
+    minAndMaxDeviations = [-2.5, 2.5]
     axes = plt.gca()
     axes.set_xlim(minAndMaxDeviations)
     axes.set_ylim(minAndMaxDeviations)
-    
+    # set plot general characteristics
     plt.xlabel("Feature 1")
     plt.ylabel("Feature 2")
     plt.grid(color='k', linestyle=':', linewidth=1)
     plt.show()
-      
+
+
+
+
+  def getMarkersSizeList(self, uCs):
+    res = []
+    for uC in uCs:
+      if self.isOutlier(uC):
+        # really small size -> comes out almost as a point
+        res.append(5)
+      elif self.isDense(uC):
+        # big marker
+        res.append(10)
+      elif self.isSemiDense(uC):
+        # medium size marker
+        res.append(35)
+    return res
+
+
+
+
+  def scatter(self, uCs):
+    if not self.plottableUcs(uCs):
+      return
+    # let's plot!
+    # first set markers size to represent different densities
+    s = self.getMarkersSizeList(uCs)
+    # then get a list with u cluster labels
+    labelsPerUCluster = [uC.label for uC in uCs]
+    # clusters will be a sequence of numbers (cluster number or -1) for each point in the dataset
+    clusters = np.array(labelsPerUCluster)
+    printInMagentaForDebugging("S2 plotclusters uCs CLUSTERS: " + '\n' + clusters.__repr__() + '\n')
+    # get uCs centroids
+    centroids = [uC.getCentroid() for uC in uCs]
+    x, y = zip(*centroids)
+    printInMagentaForDebugging("S2 plotclusters uCs x: " + '\n' + x.__repr__() + '\n')
+    printInMagentaForDebugging("S2 plotclusters uCs y: " + '\n' + y.__repr__())
+    # scatter
+    plt.scatter(x, y, c=clusters, cmap="nipy_spectral", marker='s', alpha=0.8, s=s)
+
+
+
+
+  def plottableUcs(self, uCs):
+    if len(uCs) == 0:
+      # there are't any u clusters to plot
+      return False
+    firstEl = uCs[0]
+    if len(firstEl.CF.LS) != 2:
+      print("UNABLE TO DRAW CLUSTERS: IT'S NOT A 2D DATASET")
+      return False
+    # uCs are plottable
+    return True
