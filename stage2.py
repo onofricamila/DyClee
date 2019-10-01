@@ -213,14 +213,44 @@ class Stage2:
     labelsPerUCluster = [uC.label for uC in uCs]
     # clusters will be a sequence of numbers (cluster number or -1) for each point in the dataset
     clusters = np.array(labelsPerUCluster)
-    printInMagentaForDebugging("S2 plotclusters uCs CLUSTERS: " + '\n' + clusters.__repr__() + '\n')
+    self.showPlotInfo(labelsPerUCluster)
+    printInMagentaForDebugging("* uCs labels: " + '\n' + clusters.__repr__() + '\n')
     # get uCs centroids
     centroids = [uC.getCentroid() for uC in uCs]
     x, y = zip(*centroids)
-    printInMagentaForDebugging("S2 plotclusters uCs x: " + '\n' + x.__repr__() + '\n')
-    printInMagentaForDebugging("S2 plotclusters uCs y: " + '\n' + y.__repr__())
-    # scatter
+    printInMagentaForDebugging("* uCs 'x' coordinates: " + '\n' + x.__repr__() + '\n')
+    printInMagentaForDebugging("* uCs 'y' coordinates: " + '\n' + y.__repr__())
+    # scatter'
     plt.scatter(x, y, c=clusters, cmap="nipy_spectral", marker='s', alpha=0.8, s=s)
+
+
+
+
+  def showPlotInfo(self, labelsPerUCluster):
+    # final clusters info
+    dic = self.clustersElCounter(labelsPerUCluster)
+    dicLength = len(dic)
+    if dicLength == 1:
+      msg = "There is only 1 final cluster and "
+    else:
+      msg = "There are " + len(dic).__repr__() + " final clusters and "
+    if -1 in labelsPerUCluster:
+      msg += "one of them represents outliers (the black one)."
+    else:
+      msg += "no outliers."
+    printInMagentaForDebugging(msg + "\n")
+    for key, value in dic.items():
+      printInMagentaForDebugging("- Cluster n°" + key.__repr__() + " -> " + value.__repr__() + " uCs" + "\n")
+
+
+
+
+  def clustersElCounter(self, labelsPerUCluster):
+    dicKeys = set(labelsPerUCluster)
+    dic = {key: 0 for key in dicKeys}
+    for c in labelsPerUCluster:
+      dic[c] += 1
+    return dic
 
 
 
