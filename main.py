@@ -24,7 +24,7 @@ s2ToS1ComQueue = Queue()  # s2 will write to s1 there
 dataset = noisyMoonsDataset
 
 # stages
-s1 = Stage1(s1ToS2ComQueue, s2ToS1ComQueue, relativeSize=0.1, tGlobal=1500) # default relative size = 1
+s1 = Stage1(s1ToS2ComQueue, s2ToS1ComQueue, relativeSize=0.06, tGlobal=1500) # default relative size = 1
 s2 = Stage2(s1ToS2ComQueue, s2ToS1ComQueue, uncommonDimensions=0) # default uncommon dimensions = 0
 
 # start s1

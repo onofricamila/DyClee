@@ -106,12 +106,6 @@ class Stage2:
 
 
 
-  def hasntBeenSeen(self, uC, alreadySeen):
-    return (uC not in alreadySeen)
-
-
-
-
   def findDirectlyConnectedUcsFor(self, uC, uCs):
     res = []
     for u in uCs:
@@ -137,11 +131,10 @@ class Stage2:
     alreadySeen = []
     
     for denseUc in DMC:
-      if self.hasntBeenSeen(denseUc, alreadySeen):
+      if denseUc not in alreadySeen:
         alreadySeen.append(denseUc)
-        if denseUc.hasUnclassLabel():
-          currentClusterId += 1
-          denseUc.label = currentClusterId
+        currentClusterId += 1
+        denseUc.label = currentClusterId
         connectedUcs = self.findDirectlyConnectedUcsFor(denseUc, updatedAList)
         self.growCluster(currentClusterId, alreadySeen, connectedUcs, updatedAList)
     # for loop finished -> clusters were formed
@@ -154,16 +147,13 @@ class Stage2:
     i = 0
     while i < len(connectedUcs):
       conUc = connectedUcs[i]
-      # if self.isDense(conUc) or not conUc.hasUnclassLabel():
-      if self.isDense(conUc):
+      if (conUc not in alreadySeen):
         conUc.label = currentClusterId
         alreadySeen.append(conUc)
-        newConnectedUcs = self.findDirectlyConnectedUcsFor(conUc, uCs)
-        for newNeighbour in newConnectedUcs:
-          if self.hasntBeenSeen(newNeighbour, alreadySeen):
-            if self.isDense(newNeighbour):
-              connectedUcs.append(newNeighbour)
-            newNeighbour.label = currentClusterId
+        if self.isDense(conUc):
+          newConnectedUcs = self.findDirectlyConnectedUcsFor(conUc, uCs)
+          for newNeighbour in newConnectedUcs:
+            connectedUcs.append(newNeighbour)
       i += 1
     
 
@@ -192,10 +182,10 @@ class Stage2:
       if self.isOutlier(uC):
         # really small size -> comes out almost as a point
         res.append(5)
-      elif self.isDense(uC):
-        # big marker
-        res.append(10)
       elif self.isSemiDense(uC):
+        # big marker
+        res.append(20)
+      elif self.isDense(uC):
         # medium size marker
         res.append(50)
     return res
