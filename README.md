@@ -20,7 +20,7 @@ First of all, there are 2 independent stages that work at different rates:
 
 :bulb: Keep in mind that micro clusters acompass elements which are close according to the 'relative size' parameter, and the final clusters are a set of connected micro clusters: a chain of dense micro clusters which are directly connected <taking into account the 'relative size' parameter for (dataset features - 'uncommon dimensions') features>, with semi dense ones in the borders.
 
-Side note: Finally, as there are many representatives for every cluster, it is possible to generate non convex groups. 
+Side note: as there are many representatives for every cluster, it is possible to generate non convex groups. 
 
 ### :small_orange_diamond: How to try it
 The `parametersConfiguration` file is the one in which you have to define the dataset you want to use and configure the parameters to be passed to stage 1 and stage 2. Then, just run the `main` file and you will see the results :blush:
