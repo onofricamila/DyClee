@@ -18,7 +18,7 @@ First of all, there are 2 independent stages that work at different rates:
 1. a distance-based one, which processes every element of a given dataset, creates the so called __micro clusters__, and every 'tGlobal' samples sends them to the second stage
 2. a density-based one, which receives the micro clusters generated previously and joins them to form the final groups,  showing them to the user
 
-:bulb: Keep in mind that micro clusters acommpass elements which are close according to the 'relative size' parameter, and the final clusters are a set of micro clusters connected: a chain of directly connected dense micro clusters <taking into account the 'relative size' parameter for (dataset features - 'uncommon dimensions')>, with semi dense ones in the borders.
+:bulb: Keep in mind that micro clusters acompass elements which are close according to the 'relative size' parameter, and the final clusters are a set of micro clusters connected: a chain of directly connected dense micro clusters <taking into account the 'relative size' parameter for (dataset features - 'uncommon dimensions')>, with semi dense ones in the borders.
 
 Finally, as there are many representatives for every cluster, it is possible to generate non convex groups. 
 
