@@ -16,11 +16,11 @@ Consider the global approach is used in the density-based stage.
 ### :small_orange_diamond: How it works
 First of all, there are 2 independent stages that work at different rates:
 1. a distance-based one, which processes every element of a given dataset, creates the so called __micro clusters__, and every 'tGlobal' samples sends them to the second stage
-2. a density-based one, which receives the micro clusters generated previously and joins them to form the final groups,  showing them to the user
+2. a density-based one, which receives the micro clusters generated previously and joins them to form the final groups, eventually showing them to the user
 
-:bulb: Keep in mind that micro clusters acompass elements which are close according to the 'relative size' parameter, and the final clusters are a set of micro clusters connected: a chain of directly connected dense micro clusters <taking into account the 'relative size' parameter for (dataset features - 'uncommon dimensions')>, with semi dense ones in the borders.
+:bulb: Keep in mind that micro clusters acompass elements which are close according to the 'relative size' parameter, and the final clusters are a set of connected micro clusters: a chain of dense micro clusters which are directly connected <taking into account the 'relative size' parameter for (dataset features - 'uncommon dimensions') features>, with semi dense ones in the borders.
 
-Finally, as there are many representatives for every cluster, it is possible to generate non convex groups. 
+Side note: Finally, as there are many representatives for every cluster, it is possible to generate non convex groups. 
 
 ### :small_orange_diamond: How to try it
 The `parametersConfiguration` file is the one in which you have to define the dataset you want to use and configure the parameters to be passed to stage 1 and stage 2. Then, just run the `main` file and you will see the results :blush:
