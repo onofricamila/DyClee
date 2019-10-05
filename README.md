@@ -13,7 +13,7 @@ The subset of parameters that can be passed to the algorithm are listed below:
 
 Consider the global approach is used in the density-based stage. 
 
-### How does it work
+### How it works
 First of all, there are 2 independent stages that work at different rates:
 1. a distance-based one, which processes every element of a given dataset, creates the so called __micro clusters__, and every 'tGlobal' samples sends them to the second stage
 2. a density-based one, which receives the micro clusters generated previously and joins them to form the final groups,  showing them to the user
