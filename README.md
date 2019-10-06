@@ -11,7 +11,7 @@ The subset of parameters that can be passed to the algorithm are listed below:
 * t global
 * uncommon dimensions
 
-Consider the global approach is used in the density-based stage. 
+Also consider the global approach is used in the density-based stage. 
 
 ### :small_orange_diamond: How it works
 First of all, there are 2 independent stages that work at different rates:
