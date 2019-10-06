@@ -16,7 +16,8 @@ radio = 5
 maxRadioInc = 0.1
 centerPointsR = 10/100 * radio
 # batch representa la cantidad de puntos a generar por lista cuando estamos en cierto angulo
-# vamos a tener 180 * batch puntos en cada lista, y eso por la cantidad de listas nos va a dar los puntos totales
+# vamos a tener 180 * batch puntos en cada lista,
+# y eso por la cantidad de listas nos va a dar los puntos totales
 batch = 5
 
 
