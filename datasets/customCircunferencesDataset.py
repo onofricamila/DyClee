@@ -19,6 +19,8 @@ centerPointsR = 10/100 * radio
 # vamos a tener 180 * batch puntos en cada lista,
 # y eso por la cantidad de listas nos va a dar los puntos totales
 batch = 5
+# pointsPerListToAppend representa la cantidad de puntos de una lista que agregas seguidos al dataset
+pointsPerListToAppend = 100
 
 
 
@@ -58,12 +60,11 @@ def generateDataset():
     # para tratar los lotes de puntos
     batchUpperLimit = 0
     batchLowerLimit = 0
-    batchIncUnit = 100
     limIterator = len(puntosArriba)
     res = []
     for i in range(0, limIterator):
         # incremento el limite superior del lote de puntos a mostrar
-        batchUpperLimit += batchIncUnit
+        batchUpperLimit += pointsPerListToAppend
         # pongo puntos de cada grupo
         res = res + puntosArriba[batchLowerLimit:batchUpperLimit] + puntosCentro[batchLowerLimit:batchUpperLimit] + puntosAbajo[batchLowerLimit:batchUpperLimit]
         batchLowerLimit = batchUpperLimit
