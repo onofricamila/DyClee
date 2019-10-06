@@ -10,7 +10,6 @@ class Stage2:
         # communication instance variables    
         self.s1ToS2ComQueue = s1ToS2ComQueue
         self.s2ToS1ComQueue = s2ToS1ComQueue
-        
         # stage2 algo instance variables
         self.densityMean = 0
         self.densityMedian = 0
@@ -123,7 +122,6 @@ class Stage2:
     # it's unnecessary to look for dense uCs in the oList
     DMC = self.findDenseUcs(updatedAList)
     alreadySeen = []
-    
     for denseUc in DMC:
       if denseUc not in alreadySeen:
         alreadySeen.append(denseUc)

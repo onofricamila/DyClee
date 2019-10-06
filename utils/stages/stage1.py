@@ -10,14 +10,12 @@ class Stage1:
         # communication instance variables    
         self.s1ToS2ComQueue = s1ToS2ComQueue
         self.s2ToS1ComQueue = s2ToS1ComQueue  
-      
         # stage1 algo instance variables
         self.relativeSize = relativeSize
         self.tGlobal = tGlobal        
         self.aList = []
         self.oList = []
         self.processedElements = 0
-        
         # to be calculated when the dataset is received
         self.meanList = []
         self.SDList = []
@@ -75,8 +73,7 @@ class Stage1:
                 # the uC will have the parametrized relative size
                 uC = uCluster(self.relativeSize, d)
                 self.oList.append(uC)
-                
-            else: 
+            else:
                 # find closest reachable u cluster
                 closestUc = self.findClosestReachableUc(d, reachableUcs)
                 closestUc.addElement(d)
@@ -108,7 +105,6 @@ class Stage1:
                 acPerFeature += fValue
                 # to later obtain ssdev
                 fValuesList.append(fValue)
-                
             featureMean = acPerFeature / n
             self.meanList.append(featureMean)
             featureSD = stddev(data=fValuesList, mean=featureMean)
@@ -130,9 +126,7 @@ class Stage1:
       
     # returns a list of reachable u clusters for a given element          
     def findReachableUcs(self, d):
-        
         reachableUcs = self.getReachableUcsFrom(self.aList, d)
-                       
         if not reachableUcs:
             # empty list -> check oList
             reachableUcs = self.getReachableUcsFrom(self.oList, d)
@@ -154,13 +148,11 @@ class Stage1:
     def findClosestReachableUc(self, d, reachableUcs):
         closestUc = None
         minDistance = float("inf")
-        
         for uC in reachableUcs:
             distance = self.manhatanDistance(d, uC)
             if distance < minDistance:
                 minDistance = distance
                 closestUc = uC
-        
         return closestUc
         
         
@@ -173,7 +165,6 @@ class Stage1:
         for i in range(len(d)):
             diff = d[i] - uCCentroid[i]
             dist = dist + abs(diff)
-            
         return dist
         
     

@@ -7,8 +7,6 @@ def _ss(data, mean):
     return ss
 
 
-
-
 def stddev(data, mean, ddof=0):
     """Calculates the population standard deviation
     by default; specify ddof=1 to compute the sample

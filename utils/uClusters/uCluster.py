@@ -26,17 +26,12 @@ class uCluster:
     def initializeCF(self, d):  
        # we assume d is a list of features
        LS = d
-       
        # this vector will only have d elements squared
        SS = [a*b for a,b in zip(d, d)]
-        
        currentTime = datetime.datetime.now().time()
-        
        D = self.getD()
-       
        # CF creation
        cf = CF(n=1, LS=LS, SS=SS, tl=currentTime, ts=currentTime, D=D)
-             
        return cf
     
     
@@ -44,11 +39,9 @@ class uCluster:
     # initializes boundingBox with d values 
     def initBoundingBoxesList(self, d):
         boundingBoxesList = []
-        
         for i in range(len(d)):
             boundingBox = BoundingBox(minimun=-2 , maximun=2)
             boundingBoxesList.append(boundingBox)
-        
         return boundingBoxesList
     
     
@@ -56,11 +49,9 @@ class uCluster:
     # returns a list containing the size per feature. Indexes match those from d
     def getHyperboxSizePerFeature(self):
         hyperboxSizePerFeature = []
-        
         for bb in self.boundingBoxesList:
             aux = bb.maximun - bb.minimun
             hyperboxSizePerFeature.append(self.relativeSize * abs(aux))
-        
         return hyperboxSizePerFeature
     
     
@@ -91,7 +82,6 @@ class uCluster:
         # for each feature
         for i in range(len(self.CF.LS)):
           centroid.append(self.CF.LS[i] / self.CF.n)
-        
         return centroid
     
     
@@ -104,11 +94,9 @@ class uCluster:
         self.updateLS(d)
         self.updateSS(d)
         self.updateCentroid()
-        
 #        # needs to check if bounding boxes change and recalculate hyperbox size
 #        self.updateBoundingBoxesList(d)
 #        self.updateHyperboxSizePerFeature()
-        
         # then update u cluster density
         self.updateD()
         
@@ -181,10 +169,8 @@ class uCluster:
     def isDirectlyConnectedWith(self, uC, uncommonDimensions):
       featuresCount = len(self.CF.LS)
       currentUncommonDimensions = 0
-      
       myCentroid = self.getCentroid()
       uCCentroid = uC.getCentroid()
-      
       # for each feature
       for i in range(featuresCount):
           # difference between the u cluster centroids for that feature

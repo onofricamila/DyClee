@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 from termcolor import colored
 
-
 def printInBlue(msg):
   printInBold(msg, 'cyan')
 
