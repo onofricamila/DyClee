@@ -27,8 +27,7 @@ class Stage1:
         self.calculateMeanAndSD(dataset)
         scaledDataset = self.scaleDataset(dataset)
         self.formUcs(scaledDataset)
-        
-        
+
         
         
     def scaleDataset(self, dataset):
@@ -40,8 +39,7 @@ class Stage1:
         return res
     
 
-          
-              
+
     def scaleDatasetElement(self, el):
         scaledEl = []
         # for each dimension
@@ -53,19 +51,16 @@ class Stage1:
     
     
     
-    
     def scaleDatasetElementFeature(self, fValue, fIndex):
         return (fValue - self.meanList[fIndex]) / self.SDList[fIndex]
         
-    
-    
+
     
     def formUcs(self, dataset):
     # ASSUMPTIONS: dataset es un vector de vectores    
         for d in dataset:
             # processed_elements ++
             self.processedElements += 1
-            
             # find reachable u clusters for the new element
             reachableUcs = self.findReachableUcs(d)
             if not reachableUcs:
@@ -86,7 +81,6 @@ class Stage1:
         if len(dataset) < self.tGlobal:
           self.sendListsToStage2()
         self.sendEndMsgToStage2()
-
 
 
 
@@ -111,7 +105,6 @@ class Stage1:
             self.SDList.append(featureSD)
 
         
-
 
     # checks if there's a msg from s2 so both u cluster lists must be updated
     def checkUpdatedListsFromStage2(self):
@@ -142,7 +135,8 @@ class Stage1:
             if uC.isReachableFrom(d):
                 res.append(uC)
       return res        
-                
+
+
  
     # returns the closest uC for an element, given a set of reachable uCs
     def findClosestReachableUc(self, d, reachableUcs):

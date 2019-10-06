@@ -15,8 +15,7 @@ class Stage2:
         self.densityMedian = 0
         self.uncommonDimensions = uncommonDimensions
         
-        
-        
+
         
   def start(self):
     while True:
@@ -37,7 +36,6 @@ class Stage2:
 
 
 
-
   def updateLists(self, lists):
     aList, oList = lists
     newAList = []
@@ -53,13 +51,11 @@ class Stage2:
         
 
 
-
   def updateMeanAndMedian(self, lists):
     aList, oList = lists
     concatenatedLists = aList + oList
     self.densityMean = self.calculateMeanFor(concatenatedLists)
     self.densityMedian = self.calculateMedianFor(concatenatedLists)
-
 
 
 
@@ -69,13 +65,12 @@ class Stage2:
 
 
 
-
   def calculateMeanFor(self, uCs):
     return np.mean([uC.CF.D for uC in uCs])
 
+
   def calculateMedianFor(self, uCs):
     return np.median([uC.CF.D for uC in uCs])
-
 
 
 
@@ -83,19 +78,24 @@ class Stage2:
   def isDense(self, uC):
     return (uC.CF.D >= self.densityMean and uC.CF.D >= self.densityMedian)
 
+
+
   # returns true if a given u cluster is considered semi dense
   def isSemiDense(self, uC):
     # xor
     return (uC.CF.D >= self.densityMean) != (uC.CF.D >= self.densityMedian)
 
+
+
   # returns true if a given u cluster is considered outlier
   def isOutlier(self, uC):
     return (uC.CF.D < self.densityMean and uC.CF.D < self.densityMedian)
 
+
+
   # returns only dense u clusters from a set of u clusters
   def findDenseUcs(self, uCs):
     return [uC for uC in uCs if self.isDense(uC)]
-
 
 
 
@@ -105,7 +105,6 @@ class Stage2:
       if uC.isDirectlyConnectedWith(u, self.uncommonDimensions):
         res.append(u)
     return res
-
 
 
 
@@ -134,7 +133,6 @@ class Stage2:
 
 
 
-
   def growCluster(self, currentClusterId, alreadySeen, connectedUcs, uCs):
     i = 0
     while i < len(connectedUcs):
@@ -150,7 +148,6 @@ class Stage2:
     
 
 
-          
   # plots current clusters          
   def plotClusters(self, uCs):
     self.scatter(uCs)
@@ -167,7 +164,6 @@ class Stage2:
 
 
 
-
   def getMarkersSizeList(self, uCs):
     res = []
     for uC in uCs:
@@ -181,7 +177,6 @@ class Stage2:
         # medium size marker
         res.append(50)
     return res
-
 
 
 
@@ -207,7 +202,6 @@ class Stage2:
 
 
 
-
   def showPlotInfo(self, labelsPerUCluster):
     # final clusters info
     dic = self.clustersElCounter(labelsPerUCluster)
@@ -226,14 +220,12 @@ class Stage2:
 
 
 
-
   def clustersElCounter(self, labelsPerUCluster):
     dicKeys = set(labelsPerUCluster)
     dic = {key: 0 for key in dicKeys}
     for c in labelsPerUCluster:
       dic[c] += 1
     return dic
-
 
 
 
