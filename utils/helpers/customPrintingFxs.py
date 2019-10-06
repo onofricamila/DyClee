@@ -8,15 +8,17 @@ Created on Fri Sep 20 14:37:00 2019
 from termcolor import colored
 
 
-def printInBlueForDebugging(msg):
+def printInBlue(msg):
   printInBold(msg, 'cyan')
-  
-  
-  
-def printInMagentaForDebugging(msg):
+
+
+def printInMagenta(msg):
   printInBold(msg, 'magenta')
-  
-  
-  
+
+
+def printInGreen(msg):
+  printInBold(msg, 'green')
+
+
 def printInBold(msg, color):
   print(colored(msg, color, attrs=['bold']))

@@ -7,7 +7,7 @@ Created on Tue Sep 10 14:35:06 2019
 """
 
 from utils.uClusters.uCluster import uCluster
-from utils.helpers.customPrintingFxs import printInBlueForDebugging
+from utils.helpers.customPrintingFxs import printInBlue
 from utils.helpers.customMathFxs import stddev
   
 class Stage1:
@@ -87,7 +87,7 @@ class Stage1:
                 closestUc = self.findClosestReachableUc(d, reachableUcs)
                 closestUc.addElement(d)
             if self.timeToSendMessage():
-                printInBlueForDebugging("S1 lists sent to s2")
+                printInBlue("S1 lists sent to s2")
                 self.sendListsToStage2()
                 self.resetProcessedElements()
                 self.checkUpdatedListsFromStage2()
@@ -125,7 +125,7 @@ class Stage1:
 
     # checks if there's a msg from s2 so both u cluster lists must be updated
     def checkUpdatedListsFromStage2(self):
-          printInBlueForDebugging("S1 waiting for lists from s2")
+          printInBlue("S1 waiting for lists from s2")
           lists = self.s2ToS1ComQueue.get()
           aList, oList = lists
           # update both lists              

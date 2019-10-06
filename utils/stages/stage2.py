@@ -7,7 +7,7 @@ Created on Sun Sep 15 15:52:46 2019
 """
 import numpy as np
 import matplotlib.pyplot as plt
-from utils.helpers.customPrintingFxs import printInMagentaForDebugging
+from utils.helpers.customPrintingFxs import printInMagenta
 
 
 class Stage2:
@@ -204,12 +204,12 @@ class Stage2:
     # clusters will be a sequence of numbers (cluster number or -1) for each point in the dataset
     clusters = np.array(labelsPerUCluster)
     self.showPlotInfo(labelsPerUCluster)
-    printInMagentaForDebugging("* uCs labels: " + '\n' + clusters.__repr__() + '\n')
+    printInMagenta("* uCs labels: " + '\n' + clusters.__repr__() + '\n')
     # get uCs centroids
     centroids = [uC.getCentroid() for uC in uCs]
     x, y = zip(*centroids)
-    printInMagentaForDebugging("* uCs 'x' coordinates: " + '\n' + x.__repr__() + '\n')
-    printInMagentaForDebugging("* uCs 'y' coordinates: " + '\n' + y.__repr__())
+    printInMagenta("* uCs 'x' coordinates: " + '\n' + x.__repr__() + '\n')
+    printInMagenta("* uCs 'y' coordinates: " + '\n' + y.__repr__())
     # scatter'
     plt.scatter(x, y, c=clusters, cmap="nipy_spectral", marker='s', alpha=0.8, s=s)
 
@@ -228,9 +228,9 @@ class Stage2:
       msg += "one of them represents outliers (the black one)."
     else:
       msg += "no outliers."
-    printInMagentaForDebugging(msg + "\n")
+    printInMagenta(msg + "\n")
     for key, value in dic.items():
-      printInMagentaForDebugging("- Cluster n°" + key.__repr__() + " -> " + value.__repr__() + " uCs" + "\n")
+      printInMagenta("- Cluster n°" + key.__repr__() + " -> " + value.__repr__() + " uCs" + "\n")
 
 
 
