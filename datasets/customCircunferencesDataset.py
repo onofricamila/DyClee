@@ -9,64 +9,67 @@ from math import pi, cos, sin, radians
 import random
 
 # config ------------------------------------------------------------------------------------------
-# propiedades de la circunferencia
-centro_x = 0
-centro_y = 0
-radio = 5
-maxRadioInc = 0.1
-centerPointsR = 10/100 * radio
-# batch representa la cantidad de puntos a generar por lista cuando estamos en cierto angulo
-# vamos a tener 180 * batch puntos en cada lista,
-# y eso por la cantidad de listas nos va a dar los puntos totales
-batch = 5
-# pointsPerListToAppend representa la cantidad de puntos de una lista que agregas seguidos al dataset
-pointsPerListToAppend = 100
+# circumference properties
+h = 0
+k = 0
+ratio = 5
+maxRatioInc = 0.1
+ratioPortionForCenterPoints = 10 / 100 * ratio
+# batch represents the amount of points to generate per list at a given angle
+# we will have 180 * batch points in each list
+pointsPerAngle = 5
+# pointsPerListToAppend represents the amount of points from a list to be added one next to the other to the dataset
+pointsPerListToAppendToDataset = 100
 
 
 
 # dataset formation ------------------------------------------------------------------------------------------
-# la idea es agarrar un angulo y usar la interpretación geométrica de la
-# circunferencia junto con trigonometria para asi formar un punto en ella 
+# the idea is to get an angle and then use the circunference geometric interpretation and trigonometry to generate points
+# on it
 def point(theta):
-    # agrando o no un toque el radio
-    r = radio + random.uniform(0, maxRadioInc)
-    # cos(theta) * r es la diferencia entre el x del punto y el del centro 
-    # sin(theta) * r es la diferencia entre el y del punto y el del centro 
-    return [centro_x + cos(theta) * r, centro_y + sin(theta) * r]
+    # increase a little bit the radio [or not]
+    r = ratio + random.uniform(0, maxRatioInc)
+    # cos(theta) * r --> difference between the point x coordinate and the circumference center one (h)
+    # sin(theta) * r --> difference between the point y coordinate and the circumference center one (y)
+    return [h + cos(theta) * r, k + sin(theta) * r]
 
 
 
 def generatePoints():
-    # listas de puntos
-    puntosArriba = []
-    puntosAbajo = []
-    puntosCentro = []
+    # points lists
+    upperPoints = []
+    lowerPoints = []
+    centerPoints = []
 
-    # theta es el angulo respecto de x en el que rotaremos alrededor del centro
+    # theta represents the angle with respect to the x axis from which we will rotate around the circumference center
     for theta in range(0, 180):
-        for i in range(0, batch):
-          # en los puntos de arriba avanzo de derecha a izquierda (de 0° a 180°)
-          puntosArriba.append(point(radians(theta)))
-          # en los puntos de abajo avanzo de izquierda a derecha (de 180° a 360°)
-          puntosAbajo.append(point(pi + radians(theta)))
-          # para los puntos del centro considero una porción pequeña del radio original
-          # puntosCentro.append(point(centro_x, centro_y, centerPointsR, maxRadioInc, radians(theta)))
-    return puntosArriba, puntosCentro, puntosAbajo
+        for i in range(0, pointsPerAngle):
+          # to generate the upper points we move from right to left (from 0° to 180°)
+          upperPoints.append(point(radians(theta)))
+          # to generate the lower points we move from left to right (from 180° to 360°)
+          lowerPoints.append(point(pi + radians(theta)))
+          # to generate the center points we move from right to left but considering a small portion of the original ratio
+          # centerPoints.append(point(h, k, centerPointsR, maxRadioInc, radians(theta)))
+    return upperPoints, centerPoints, lowerPoints
 
 
 
 def generateDataset():
-    puntosArriba, puntosCentro, puntosAbajo = generatePoints()
-    # para tratar los lotes de puntos
+    upperPoints, centerPoints, lowerPoints = generatePoints()
+    # parameters regarding the points batchs per list formation
     batchUpperLimit = 0
     batchLowerLimit = 0
-    limIterator = len(puntosArriba)
+    limIterator = len(upperPoints)
     res = []
     for i in range(0, limIterator):
-        # incremento el limite superior del lote de puntos a mostrar
-        batchUpperLimit += pointsPerListToAppend
-        # pongo puntos de cada grupo
-        res = res + puntosArriba[batchLowerLimit:batchUpperLimit] + puntosCentro[batchLowerLimit:batchUpperLimit] + puntosAbajo[batchLowerLimit:batchUpperLimit]
+        # increment the batchUpperLimit
+        batchUpperLimit += pointsPerListToAppendToDataset
+        # select points batches from every list
+        res = res \
+              + upperPoints[batchLowerLimit:batchUpperLimit] \
+              + centerPoints[batchLowerLimit:batchUpperLimit] \
+              + lowerPoints[batchLowerLimit:batchUpperLimit]
+        # now make batchLowerLimit equal to batchUpperLimit
         batchLowerLimit = batchUpperLimit
     return res
 
