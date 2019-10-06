@@ -7,10 +7,10 @@ Created on Tue Sep 10 20:19:40 2019
 """
 
 import datetime
-from CF import CF
-from boundingBox import BoundingBox
+from utils.uClusters.CF import CF
+from utils.uClusters.boundingBox import BoundingBox
 import numpy as np
-from customizedPrinting import printInBlueForDebugging
+
 
 class uCluster:
     

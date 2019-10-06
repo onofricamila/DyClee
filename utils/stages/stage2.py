@@ -7,7 +7,7 @@ Created on Sun Sep 15 15:52:46 2019
 """
 import numpy as np
 import matplotlib.pyplot as plt
-from customizedPrinting import printInMagentaForDebugging
+from utils.helpers.customPrintingFxs import printInMagentaForDebugging
 
 
 class Stage2:

@@ -5,7 +5,7 @@ Created on Mon Sep 30 12:02:00 2019
 
 @author: camila
 """
-from uCluster import uCluster
+from utils.uClusters.uCluster import uCluster
 
 rs = 0.06 # --> s = 0.06 * {2 - (-2)} = 0.06 * 4 = 0.24
 # --> hyperbox size per feature = 0.24 / 2 = 0.12

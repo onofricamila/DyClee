@@ -6,10 +6,10 @@ Created on Sun Sep 15 15:56:58 2019
 @author: camila
 """
 
-from stage1 import Stage1
-from stage2 import Stage2
+from utils.stages.stage1 import Stage1
+from utils.stages.stage2 import Stage2
 from multiprocessing import Process, Queue
-from parametersConfiguration import chosenDataset, rs, tG, uncdim
+from config import chosenDataset, rs, tG, uncdim
 
 # s1 to s2 communication queue
 s1ToS2ComQueue = Queue()  # s1 will write to s2 there

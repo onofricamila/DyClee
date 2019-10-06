@@ -6,9 +6,9 @@ Created on Tue Sep 10 14:35:06 2019
 @author: camila
 """
 
-from uCluster import uCluster
-from customizedPrinting import printInBlueForDebugging
-from mathHelperFunctions import stddev
+from utils.uClusters.uCluster import uCluster
+from utils.helpers.customPrintingFxs import printInBlueForDebugging
+from utils.helpers.customMathFxs import stddev
   
 class Stage1:
     

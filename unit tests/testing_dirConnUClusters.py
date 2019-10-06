@@ -5,7 +5,7 @@ Created on Mon Sep 30 12:02:55 2019
 
 @author: camila
 """
-from testing_uClusters import uC1, uC2, uC3, uC4, uC5, uC6, uC7, uC8, uC9, uC10, uC11, uC12
+from testing_uClusters import uC1, uC2, uC3, uC4, uC5, uC6, uC8, uC10, uC11, uC12
 
 # TEST 1°: uC2 llega a ser directly conn con uC1
 print('Debe dar True: ', uC1.isDirectlyConnectedWith(uC2, 0)) # --> true
