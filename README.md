@@ -8,17 +8,17 @@ Note that this implementation only takes a few possible configurations into acco
 
 The subset of parameters that can be passed to the algorithm are listed below:
 * relative size
-* t global
-* uncommon dimensions
+* tGlobal
+* uncommon dimensions (uncdim)
 
 Also consider the global approach is used in the density-based stage. 
 
 ### :small_orange_diamond: How it works
 First of all, there are 2 independent stages that work at different rates:
-1. a distance-based one, which processes every element of a given dataset, creates the so called __micro clusters__, and every 'tGlobal' samples sends them to the second stage
-2. a density-based one, which receives the micro clusters generated previously and joins them to form the final groups, eventually showing them to the user
+1. a distance-based one, which job will be to process every element of a given dataset and form the so called __micro clusters__, sending the current ones to the second stage every *'tGlobal'* proccessed samples
+2. a density-based one, which constantly receives the micro clusters generated previously and joins them to form the __final groups__, showing them to the user when finished
 
-:bulb: Keep in mind that micro clusters acompass elements which are close according to the 'relative size' parameter, and the final clusters are a set of connected micro clusters: a chain of dense micro clusters which are directly connected <taking into account the 'relative size' parameter for (dataset features - 'uncommon dimensions') features>, with semi dense ones in the borders.
+:bulb: Keep in mind that micro clusters acompass elements which are close according to the *'relative size'* parameter, taking into account all the features. On the other hand, final clusters are a set of connected micro clusters: a chain of dense micro clusters which are directly connected; that meaning micro clusters that are close according to the *'relative size'* parameter but only in a subset of features (at least total features - *'uncdim'*). Semi dense micro clusters will be in the borders.
 
 Side note: as there are many representatives for every cluster, it is possible to generate non convex groups. 
 
