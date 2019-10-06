@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Mon Sep 30 12:02:00 2019
-
-@author: camila
-"""
 from utils.uClusters.uCluster import uCluster
 
 rs = 0.06 # --> s = 0.06 * {2 - (-2)} = 0.06 * 4 = 0.24

@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Aug 20 19:09:14 2019
-
-@author: camila
-"""
 from math import pi, cos, sin, radians
 import random
 

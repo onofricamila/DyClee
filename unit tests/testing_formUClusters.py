@@ -1,10 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Sat Sep 28 12:54:58 2019
-
-@author: camila
-"""
 from testing_uClusters import uC1, uC2, uC3, uC4, uC5, uC6, uC7, uC8, uC9
 from utils.stages.stage2 import Stage2
 from multiprocessing import Queue

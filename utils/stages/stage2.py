@@ -1,14 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Sep 15 15:52:46 2019
-
-@author: camila
-"""
 import numpy as np
 import matplotlib.pyplot as plt
 from utils.helpers.customPrintingFxs import printInMagenta
-
 
 class Stage2:
   

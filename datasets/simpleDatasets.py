@@ -1,15 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Sun Sep 22 20:03:56 2019
 
-@author: camila
-"""
-from sklearn import datasets
-
-# Datasets for testing --------------------------------------------------------
-
-# pilot 
+# pilot
 dsPilot = [[2, 10]]
 
 # test forming 2 uCs

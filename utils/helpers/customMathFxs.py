@@ -1,12 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Thu Sep 26 12:30:17 2019
-
-@author: camila
-"""
-
-# helper functions
 
 def _ss(data, mean):
     """Return sum of square deviations of sequence data."""

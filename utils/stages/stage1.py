@@ -1,11 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Created on Tue Sep 10 14:35:06 2019
-
-@author: camila
-"""
-
 from utils.uClusters.uCluster import uCluster
 from utils.helpers.customPrintingFxs import printInBlue
 from utils.helpers.customMathFxs import stddev

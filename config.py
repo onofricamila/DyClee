@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 from datasets.simpleDatasets import dsChoosingClosestReachableUc, dsForming2uCs, dsFromUcToNoise, dsPilot
 from datasets.sklearnDatasets import noisyCirclesDataset, noisyMoonsDataset, blobsDataset
 from datasets.customCircunferencesDataset import customCircunferencesDataset
