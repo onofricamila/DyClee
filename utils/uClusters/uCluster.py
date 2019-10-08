@@ -15,6 +15,7 @@ class uCluster:
         self.CF = self.initializeCF(d)
         self.label = -1 #"unclass"
         self.centroid = self.getCentroid()
+        self.inmediatePreviousState = []
     
     
     

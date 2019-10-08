@@ -148,18 +148,10 @@ class Stage2:
     
 
 
-  # plots current clusters          
   def plotClusters(self, uCs):
-    self.scatter(uCs)
-    # set axes limits
-    minAndMaxDeviations = [-2.5, 2.5]
-    axes = plt.gca()
-    axes.set_xlim(minAndMaxDeviations)
-    axes.set_ylim(minAndMaxDeviations)
-    # set plot general characteristics
-    plt.xlabel("Feature 1")
-    plt.ylabel("Feature 2")
-    plt.grid(color='k', linestyle=':', linewidth=1)
+    f, (ax1, ax2) = plt.subplots(1, 2, sharey=True)
+    self.plotCurrentClustering(uCs, ax1)
+    self.plotMicroClustersEvolution(uCs, ax2)
     plt.show()
 
 
@@ -180,7 +172,7 @@ class Stage2:
 
 
 
-  def scatter(self, uCs):
+  def plotCurrentClustering(self, uCs, ax1):
     if not self.plottableUcs(uCs):
       return
     # let's plot!
@@ -190,19 +182,39 @@ class Stage2:
     labelsPerUCluster = [uC.label for uC in uCs]
     # clusters will be a sequence of numbers (cluster number or -1) for each point in the dataset
     clusters = np.array(labelsPerUCluster)
-    self.showPlotInfo(labelsPerUCluster)
-    printInMagenta("* uCs labels: " + '\n' + clusters.__repr__() + '\n')
     # get uCs centroids
     centroids = [uC.getCentroid() for uC in uCs]
     x, y = zip(*centroids)
-    printInMagenta("* uCs 'x' coordinates: " + '\n' + x.__repr__() + '\n')
-    printInMagenta("* uCs 'y' coordinates: " + '\n' + y.__repr__())
+    # show info to user
+    self.showClusteringInfo(labelsPerUCluster=labelsPerUCluster, clusters=clusters, x=x, y=y)
     # scatter'
-    plt.scatter(x, y, c=clusters, cmap="nipy_spectral", marker='s', alpha=0.8, s=s)
+    ax1.scatter(x, y, c=clusters, cmap="nipy_spectral", marker='s', alpha=0.8, s=s)
+    self.addStyleToSubplot(ax1, title='Current state')
 
 
 
-  def showPlotInfo(self, labelsPerUCluster):
+  def plotMicroClustersEvolution(self, uCs, ax2):
+    ax2.annotate("", xy=(0, 0), xytext=(-1, 0), arrowprops=dict(arrowstyle='<|-'))
+    ax2.annotate("", xy=(1, 1), xytext=(0, 0), arrowprops=dict(arrowstyle='<|-'))
+    self.addStyleToSubplot(ax2, title='Micro clusters evolution')
+
+
+
+  def addStyleToSubplot(self, ax, title=''):
+    # title
+    ax.set_title(title)
+    # set axes limits
+    minAndMaxDeviations = [-2.5, 2.5]
+    ax.set_xlim(minAndMaxDeviations)
+    ax.set_ylim(minAndMaxDeviations)
+    # set plot general characteristics
+    ax.set_xlabel("Feature 1")
+    ax.set_ylabel("Feature 2")
+    ax.grid(color='k', linestyle=':', linewidth=1)
+
+
+
+  def showClusteringInfo(self, labelsPerUCluster, clusters, x, y):
     # final clusters info
     dic = self.clustersElCounter(labelsPerUCluster)
     dicLength = len(dic)
@@ -217,6 +229,10 @@ class Stage2:
     printInMagenta(msg + "\n")
     for key, value in dic.items():
       printInMagenta("- Cluster n°" + key.__repr__() + " -> " + value.__repr__() + " uCs" + "\n")
+    # lists of coordinates and labels
+    printInMagenta("* uCs labels: " + '\n' + clusters.__repr__() + '\n')
+    printInMagenta("* uCs 'x' coordinates: " + '\n' + x.__repr__() + '\n')
+    printInMagenta("* uCs 'y' coordinates: " + '\n' + y.__repr__())
 
 
 
