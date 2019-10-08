@@ -18,12 +18,11 @@ class uCluster:
         self.inmediatePreviousState = []
     
     
-    
     def __repr__(self):
-     return f'\n\t uCluster =>\n\t rel siz: {self.relativeSize},\n\t label: {self.label},\n\t centroid: {self.centroid},\n\t CF: {self.CF}, \n\t hyperboxSizePerFeature: {self.hyperboxSizePerFeature}, \n\t boundingBoxesList: {self.boundingBoxesList}'
+        return 'uCluster'
 
 
-        
+
     # initializes CF  
     def initializeCF(self, d):  
        # we assume d is a list of features

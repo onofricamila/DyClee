@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import matplotlib.pyplot as plt
+from prompt_toolkit.contrib.telnet.protocol import DM
+
 from utils.helpers.customPrintingFxs import printInMagenta
 
 class Stage2:
@@ -129,7 +131,8 @@ class Stage2:
         connectedUcs = self.findDirectlyConnectedUcsFor(denseUc, updatedAList)
         self.growCluster(currentClusterId, alreadySeen, connectedUcs, updatedAList)
     # for loop finished -> clusters were formed
-    self.plotClusters(uCs)
+    self.plotClusters(uCs, DMC)
+    self.updateUcsPrevState(uCs, DMC)
 
 
 
@@ -148,10 +151,10 @@ class Stage2:
     
 
 
-  def plotClusters(self, uCs):
+  def plotClusters(self, uCs, DMC):
     f, (ax1, ax2) = plt.subplots(1, 2, sharey=True)
     self.plotCurrentClustering(uCs, ax1)
-    self.plotMicroClustersEvolution(uCs, ax2)
+    self.plotMicroClustersEvolution(uCs, ax2, DMC)
     plt.show()
 
 
@@ -193,10 +196,36 @@ class Stage2:
 
 
 
-  def plotMicroClustersEvolution(self, uCs, ax2):
-    ax2.annotate("", xy=(0, 0), xytext=(-1, 0), arrowprops=dict(arrowstyle='<|-'))
-    ax2.annotate("", xy=(1, 1), xytext=(0, 0), arrowprops=dict(arrowstyle='<|-'))
+  def plotMicroClustersEvolution(self, uCs, ax2, DMC):
+    (DMCwPrevState, newDMC) = self.formMicroClustersEvolutionLists(DMC)
+    for denseUcWPrevSt in DMCwPrevState:
+      ax2.annotate("", xy=denseUcWPrevSt.inmediatePreviousState, xytext=denseUcWPrevSt.centroid, arrowprops=dict(arrowstyle='<|-'))
+    # get newDMC centroids
+    centroids = [uC.centroid for uC in newDMC]
+    x, y = zip(*centroids)
+    ax2.plot(x, y, "*")
     self.addStyleToSubplot(ax2, title='Micro clusters evolution')
+
+
+
+  def formMicroClustersEvolutionLists(self, DMC):
+    DMCwPrevState = []
+    newDMC = []
+    for denseUc in DMC:
+      if not denseUc.inmediatePreviousState:
+        newDMC.append(denseUc)
+      else:
+        DMCwPrevState.append(denseUc)
+    return (DMCwPrevState, newDMC)
+
+
+
+  def updateUcsPrevState(self, uCs, DMC):
+    for uC in uCs:
+      if uC not in DMC:
+        uC.inmediatePreviousState = []
+      else:
+        uC.inmediatePreviousState = uC.centroid
 
 
 

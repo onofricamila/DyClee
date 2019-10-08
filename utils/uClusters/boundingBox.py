@@ -8,4 +8,4 @@ class BoundingBox:
         
 
     def __repr__(self):
-     return f'\n\t\t BoundingBox =>\n\t\t\tminimun: {self.minimun},\n\t\t\tmaximun: {self.maximun}'
+        return 'BoundingBox'
