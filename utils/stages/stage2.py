@@ -203,12 +203,12 @@ class Stage2:
   def plotMicroClustersEvolution(self, ax2, DMC):
     (DMCwPrevState, newDMC) = self.formMicroClustersEvolutionLists(DMC)
     for denseUcWPrevSt in DMCwPrevState:
-      ax2.annotate("", xy=denseUcWPrevSt.previousState, xytext=denseUcWPrevSt.centroid, arrowprops=dict(arrowstyle='<|-'))
+      ax2.annotate("", xy=denseUcWPrevSt.previousState, xytext=denseUcWPrevSt.centroid, arrowprops=dict(arrowstyle='<-'))
     # get newDMC centroids
     if len(newDMC) is not 0:
       centroids = [uC.centroid for uC in newDMC]
       x, y = zip(*centroids)
-      ax2.plot(x, y, "*")
+      ax2.plot(x, y, ".", alpha=0.5,)
     # add general style to subplot n°2
     self.addStyleToSubplot(ax2, title='Micro clusters evolution')
 
