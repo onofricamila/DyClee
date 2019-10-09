@@ -5,13 +5,13 @@ from datasets.sklearnDatasets import noisyCirclesDataset, noisyMoonsDataset, blo
 from datasets.customCircunferencesDataset import customCircunferencesDataset
 from utils.helpers.customPrintingFxs import printInGreen
 
-chosenDataset = customCircunferencesDataset
+chosenDataset = dsChoosingClosestReachableUc
 
 printInGreen("The chosen dataset has " + len(chosenDataset).__repr__() + " elements")
 
-rs = 0.06
+rs = 1
 
-tG = 100
+tG = 1
 
 uncdim = 0
 

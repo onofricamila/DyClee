@@ -31,11 +31,16 @@ class Stage2:
       self.updateMeanAndMedian(lists)
       # update lists
       updatedLists = self.updateLists(lists)
-      # send updated uCs lists to s1
-      self.s2ToS1ComQueue.put(updatedLists)
+
+      updatedAList, updatedOList = updatedLists
+      uCs = updatedAList + updatedOList
+      DMC = self.findDenseUcs(updatedAList)
       # form clusters
       self.formClusters(updatedLists)
-
+      self.plotClusters(uCs, DMC)
+      self.updateUcsPrevState(uCs, DMC)
+      # send updated uCs lists to s1
+      self.s2ToS1ComQueue.put(updatedLists)
 
 
   def updateLists(self, lists):
@@ -131,8 +136,8 @@ class Stage2:
         connectedUcs = self.findDirectlyConnectedUcsFor(denseUc, updatedAList)
         self.growCluster(currentClusterId, alreadySeen, connectedUcs, updatedAList)
     # for loop finished -> clusters were formed
-    self.plotClusters(uCs, DMC)
-    self.updateUcsPrevState(uCs, DMC)
+
+    # self.updateUcsPrevState(uCs, DMC)
 
 
 
@@ -154,7 +159,7 @@ class Stage2:
   def plotClusters(self, uCs, DMC):
     f, (ax1, ax2) = plt.subplots(1, 2, sharey=True)
     self.plotCurrentClustering(uCs, ax1)
-    self.plotMicroClustersEvolution(uCs, ax2, DMC)
+    self.plotMicroClustersEvolution(ax2, DMC)
     plt.show()
 
 
@@ -196,14 +201,16 @@ class Stage2:
 
 
 
-  def plotMicroClustersEvolution(self, uCs, ax2, DMC):
+  def plotMicroClustersEvolution(self, ax2, DMC):
     (DMCwPrevState, newDMC) = self.formMicroClustersEvolutionLists(DMC)
     for denseUcWPrevSt in DMCwPrevState:
-      ax2.annotate("", xy=denseUcWPrevSt.inmediatePreviousState, xytext=denseUcWPrevSt.centroid, arrowprops=dict(arrowstyle='<|-'))
+      ax2.annotate("", xy=denseUcWPrevSt.previousState, xytext=denseUcWPrevSt.centroid, arrowprops=dict(arrowstyle='<|-'))
     # get newDMC centroids
-    centroids = [uC.centroid for uC in newDMC]
-    x, y = zip(*centroids)
-    ax2.plot(x, y, "*")
+    if len(newDMC) is not 0:
+      centroids = [uC.centroid for uC in newDMC]
+      x, y = zip(*centroids)
+      ax2.plot(x, y, "*")
+    # add style to subplot n° 2
     self.addStyleToSubplot(ax2, title='Micro clusters evolution')
 
 
@@ -212,9 +219,11 @@ class Stage2:
     DMCwPrevState = []
     newDMC = []
     for denseUc in DMC:
-      if not denseUc.inmediatePreviousState:
+      if (len(denseUc.previousState) is 0) or (denseUc.centroid == denseUc.previousState):
+        # dense uC hasn't previous state --> is a new dense uC
         newDMC.append(denseUc)
       else:
+        # dense uC has previous state --> dense uC has evolutioned
         DMCwPrevState.append(denseUc)
     return (DMCwPrevState, newDMC)
 
@@ -223,9 +232,9 @@ class Stage2:
   def updateUcsPrevState(self, uCs, DMC):
     for uC in uCs:
       if uC not in DMC:
-        uC.inmediatePreviousState = []
+        uC.previousState = []
       else:
-        uC.inmediatePreviousState = uC.centroid
+        uC.previousState = uC.centroid
 
 
 
