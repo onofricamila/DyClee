@@ -159,6 +159,7 @@ class Stage2:
     self.plotCurrentClustering(ax1, uCs)
     self.plotMicroClustersEvolution(ax2, DMC)
     # show both subplots
+    f.canvas.manager.window.showMaximized()
     plt.show()
 
 

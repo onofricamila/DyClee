@@ -5,15 +5,19 @@ from datasets.sklearnDatasets import noisyCirclesDataset, noisyMoonsDataset, blo
 from datasets.customCircunferencesDataset import customCircunferencesDataset
 from utils.helpers.customPrintingFxs import printInGreen
 
-chosenDataset = blobsDataset
+# config
 
-printInGreen("The chosen dataset has " + len(chosenDataset).__repr__() + " elements")
+chosenDataset = blobsDataset
 
 rs = 0.06
 
 tG = 100
 
 uncdim = 0
+
+# print info regarding current config
+
+printInGreen("The chosen dataset has " + len(chosenDataset).__repr__() + " elements")
 
 printInGreen("About to cluster data with params: rs -> "  \
              + rs.__repr__() + " , tGlobal -> "  \
