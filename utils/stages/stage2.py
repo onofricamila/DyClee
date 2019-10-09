@@ -29,17 +29,21 @@ class Stage2:
       lists = msg
       # update mean and median
       self.updateMeanAndMedian(lists)
-      # update lists
+      # update lists according to uC density
       updatedLists = self.updateLists(lists)
-
+      # extract active and outlier uCs
       updatedAList, updatedOList = updatedLists
+      # get both active and outlier uCs together
       uCs = updatedAList + updatedOList
+      # extract dense uCs from active list (it's unnecessary to look for dense uCs in the oList)
       DMC = self.findDenseUcs(updatedAList)
-      # form clusters
-      self.formClusters(updatedLists)
+      # form final clusters
+      self.formClusters(updatedAList=updatedAList, updatedOList=updatedOList, DMC=DMC)
+      # plot current state and micro cluster evolution
       self.plotClusters(uCs, DMC)
+      # update prev state once the evolution was plotted
       self.updateUcsPrevState(uCs, DMC)
-      # send updated uCs lists to s1
+      # send updated uCs lists to s1 (needs to be done at this point to make prev state last; labels will last too)
       self.s2ToS1ComQueue.put(updatedLists)
 
 
@@ -115,18 +119,13 @@ class Stage2:
 
 
 
-  def formClusters(self, updatedLists):
+  def formClusters(self, updatedAList, updatedOList, DMC):
     # init currentClusterId
     currentClusterId = 0
-    # extract lists
-    updatedAList, updatedOList = updatedLists
     # reset uCs labels as -1
     self.resetLabelsAsUnclass(updatedAList)
     self.resetLabelsAsUnclass(updatedOList)
-    # join lists to get all the u clusters together
-    uCs = updatedAList + updatedOList
-    # it's unnecessary to look for dense uCs in the oList
-    DMC = self.findDenseUcs(updatedAList)
+    # start clustering
     alreadySeen = []
     for denseUc in DMC:
       if denseUc not in alreadySeen:
@@ -136,8 +135,6 @@ class Stage2:
         connectedUcs = self.findDirectlyConnectedUcsFor(denseUc, updatedAList)
         self.growCluster(currentClusterId, alreadySeen, connectedUcs, updatedAList)
     # for loop finished -> clusters were formed
-
-    # self.updateUcsPrevState(uCs, DMC)
 
 
 
@@ -157,9 +154,10 @@ class Stage2:
 
 
   def plotClusters(self, uCs, DMC):
-    f, (ax1, ax2) = plt.subplots(1, 2, sharey=True)
-    self.plotCurrentClustering(uCs, ax1)
+    f, (ax1, ax2) = plt.subplots(1, 2, sharey=True) # creates a figure with one row and two columns
+    self.plotCurrentClustering(ax1, uCs)
     self.plotMicroClustersEvolution(ax2, DMC)
+    # show both subplots
     plt.show()
 
 
@@ -180,7 +178,7 @@ class Stage2:
 
 
 
-  def plotCurrentClustering(self, uCs, ax1):
+  def plotCurrentClustering(self, ax1, uCs):
     if not self.plottableUcs(uCs):
       return
     # let's plot!
@@ -197,6 +195,7 @@ class Stage2:
     self.showClusteringInfo(labelsPerUCluster=labelsPerUCluster, clusters=clusters, x=x, y=y)
     # scatter'
     ax1.scatter(x, y, c=clusters, cmap="nipy_spectral", marker='s', alpha=0.8, s=s)
+    # add general style to subplot n°1
     self.addStyleToSubplot(ax1, title='Current state')
 
 
@@ -210,7 +209,7 @@ class Stage2:
       centroids = [uC.centroid for uC in newDMC]
       x, y = zip(*centroids)
       ax2.plot(x, y, "*")
-    # add style to subplot n° 2
+    # add general style to subplot n°2
     self.addStyleToSubplot(ax2, title='Micro clusters evolution')
 
 
@@ -221,6 +220,7 @@ class Stage2:
     for denseUc in DMC:
       if (len(denseUc.previousState) is 0) or (denseUc.centroid == denseUc.previousState):
         # dense uC hasn't previous state --> is a new dense uC
+        # dense uC prev state and current centroid match --> dense uC hasn't changed nor evolutioned; just mark its position
         newDMC.append(denseUc)
       else:
         # dense uC has previous state --> dense uC has evolutioned
@@ -232,14 +232,16 @@ class Stage2:
   def updateUcsPrevState(self, uCs, DMC):
     for uC in uCs:
       if uC not in DMC:
+        # uC prev state doesn't matter; if a dense uC turned out to be an outlier, its position is no longer important
         uC.previousState = []
       else:
+        # uC is dense; current state must be saved for viewing future evolution
         uC.previousState = uC.centroid
 
 
 
   def addStyleToSubplot(self, ax, title=''):
-    # title
+    # set title
     ax.set_title(title)
     # set axes limits
     minAndMaxDeviations = [-2.5, 2.5]
@@ -253,7 +255,7 @@ class Stage2:
 
 
   def showClusteringInfo(self, labelsPerUCluster, clusters, x, y):
-    # final clusters info
+    # show final clustering info
     dic = self.clustersElCounter(labelsPerUCluster)
     dicLength = len(dic)
     if dicLength == 1:
@@ -267,13 +269,14 @@ class Stage2:
     printInMagenta(msg + "\n")
     for key, value in dic.items():
       printInMagenta("- Cluster n°" + key.__repr__() + " -> " + value.__repr__() + " uCs" + "\n")
-    # lists of coordinates and labels
+    # show detailed info regarding lists of uCs coordinates and labels
     printInMagenta("* uCs labels: " + '\n' + clusters.__repr__() + '\n')
     printInMagenta("* uCs 'x' coordinates: " + '\n' + x.__repr__() + '\n')
     printInMagenta("* uCs 'y' coordinates: " + '\n' + y.__repr__())
 
 
 
+  # returns a dictionary in which every position represents a cluster and every value is the amount of uCs w that label
   def clustersElCounter(self, labelsPerUCluster):
     dicKeys = set(labelsPerUCluster)
     dic = {key: 0 for key in dicKeys}
@@ -283,6 +286,7 @@ class Stage2:
 
 
 
+  # returns True if uCs are plottable (regarding amount of features)
   def plottableUcs(self, uCs):
     if len(uCs) == 0:
       # there are't any u clusters to plot
