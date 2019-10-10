@@ -7,8 +7,8 @@ import random
 # circumference properties
 h = 0
 k = 0
-ratio = 5
-maxRatioInc = 0.1
+ratio = 1
+maxRatioInc = 0.5
 ratioPortionForCenterPoints = 10 / 100 * ratio
 # batch represents the amount of points to generate per list at a given angle
 # we will have 180 * batch points in each list
@@ -24,6 +24,8 @@ pointsPerListToAppendToDataset = 100
 def point(theta):
     # increase a little bit the radio [or not]
     r = ratio + random.uniform(0, maxRatioInc)
+    # increase or decrease theta (angle)
+    theta = theta + random.uniform(0, radians(1)) - random.uniform(0, 0.5)
     # cos(theta) * r --> difference between the point x coordinate and the circumference center one (h)
     # sin(theta) * r --> difference between the point y coordinate and the circumference center one (y)
     return [h + cos(theta) * r, k + sin(theta) * r]
