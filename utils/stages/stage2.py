@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.colors as clrs
 from prompt_toolkit.contrib.telnet.protocol import DM
 
 from utils.helpers.customPrintingFxs import printInMagenta
@@ -155,9 +156,10 @@ class Stage2:
 
 
   def plotClusters(self, uCs, DMC):
-    f, (ax1, ax2) = plt.subplots(1, 2, sharey=True) # creates a figure with one row and two columns
+    f, (ax1, ax2, ax3) = plt.subplots(1, 3, sharey=True) # creates a figure with one row and two columns
     self.plotCurrentClustering(ax1, uCs)
     self.plotMicroClustersEvolution(ax2, DMC)
+    self.plotMicroClustersSize(ax3, uCs)
     # show both subplots
     f.canvas.manager.window.showMaximized()
     plt.show()
@@ -212,7 +214,42 @@ class Stage2:
       x, y = zip(*centroids)
       ax2.plot(x, y, ".", alpha=0.5,)
     # add general style to subplot n°2
-    self.addStyleToSubplot(ax2, title='Micro clusters evolution')
+    self.addStyleToSubplot(ax2, title='Dense micro clusters evolution')
+
+
+
+  def plotMicroClustersSize(self, ax3, uCs):
+    # choose palette
+    ns = plt.get_cmap('nipy_spectral')
+    # get labels
+    labelsPerUCluster = [uC.label for uC in uCs]
+    # skip repeated leabels
+    s = set(labelsPerUCluster)
+    # especify normalization to get the correct colors
+    norm = clrs.Normalize(vmin=min(s), vmax=max(s))
+    # for every micro cluster
+    for uC in uCs:
+      # get coordinate x from uC centroid
+      realX = uC.centroid[0]
+      # get coordinate y from uC centroid
+      realY = uC.centroid[1]
+      # x n y are the bottom left coordinates for the rectangle
+      # to obtain them we have to substract half the hyperbox size to both coordinates
+      offsetX = uC.hyperboxSizePerFeature[0] / 2
+      offsetY = uC.hyperboxSizePerFeature[1] / 2
+      x = realX - offsetX
+      y = realY - offsetY
+      # the following are represented from the bottom left angle coordinates of the rectangle
+      width = uC.hyperboxSizePerFeature[0]
+      height = uC.hyperboxSizePerFeature[1]
+      # get the color
+      c = ns(norm(uC.label))
+      # make the rectangle
+      rect = plt.Rectangle((x, y), width, height, color=c, alpha=0.5)
+      ax3.add_patch(rect)
+       # plot the rectangle center (uC centroid)
+      ax3.plot(realX, realY, ".", color=c, alpha=0.3)
+    self.addStyleToSubplot(ax3, title='Micro clusters real size')
 
 
 
