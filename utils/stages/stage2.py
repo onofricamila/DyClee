@@ -200,7 +200,7 @@ class Stage2:
     # scatter'
     ax1.scatter(x, y, c=clusters, cmap="nipy_spectral", marker='s', alpha=0.8, s=s)
     # add general style to subplot n°1
-    self.addStyleToSubplot(ax1, title='Current state')
+    self.addStyleToSubplot(ax1, title='CURRENT STATE\nlrg square = dense microcluster \nmed square = semidense microcluster\nsml square = outlier microcluster')
 
 
 
@@ -214,7 +214,7 @@ class Stage2:
       x, y = zip(*centroids)
       ax2.plot(x, y, ".", alpha=0.5,)
     # add general style to subplot n°2
-    self.addStyleToSubplot(ax2, title='Dense micro clusters evolution')
+    self.addStyleToSubplot(ax2, title='DENSE MICRO CLUSTERS EVOLUTION\n"." means no change \n"->" implies evolution')
 
 
 
@@ -249,7 +249,7 @@ class Stage2:
       ax3.add_patch(rect)
        # plot the rectangle center (uC centroid)
       ax3.plot(realX, realY, ".", color=c, alpha=0.3)
-    self.addStyleToSubplot(ax3, title='Micro clusters real size')
+    self.addStyleToSubplot(ax3, title='MICRO CLUSTERS REAL SIZE')
 
 
 
