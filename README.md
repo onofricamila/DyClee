@@ -13,6 +13,7 @@ The subset of parameters that can be passed to the algorithm are listed below:
 
 Also consider the global approach is used in the density-based stage. 
 
+
 ### :small_orange_diamond: DyClee goals
 * As there are many representatives for every cluster, **it is possible to generate non convex groups.** 
 * **Noise is handled**: outlier elements will belong to outlier micro clusters
@@ -21,16 +22,19 @@ Also consider the global approach is used in the density-based stage.
 
 If you wanna achieve some other goals like working with different densities, feel free to take this implementation as a base and upgrade it :)
 
+
 ### :small_orange_diamond: How to try it
 The `config` file is the one in which you have to define the dataset you want to use and configure the parameters to be passed to stage 1 and stage 2. Then, just run the `main` file and you will see the results :blush:
+
 
 ### :small_orange_diamond: How it works
 First of all, there are 2 independent stages that work at different rates:
 1. a distance-based one, which job will be to process every element of a given dataset and form the so called __micro clusters__, sending the current ones to the second stage every *'tGlobal'* proccessed samples
-2. a density-based one, which constantly receives the micro clusters generated previously and joins them to form the __final groups__, showing them to the user when finished; every *'tGlobal'* proccessed samples we will plots showing:
-    * current partitions, in which we see every micro cluster centroid colored according to the label assigned
+2. a density-based one, which constantly receives the micro clusters generated previously and joins them to form the __final groups__, showing them to the user when finished. Every *'tGlobal'* proccessed samples, the user will see plots showing:
+    * current clustering, in which every micro cluster centroid is plotted, colored according to the label assigned
     * dense micro clusters evolution taking into account the previous state
-    * micro clusters real size, to being able to at least mentally picture the datasets points assigned to each micro cluster
+    * micro clusters real size, being able to picture the dataset elements assigned to each micro cluster
+    
 The plots for a 2D dataset would look like theese:
 ![Figure_2](https://user-images.githubusercontent.com/26676136/67420367-de07b700-f5a4-11e9-8fa5-05adb6e1c96a.png)
 
