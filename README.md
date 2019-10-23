@@ -24,8 +24,9 @@ If you wanna achieve some other goals, like being able to work with different de
 
 
 ### :small_orange_diamond: How to try it
-The `config` file is the one in which you have to define the dataset you want to use and configure the parameters to be passed to stage 1 and stage 2. Then, just run the `main` file and you will see the results. 
+The `requirements.txt` file provides the needed packages to create a conda environment. 
 
+Then, as for the algorithm itself, the `config.py` file is the one in which you have to define the dataset you want to use and configure the parameters to be passed to stage 1 and stage 2. Then, just run the `main.py` file and you will see the results :sparkles: 
 
 ### :small_orange_diamond: How it works
 First of all, there are 2 independent stages that work at different rates:
