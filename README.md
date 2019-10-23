@@ -36,7 +36,7 @@ First of all, there are 2 independent stages that work at different rates:
     * dense micro clusters evolution taking into account the previous state
     * micro clusters real size, being able to picture the dataset elements assigned to each micro cluster
     
-The plots for a 2D dataset would look like theese:
+The plots for a 2D dataset would look like these:
 ![Figure_2](https://user-images.githubusercontent.com/26676136/67420367-de07b700-f5a4-11e9-8fa5-05adb6e1c96a.png)
 
 :bulb: Keep in mind that micro clusters acompass elements which are close according to the *'relative size'* parameter, taking into account all the features. On the other hand, final clusters are a set of connected micro clusters: a chain of dense micro clusters which are directly connected; that meaning micro clusters that are close according to the *'relative size'* parameter but only in a subset of features (at least total features - *'uncdim'*). Semi dense micro clusters will be in the borders.
