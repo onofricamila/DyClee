@@ -20,11 +20,11 @@ Also consider the global approach is used in the density-based stage.
 * As every element of the provided dataset is processed once, the algorithm is **perfect for working with streams**
 * It's possible to work with **evolving environments**. There is no need to specify a fixed number of clusters to be generated. 
 
-If you wanna achieve some other goals like working with different densities, feel free to take this implementation as a base and upgrade it :)
+If you wanna achieve some other goals, like being able to work with different densities, feel free to take this implementation as a base :blush:
 
 
 ### :small_orange_diamond: How to try it
-The `config` file is the one in which you have to define the dataset you want to use and configure the parameters to be passed to stage 1 and stage 2. Then, just run the `main` file and you will see the results :blush:
+The `config` file is the one in which you have to define the dataset you want to use and configure the parameters to be passed to stage 1 and stage 2. Then, just run the `main` file and you will see the results. 
 
 
 ### :small_orange_diamond: How it works
