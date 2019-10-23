@@ -14,11 +14,11 @@ The subset of parameters that can be passed to the algorithm are listed below:
 Also consider the global approach is used in the density-based stage. 
 
 
-### :small_orange_diamond: The algorithm goals
+### :small_orange_diamond: Goals
 * As there are many representatives for every cluster, **it is possible to generate non convex groups.** 
 * **Noise is handled**: outlier elements will belong to outlier micro clusters
 * As every element of the provided dataset is processed once, the algorithm is **perfect for working with streams**
-* It's possible to work with **evolving environments**. There is no need to specify a fixed number of clusters to be generated. 
+* It's possible to track **evolving environments**. There is no need to specify a fixed number of clusters to be generated. 
 
 If you wanna achieve some other goals, like being able to work with different densities as mentioned in the original paper, feel free to take this implementation as a base :blush:
 
