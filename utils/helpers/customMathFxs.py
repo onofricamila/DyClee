@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-
 def _ss(data, mean):
     """Return sum of square deviations of sequence data."""
     ss = sum((x-mean)**2 for x in data)

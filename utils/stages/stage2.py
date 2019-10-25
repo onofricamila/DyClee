@@ -3,9 +3,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as clrs
-from prompt_toolkit.contrib.telnet.protocol import DM
-
 from utils.helpers.customPrintingFxs import printInMagenta
+import matplotlib
+# set matplotlib backend to Qt5Agg to make figure window maximizer work
+matplotlib.use('Qt5Agg')
+
 
 class Stage2:
   
