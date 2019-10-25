@@ -14,7 +14,7 @@ The subset of parameters that can be passed to the algorithm are listed below:
 Also consider the global approach is used in the density-based stage. 
 
 
-### :small_orange_diamond: Goals
+### :small_orange_diamond: Achieved goals
 * As there are many representatives for every cluster, **it is possible to generate non convex groups.** 
 * **Noise is handled**: outlier elements will belong to outlier micro clusters
 * As every element of the provided dataset is processed once, the algorithm is **perfect for working with streams**
