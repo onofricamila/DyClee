@@ -17,7 +17,7 @@ Also consider the global approach is used in the density-based stage.
 ### :small_orange_diamond: Achieved goals
 * As there are many representatives for every cluster, **it is possible to generate non convex groups.** 
 * **Noise is handled**: outlier elements will belong to outlier micro clusters
-* As every element of the provided dataset is processed once, the algorithm is **perfect for working with streams**. Note that if you wanna use DyClee for clustering a fixed size data set, you will have to set 'tGlobal' to a value higher than the data set size.
+* As every element of the provided dataset is processed once, the algorithm is **perfect for working with streams**. Note that if you wanna use DyClee for clustering a fixed size data set, you will have to set *'tGlobal'* to a value higher than the data set size.
 * It's possible to track **evolving environments**. There is no need to specify a fixed number of clusters to be generated. 
 
 If you wanna achieve some other goals, like being able to work with different densities as mentioned in the original paper, feel free to take this implementation as a base :blush:
