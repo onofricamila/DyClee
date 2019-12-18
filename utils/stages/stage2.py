@@ -3,7 +3,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as clrs
-from utils.helpers.customPrintingFxs import printInMagenta
+from utils.helpers.custom_printing_fxs import printInMagenta
 import matplotlib
 # set matplotlib backend to Qt5Agg to make figure window maximizer work
 matplotlib.use('Qt5Agg')

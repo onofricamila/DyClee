@@ -16,3 +16,16 @@ def stddev(data, mean, ddof=0):
     ss = _ss(data, mean)
     pvar = ss/(n-ddof)
     return pvar**0.5
+
+
+# returns the manhattan distance between a and b
+def manhattanDistance(a, b):
+    dist = 0
+    # for every feature/dimension
+    for i in range(len(a)):
+        diff = a[i] - b[i]
+        dist = dist + abs(diff)
+    return dist
+
+
+

@@ -1,53 +1,54 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import datetime
-from utils.uClusters.CF import CF
-from utils.uClusters.boundingBox import BoundingBox
+from utils.micro_clusters.CF import CF
+from utils.micro_clusters.bounding_box import BoundingBox
 import numpy as np
 
 
-class uCluster:
+class MicroCluster:
     
-    def __init__(self, relativeSize, d):
+    def __init__(self, relativeSize, currTimestamp, point):
         self.relativeSize = relativeSize
-        self.boundingBoxesList = self.initBoundingBoxesList(d)
+        self.currTimestamp = currTimestamp # object
+        self.boundingBoxesList = self.initBoundingBoxesList(point)
         self.hyperboxSizePerFeature = self.getHyperboxSizePerFeature()
-        self.CF = self.initializeCF(d)
+        self.CF = self.initializeCF(point)
         self.label = -1 #"unclass"
         self.centroid = self.getCentroid()
         self.previousState = []
     
     
     def __repr__(self):
-        return 'uCluster'
+        return 'Micro Cluster'
 
 
 
     # initializes CF  
-    def initializeCF(self, d):  
-       # we assume d is a list of features
-       LS = d
-       # this vector will only have d elements squared
-       SS = [a*b for a,b in zip(d, d)]
-       currentTime = datetime.datetime.now().time()
+    def initializeCF(self, point):  
+       # we assume point is a list of features
+       LS = point
+       # this vector will only have point elements squared
+       SS = [a*b for a,b in zip(point, point)]
+       now = datetime.datetime.now().time()
        D = self.getD()
        # CF creation
-       cf = CF(n=1, LS=LS, SS=SS, tl=currentTime, ts=currentTime, D=D)
+       cf = CF(n=1, LS=LS, SS=SS, tl=now, ts=now, D=D)
        return cf
     
     
     
-    # initializes boundingBox with d values 
-    def initBoundingBoxesList(self, d):
+    # initializes boundingBox with point values 
+    def initBoundingBoxesList(self, point):
         boundingBoxesList = []
-        for i in range(len(d)):
+        for i in range(len(point)):
             boundingBox = BoundingBox(minimun=-2 , maximun=2)
             boundingBoxesList.append(boundingBox)
         return boundingBoxesList
     
     
     
-    # returns a list containing the size per feature. Indexes match those from d
+    # returns a list containing the size per feature. Indexes match those from point
     def getHyperboxSizePerFeature(self):
         hyperboxSizePerFeature = []
         for bb in self.boundingBoxesList:
@@ -58,14 +59,14 @@ class uCluster:
     
     
     # retunrs true if the uc is reachable from a given element
-    def isReachableFrom(self, d):
+    def isReachableFrom(self, point):
         myCentroid = self.getCentroid()
         maxDiff = float("-inf")
         featureIndex = 0
         # for each feature
-        for i in range(len(d)):
+        for i in range(len(point)):
             # difference between the element feature and the cluster centroid for that feature
-            diff = abs(d[i] - myCentroid[i])
+            diff = abs(point[i] - myCentroid[i])
             if diff > maxDiff:
               maxDiff = diff
               featureIndex = i
@@ -89,14 +90,14 @@ class uCluster:
     
     # includes an element into the u cluster
     # updates CF vector
-    def addElement(self, d):
+    def addElement(self, point):
         self.updateTl()
         self.updateN()
-        self.updateLS(d)
-        self.updateSS(d)
+        self.updateLS(point)
+        self.updateSS(point)
         self.updateCentroid()
 #        # needs to check if bounding boxes change and recalculate hyperbox size
-#        self.updateBoundingBoxesList(d)
+#        self.updateBoundingBoxesList(point)
 #        self.updateHyperboxSizePerFeature()
         # then update u cluster density
         self.updateD()
@@ -104,8 +105,8 @@ class uCluster:
         
         
     def updateTl(self):
-        currentTime = datetime.datetime.now().time()
-        self.CF.tl = currentTime
+        now = datetime.datetime.now().time()
+        self.CF.tl = now
         
         
         
@@ -114,15 +115,15 @@ class uCluster:
         
         
     
-    def updateLS(self, d):
-        for i in range(len(d)):
-            self.CF.LS[i] = self.CF.LS[i] + d[i]  
+    def updateLS(self, point):
+        for i in range(len(point)):
+            self.CF.LS[i] = self.CF.LS[i] + point[i]  
             
             
     
-    def updateSS(self, d):
-        for i in range(len(d)):
-            self.CF.SS[i] = self.CF.SS[i] + (d[i] **2)
+    def updateSS(self, point):
+        for i in range(len(point)):
+            self.CF.SS[i] = self.CF.SS[i] + (point[i] **2)
         
     
 
@@ -131,10 +132,10 @@ class uCluster:
       
       
         
-    def updateBoundingBoxesList(self, d):
-        for i in range(len(d)):
-            mini = min(d[i], self.boundingBoxesList[i].minimun)
-            maxi = max(d[i], self.boundingBoxesList[i].maximun)
+    def updateBoundingBoxesList(self, point):
+        for i in range(len(point)):
+            mini = min(point[i], self.boundingBoxesList[i].minimun)
+            maxi = max(point[i], self.boundingBoxesList[i].maximun)
             boundingBox = BoundingBox(minimun=mini , maximun=maxi)
             self.boundingBoxesList[i] = boundingBox
 
@@ -166,16 +167,16 @@ class uCluster:
     
     
     
-    # retunrs true if the uC is directly connected to another uC
-    def isDirectlyConnectedWith(self, uC, uncommonDimensions):
+    # retunrs true if the microCluster is directly connected to another microCluster
+    def isDirectlyConnectedWith(self, microCluster, uncommonDimensions):
       featuresCount = len(self.CF.LS)
       currentUncommonDimensions = 0
       myCentroid = self.getCentroid()
-      uCCentroid = uC.getCentroid()
+      microClusterCentroid = microCluster.getCentroid()
       # for each feature
       for i in range(featuresCount):
           # difference between the u cluster centroids for that feature
-          aux = abs(myCentroid[i] - uCCentroid[i])
+          aux = abs(myCentroid[i] - microClusterCentroid[i])
           # if for a given feature the element doesn't match the cluster, return false
           limit = self.limit(i)
           if aux >= (limit*2):

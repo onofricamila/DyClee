@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-from utils.uClusters.uCluster import uCluster
-from utils.helpers.customPrintingFxs import printInBlue
-from utils.helpers.customMathFxs import stddev
+from utils.micro_clusters.micro_cluster import MicroCluster
+from utils.helpers.custom_printing_fxs import printInBlue
+from utils.helpers.custom_math_fxs import stddev
   
 class Stage1:
     
@@ -66,7 +66,7 @@ class Stage1:
             if not reachableUcs:
                 # empty list -> create u cluster from element 
                 # the uC will have the parametrized relative size
-                uC = uCluster(self.relativeSize, d)
+                uC = MicroCluster(self.relativeSize, d)
                 self.oList.append(uC)
             else:
                 # find closest reachable u cluster

@@ -1,40 +1,35 @@
 # S1
-from utils.uClusters.uCluster import uCluster
-from utils.helpers.customPrintingFxs import printInBlue
-from utils.helpers.customMathFxs import stddev
+from utils.helpers.custom_math_fxs import manhattanDistance
+from utils.micro_clusters.micro_cluster import MicroCluster
+from utils.timestamp import Timestamp
 # S2
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as clrs
-from utils.helpers.customPrintingFxs import printInMagenta
+from utils.helpers.custom_printing_fxs import printInMagenta
 import matplotlib
 # set matplotlib backend to Qt5Agg to make figure window maximizer work
 matplotlib.use('Qt5Agg')
 
+
 class Dyclee:
-    def __init__(self, relativeSize=1, tGlobal=1, uncommonDimensions = 0, initPoints = 100):
-        # stage1 algo instance variables
+    def __init__(self, relativeSize=1, speed = 100, uncommonDimensions = 0):
         self.relativeSize = relativeSize
-        self.tGlobal = tGlobal
+        self.processingSpeed = speed
         self.aList = []
         self.oList = []
         self.processedElements = 0
         self.timestamp = 0
-        # to be calculated when the dataset is received
-        self.meanList = []
-        self.SDList = []
-        # stage2 algo instance variables
+        self.currTimestamp = Timestamp() # initialized at 0
         self.densityMean = 0
         self.densityMedian = 0
         self.uncommonDimensions = uncommonDimensions
+        # for normalization; to be calculated when the data set is received
+        self.meanValuePerFeature = []
+        self.SDPerFeature = []
 
-    # main method
-    # def start(self, dataset):
-    #     self.calculateMeanAndSD(dataset)
-    #     scaledDataset = self.scaleDataset(dataset)
-    #     self.formUcs(scaledDataset)
-    #
-    # def scaleDataset(self, dataset):
+
+   # def scaleDataset(self, dataset):
     #     res = []
     #     # for each element
     #     for i in range(len(dataset)):
@@ -54,39 +49,49 @@ class Dyclee:
     # def scaleDatasetElementFeature(self, fValue, fIndex):
     #     return (fValue - self.meanList[fIndex]) / self.SDList[fIndex]
 
-
+    # returns a list of floats given an iterable object
     def trainOnElement(self, newEl):
+        # get an object matching the desired format (to guarantee consistency)
+        point = self.getListOfFloatsFromIterable(newEl)
         self.processedElements += 1
-        # TODO: check if a param like denstream speed is needed ... now, time stamp increments every time
-        self.timestamp += 1
-        # TODO: new instance?
-        self.formUcs(self.initBuffer)
+        # control the stream speed
+        # TODO: check if the "speed" param is ok ...
+        if self.timeToIncTimestamp():
+            self.timestamp += 1
+            self.currTimestamp.timestamp = self.timestamp
+        # now, check what to do with the new point
+        self.processPoint(point)
 
 
+    def getListOfFloatsFromIterable(self, newEl):
+        point = []
+        for value in newEl:
+            point.append(float(value))
+        return point
 
 
-
-    def formUcs(self, dataset):
-        # ASSUMPTIONS: dataset es un vector de vectores
-        for d in dataset:
-            # processed_elements ++
-            # self.processedElements += 1 # done in train on el
-            # find reachable u clusters for the new element
-            reachableUcs = self.findReachableUcs(d)
-            if not reachableUcs:
-                # empty list -> create u cluster from element
-                # the uC will have the parametrized relative size
-                uC = uCluster(self.relativeSize, d)
-                self.oList.append(uC)
-            else:
-                # find closest reachable u cluster
-                closestUc = self.findClosestReachableUc(d, reachableUcs)
-                closestUc.addElement(d)
-            # self self.aList, self.oList are updated
+    def timeToIncTimestamp(self):
+        return self.processedElements % self.processingSpeed == 0
 
 
-    #
-    # def calculateMeanAndSD(self, dataset):
+    def processPoint(self, point):
+        # ASSUMPTION: point is a list of floats
+        # find reachable u clusters for the new element
+        reachableMicroClusters = self.findReachableMicroClusters(point)
+        if not reachableMicroClusters:
+            # empty list -> create u cluster from element
+            # the microCluster will have the parametrized relative size, and the Timestamp object to being able to access the
+            # current timestamp any atime
+            microCluster = MicroCluster(self.relativeSize, self.currTimestamp, point)
+            self.oList.append(microCluster)
+        else:
+            # find closest reachable u cluster
+            closestMicroCluster = self.findClosestReachableMicroCluster(point, reachableMicroClusters)
+            closestMicroCluster.addElement(point)
+        # at this point, self self.aList and self.oList are updated
+
+
+   # def calculateMeanAndSD(self, dataset):
     #     n = len(dataset)
     #     # sample taken to get the ammount of features
     #     anElement = dataset[0]
@@ -106,372 +111,330 @@ class Dyclee:
     #         featureSD = stddev(data=fValuesList, mean=featureMean)
     #         self.SDList.append(featureSD)
 
-    # checks if there's a msg from s2 so both u cluster lists must be updated
-    def checkUpdatedListsFromStage2(self):
-        printInBlue("S1 waiting for lists from s2")
-        lists = self.s2ToS1ComQueue.get()
-        aList, oList = lists
-        # update both lists
-        self.aList = aList
-        self.oList = oList
 
-        # returns a list of reachable u clusters for a given element
-
-    def findReachableUcs(self, d):
-        reachableUcs = self.getReachableUcsFrom(self.aList, d)
-        if not reachableUcs:
+    # returns a list of reachable u clusters for a given element
+    def findReachableMicroClusters(self, point):
+        reachableMicroClusters = self.getReachableMicroClustersFrom(self.aList, point)
+        if not reachableMicroClusters:
             # empty list -> check oList
-            reachableUcs = self.getReachableUcsFrom(self.oList, d)
-        return reachableUcs
+            reachableMicroClusters = self.getReachableMicroClustersFrom(self.oList, point)
+        return reachableMicroClusters
 
-    # modifies reareachableUcs iterating over a given list of u clusters
-    def getReachableUcsFrom(self, uCsList, d):
+
+    # modifies reareachableMicroClusters iterating over a given list of u clusters
+    def getReachableMicroClustersFrom(self, microClustersList, point):
         res = []
-        for uC in uCsList:
-            # the uC has the parametrized relative size
-            if uC.isReachableFrom(d):
-                res.append(uC)
+        for microCluster in microClustersList:
+            # the microCluster has the parametrized relative size
+            if microCluster.isReachableFrom(point):
+                res.append(microCluster)
         return res
 
-        # returns the closest uC for an element, given a set of reachable uCs
 
-    def findClosestReachableUc(self, d, reachableUcs):
-        closestUc = None
+    # returns the closest microCluster for an element, given a set of reachable microClusters
+    def findClosestReachableMicroCluster(self, point, reachableMicroClusters):
+        closestMicroCluster = None
         minDistance = float("inf")
-        for uC in reachableUcs:
-            distance = self.manhatanDistance(d, uC)
+        for microCluster in reachableMicroClusters:
+            distance = manhattanDistance(point, microCluster.getCentroid())
             if distance < minDistance:
                 minDistance = distance
-                closestUc = uC
-        return closestUc
+                closestMicroCluster = microCluster
+        return closestMicroCluster
 
-    # returns the manhatan distance between a cluster and an element
-    def manhatanDistance(self, d, uC):
-        dist = 0
-        uCCentroid = uC.getCentroid()
-        # for every feature/dimension
-        for i in range(len(d)):
-            diff = d[i] - uCCentroid[i]
-            dist = dist + abs(diff)
-        return dist
-
-    # returns true if it's time to send message to stage 2
-    def timeToSendMessage(self):
-        return self.processedElements == self.tGlobal
-
-    def sendListsToStage2(self):
-        self.s1ToS2ComQueue.put((self.aList, self.oList))
-
-    def resetProcessedElements(self):
-        self.processedElements = 0
-
-    def sendEndMsgToStage2(self):
-        self.s1ToS2ComQueue.put("DONE")
 
 
 
 # S2 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-def start(self):
-    while True:
-        # wait for lists from s1
-        msg = self.s1ToS2ComQueue.get()
-        if msg == "DONE":
-            break
-        # uC lists were received
-        lists = msg
-        # update mean and median
-        self.updateMeanAndMedian(lists)
-        # update lists according to uC density
-        updatedLists = self.updateLists(lists)
-        # extract active and outlier uCs
-        updatedAList, updatedOList = updatedLists
-        # get both active and outlier uCs together
-        uCs = updatedAList + updatedOList
-        # extract dense uCs from active list (it's unnecessary to look for dense uCs in the oList)
-        DMC = self.findDenseUcs(updatedAList)
+    def getClusteringResult(self):
+        lists = self.aList + self.oList
+        # update density mean and median values with current ones
+        self.calculateDensityMeanAndMedian()
+        # rearrange lists according to microClusters density, considering density mean and median limits
+        self.rearrangeLists()
+        # extract dense microClusters from active list
+        DMC = self.findDenseMicroClusters()
         # form final clusters
-        self.formClusters(updatedAList=updatedAList, updatedOList=updatedOList, DMC=DMC)
+        self.formClusters(DMC)
+        # concatenate them: get both active and outlier microClusters together
+        microClusters = self.aList + self.oList
         # plot current state and micro cluster evolution
-        self.plotClusters(uCs, DMC)
+        self.plotClusters(microClusters, DMC)
         # update prev state once the evolution was plotted
-        self.updateUcsPrevState(uCs, DMC)
-        # send updated uCs lists to s1 (needs to be done at this point to make prev state last; labels will last too)
-        self.s2ToS1ComQueue.put(updatedLists)
+        self.updateMicroClustersPrevState(microClusters, DMC)
+        # send updated microClusters lists to s1 (needs to be done at this point to make prev state last; labels will last too)
+        # TODO: store clustering result -> rearrangedLists
 
 
-def updateLists(self, lists):
-    aList, oList = lists
-    newAList = []
-    newOList = []
-    concatenatedLists = aList + oList
-    for uC in concatenatedLists:
-        if self.isOutlier(uC):
-            newOList.append(uC)
-        else:
-            # uC is dense or semi dense
-            newAList.append(uC)
-    return (newAList, newOList)
+    def rearrangeLists(self,):
+        newAList = []
+        newOList = []
+        concatenatedLists = self.aList + self.oList
+        for microCluster in concatenatedLists:
+            if self.isOutlier(microCluster):
+                newOList.append(microCluster)
+            else:
+                # microCluster is dense or semi dense
+                newAList.append(microCluster)
+        self.aList = newAList
+        self.oList = newOList
 
 
-def updateMeanAndMedian(self, lists):
-    aList, oList = lists
-    concatenatedLists = aList + oList
-    self.densityMean = self.calculateMeanFor(concatenatedLists)
-    self.densityMedian = self.calculateMedianFor(concatenatedLists)
+    def calculateDensityMeanAndMedian(self):
+        concatenatedLists = self.aList + self.oList
+        self.densityMean = self.calculateMeanFor(concatenatedLists)
+        self.densityMedian = self.calculateMedianFor(concatenatedLists)
 
 
-def resetLabelsAsUnclass(self, uCs):
-    for uC in uCs:
-        uC.label = -1
+    def resetLabelsAsUnclass(self, microClusters):
+        for microCluster in microClusters:
+            microCluster.label = -1
 
 
-def calculateMeanFor(self, uCs):
-    return np.mean([uC.CF.D for uC in uCs])
+    def calculateMeanFor(self, microClusters):
+        return np.mean([microCluster.CF.D for microCluster in microClusters])
 
 
-def calculateMedianFor(self, uCs):
-    return np.median([uC.CF.D for uC in uCs])
+    def calculateMedianFor(self, microClusters):
+        return np.median([microCluster.CF.D for microCluster in microClusters])
+
 
     # returns true if a given u cluster is considered dense
+    def isDense(self, microCluster):
+        return (microCluster.CF.D >= self.densityMean and microCluster.CF.D >= self.densityMedian)
 
-
-def isDense(self, uC):
-    return (uC.CF.D >= self.densityMean and uC.CF.D >= self.densityMedian)
 
     # returns true if a given u cluster is considered semi dense
+    def isSemiDense(self, microCluster):
+        # xor
+        return (microCluster.CF.D >= self.densityMean) != (microCluster.CF.D >= self.densityMedian)
 
-
-def isSemiDense(self, uC):
-    # xor
-    return (uC.CF.D >= self.densityMean) != (uC.CF.D >= self.densityMedian)
 
     # returns true if a given u cluster is considered outlier
+    def isOutlier(self, microCluster):
+        return (microCluster.CF.D < self.densityMean and microCluster.CF.D < self.densityMedian)
 
-
-def isOutlier(self, uC):
-    return (uC.CF.D < self.densityMean and uC.CF.D < self.densityMedian)
 
     # returns only dense u clusters from a set of u clusters
+    def findDenseMicroClusters(self):
+        # it's unnecessary to look for dense microClusters in the oList
+        return [microCluster for microCluster in self.aList if self.isDense(microCluster)]
 
 
-def findDenseUcs(self, uCs):
-    return [uC for uC in uCs if self.isDense(uC)]
+    def findDirectlyConnectedMicroClustersFor(self, microCluster, microClusters):
+        res = []
+        for u in microClusters:
+            if microCluster.isDirectlyConnectedWith(u, self.uncommonDimensions):
+                res.append(u)
+        return res
 
 
-def findDirectlyConnectedUcsFor(self, uC, uCs):
-    res = []
-    for u in uCs:
-        if uC.isDirectlyConnectedWith(u, self.uncommonDimensions):
-            res.append(u)
-    return res
+    def formClusters(self, DMC):
+        # init currentClusterId
+        currentClusterId = 0
+        # reset microClusters labels as -1
+        self.resetLabelsAsUnclass(self.aList)
+        self.resetLabelsAsUnclass(self.oList)
+        # start clustering
+        alreadySeen = []
+        for denseMicroCluster in DMC:
+            if denseMicroCluster not in alreadySeen:
+                alreadySeen.append(denseMicroCluster)
+                currentClusterId += 1
+                denseMicroCluster.label = currentClusterId
+                connectedMicroClusters = self.findDirectlyConnectedMicroClustersFor(denseMicroCluster, self.aList)
+                self.growCluster(currentClusterId, alreadySeen, connectedMicroClusters, self.aList)
 
 
-def formClusters(self, updatedAList, updatedOList, DMC):
-    # init currentClusterId
-    currentClusterId = 0
-    # reset uCs labels as -1
-    self.resetLabelsAsUnclass(updatedAList)
-    self.resetLabelsAsUnclass(updatedOList)
-    # start clustering
-    alreadySeen = []
-    for denseUc in DMC:
-        if denseUc not in alreadySeen:
-            alreadySeen.append(denseUc)
-            currentClusterId += 1
-            denseUc.label = currentClusterId
-            connectedUcs = self.findDirectlyConnectedUcsFor(denseUc, updatedAList)
-            self.growCluster(currentClusterId, alreadySeen, connectedUcs, updatedAList)
     # for loop finished -> clusters were formed
+    def growCluster(self, currentClusterId, alreadySeen, connectedMicroClusters, microClusters):
+        i = 0
+        while i < len(connectedMicroClusters):
+            conMicroCluster = connectedMicroClusters[i]
+            if (conMicroCluster not in alreadySeen):
+                conMicroCluster.label = currentClusterId
+                alreadySeen.append(conMicroCluster)
+                if self.isDense(conMicroCluster):
+                    newConnectedMicroClusters = self.findDirectlyConnectedMicroClustersFor(conMicroCluster, microClusters)
+                    for newNeighbour in newConnectedMicroClusters:
+                        connectedMicroClusters.append(newNeighbour)
+            i += 1
 
 
-def growCluster(self, currentClusterId, alreadySeen, connectedUcs, uCs):
-    i = 0
-    while i < len(connectedUcs):
-        conUc = connectedUcs[i]
-        if (conUc not in alreadySeen):
-            conUc.label = currentClusterId
-            alreadySeen.append(conUc)
-            if self.isDense(conUc):
-                newConnectedUcs = self.findDirectlyConnectedUcsFor(conUc, uCs)
-                for newNeighbour in newConnectedUcs:
-                    connectedUcs.append(newNeighbour)
-        i += 1
+    def plotClusters(self, microClusters, DMC):
+        f, (ax1, ax2, ax3) = plt.subplots(1, 3, sharey=True)  # creates a figure with one row and two columns
+        self.plotCurrentClustering(ax1, microClusters)
+        self.plotMicroClustersEvolution(ax2, DMC)
+        self.plotMicroClustersSize(ax3, microClusters)
+        # show both subplots
+        f.canvas.manager.window.showMaximized()
+        plt.show()
 
 
-def plotClusters(self, uCs, DMC):
-    f, (ax1, ax2, ax3) = plt.subplots(1, 3, sharey=True)  # creates a figure with one row and two columns
-    self.plotCurrentClustering(ax1, uCs)
-    self.plotMicroClustersEvolution(ax2, DMC)
-    self.plotMicroClustersSize(ax3, uCs)
-    # show both subplots
-    f.canvas.manager.window.showMaximized()
-    plt.show()
+    def getMarkersSizeList(self, microClusters):
+        res = []
+        for microCluster in microClusters:
+            if self.isOutlier(microCluster):
+                # really small size -> comes out almost as a point
+                res.append(5)
+            elif self.isSemiDense(microCluster):
+                # big marker
+                res.append(20)
+            elif self.isDense(microCluster):
+                # medium size marker
+                res.append(50)
+        return res
 
 
-def getMarkersSizeList(self, uCs):
-    res = []
-    for uC in uCs:
-        if self.isOutlier(uC):
-            # really small size -> comes out almost as a point
-            res.append(5)
-        elif self.isSemiDense(uC):
-            # big marker
-            res.append(20)
-        elif self.isDense(uC):
-            # medium size marker
-            res.append(50)
-    return res
-
-
-def plotCurrentClustering(self, ax1, uCs):
-    if not self.plottableUcs(uCs):
-        return
-    # let's plot!
-    # first set markers size to represent different densities
-    s = self.getMarkersSizeList(uCs)
-    # then get a list with u cluster labels
-    labelsPerUCluster = [uC.label for uC in uCs]
-    # clusters will be a sequence of numbers (cluster number or -1) for each point in the dataset
-    clusters = np.array(labelsPerUCluster)
-    # get uCs centroids
-    centroids = [uC.getCentroid() for uC in uCs]
-    x, y = zip(*centroids)
-    # show info to user
-    self.showClusteringInfo(labelsPerUCluster=labelsPerUCluster, clusters=clusters, x=x, y=y)
-    # scatter'
-    ax1.scatter(x, y, c=clusters, cmap="nipy_spectral", marker='s', alpha=0.8, s=s)
-    # add general style to subplot n°1
-    self.addStyleToSubplot(ax1,
-                           title='CURRENT STATE\nlrg square = dense microcluster \nmed square = semidense microcluster\nsml square = outlier microcluster')
-
-
-def plotMicroClustersEvolution(self, ax2, DMC):
-    (DMCwPrevState, newDMC) = self.formMicroClustersEvolutionLists(DMC)
-    for denseUcWPrevSt in DMCwPrevState:
-        ax2.annotate("", xy=denseUcWPrevSt.previousState, xytext=denseUcWPrevSt.centroid,
-                     arrowprops=dict(arrowstyle='<-'))
-    # get newDMC centroids
-    if len(newDMC) is not 0:
-        centroids = [uC.centroid for uC in newDMC]
+    def plotCurrentClustering(self, ax1, microClusters):
+        if not self.plottableMicroClusters(microClusters):
+            return
+        # let's plot!
+        # first set markers size to represent different densities
+        s = self.getMarkersSizeList(microClusters)
+        # then get a list with u cluster labels
+        labelsPerUCluster = [microCluster.label for microCluster in microClusters]
+        # clusters will be a sequence of numbers (cluster number or -1) for each point in the dataset
+        clusters = np.array(labelsPerUCluster)
+        # get microClusters centroids
+        centroids = [microCluster.getCentroid() for microCluster in microClusters]
         x, y = zip(*centroids)
-        ax2.plot(x, y, ".", alpha=0.5, )
-    # add general style to subplot n°2
-    self.addStyleToSubplot(ax2, title='DENSE MICRO CLUSTERS EVOLUTION\n"." means no change \n"->" implies evolution')
+        # show info to user
+        self.showClusteringInfo(labelsPerUCluster=labelsPerUCluster, clusters=clusters, x=x, y=y)
+        # scatter'
+        ax1.scatter(x, y, c=clusters, cmap="nipy_spectral", marker='s', alpha=0.8, s=s)
+        # add general style to subplot n°1
+        self.addStyleToSubplot(ax1,
+                               title='CURRENT STATE\nlrg square = dense microcluster \nmed square = semidense microcluster\nsml square = outlier microcluster')
 
 
-def plotMicroClustersSize(self, ax3, uCs):
-    # choose palette
-    ns = plt.get_cmap('nipy_spectral')
-    # get labels
-    labelsPerUCluster = [uC.label for uC in uCs]
-    # skip repeated leabels
-    s = set(labelsPerUCluster)
-    # especify normalization to get the correct colors
-    norm = clrs.Normalize(vmin=min(s), vmax=max(s))
-    # for every micro cluster
-    for uC in uCs:
-        # get coordinate x from uC centroid
-        realX = uC.centroid[0]
-        # get coordinate y from uC centroid
-        realY = uC.centroid[1]
-        # x n y are the bottom left coordinates for the rectangle
-        # to obtain them we have to substract half the hyperbox size to both coordinates
-        offsetX = uC.hyperboxSizePerFeature[0] / 2
-        offsetY = uC.hyperboxSizePerFeature[1] / 2
-        x = realX - offsetX
-        y = realY - offsetY
-        # the following are represented from the bottom left angle coordinates of the rectangle
-        width = uC.hyperboxSizePerFeature[0]
-        height = uC.hyperboxSizePerFeature[1]
-        # get the color
-        c = ns(norm(uC.label))
-        # make the rectangle
-        rect = plt.Rectangle((x, y), width, height, color=c, alpha=0.5)
-        ax3.add_patch(rect)
-        # plot the rectangle center (uC centroid)
-        ax3.plot(realX, realY, ".", color=c, alpha=0.3)
-    self.addStyleToSubplot(ax3, title='MICRO CLUSTERS REAL SIZE')
+    def plotMicroClustersEvolution(self, ax2, DMC):
+        (DMCwPrevState, newDMC) = self.formMicroClustersEvolutionLists(DMC)
+        for denseMicroClusterWPrevSt in DMCwPrevState:
+            ax2.annotate("", xy=denseMicroClusterWPrevSt.previousState, xytext=denseMicroClusterWPrevSt.centroid,
+                         arrowprops=dict(arrowstyle='<-'))
+        # get newDMC centroids
+        if len(newDMC) is not 0:
+            centroids = [microCluster.centroid for microCluster in newDMC]
+            x, y = zip(*centroids)
+            ax2.plot(x, y, ".", alpha=0.5, )
+        # add general style to subplot n°2
+        self.addStyleToSubplot(ax2, title='DENSE MICRO CLUSTERS EVOLUTION\n"." means no change \n"->" implies evolution')
 
 
-def formMicroClustersEvolutionLists(self, DMC):
-    DMCwPrevState = []
-    newDMC = []
-    for denseUc in DMC:
-        if (len(denseUc.previousState) is 0) or (denseUc.centroid == denseUc.previousState):
-            # dense uC hasn't previous state --> is a new dense uC
-            # dense uC prev state and current centroid match --> dense uC hasn't changed nor evolutioned; just mark its position
-            newDMC.append(denseUc)
+    def plotMicroClustersSize(self, ax3, microClusters):
+        # choose palette
+        ns = plt.get_cmap('nipy_spectral')
+        # get labels
+        labelsPerUCluster = [microCluster.label for microCluster in microClusters]
+        # skip repeated leabels
+        s = set(labelsPerUCluster)
+        # especify normalization to get the correct colors
+        norm = clrs.Normalize(vmin=min(s), vmax=max(s))
+        # for every micro cluster
+        for microCluster in microClusters:
+            # get coordinate x from microCluster centroid
+            realX = microCluster.centroid[0]
+            # get coordinate y from microCluster centroid
+            realY = microCluster.centroid[1]
+            # x n y are the bottom left coordinates for the rectangle
+            # to obtain them we have to substract half the hyperbox size to both coordinates
+            offsetX = microCluster.hyperboxSizePerFeature[0] / 2
+            offsetY = microCluster.hyperboxSizePerFeature[1] / 2
+            x = realX - offsetX
+            y = realY - offsetY
+            # the following are represented from the bottom left angle coordinates of the rectangle
+            width = microCluster.hyperboxSizePerFeature[0]
+            height = microCluster.hyperboxSizePerFeature[1]
+            # get the color
+            c = ns(norm(microCluster.label))
+            # make the rectangle
+            rect = plt.Rectangle((x, y), width, height, color=c, alpha=0.5)
+            ax3.add_patch(rect)
+            # plot the rectangle center (microCluster centroid)
+            ax3.plot(realX, realY, ".", color=c, alpha=0.3)
+        self.addStyleToSubplot(ax3, title='MICRO CLUSTERS REAL SIZE')
+
+
+    def formMicroClustersEvolutionLists(self, DMC):
+        DMCwPrevState = []
+        newDMC = []
+        for denseMicroCluster in DMC:
+            if (len(denseMicroCluster.previousState) is 0) or (denseMicroCluster.centroid == denseMicroCluster.previousState):
+                # dense microCluster hasn't previous state --> is a new dense microCluster
+                # dense microCluster prev state and current centroid match --> dense microCluster hasn't changed nor evolutioned; just mark its position
+                newDMC.append(denseMicroCluster)
+            else:
+                # dense microCluster has previous state --> dense microCluster has evolutioned
+                DMCwPrevState.append(denseMicroCluster)
+        return (DMCwPrevState, newDMC)
+
+
+    def updateMicroClustersPrevState(self, microClusters, DMC):
+        for microCluster in microClusters:
+            if microCluster not in DMC:
+                # microCluster prev state doesn't matter; if a dense microCluster turned out to be an outlier, its position is no longer important
+                microCluster.previousState = []
+            else:
+                # microCluster is dense; current state must be saved for viewing future evolution
+                microCluster.previousState = microCluster.centroid
+
+
+    def addStyleToSubplot(self, ax, title=''):
+        # set title
+        ax.set_title(title)
+        # set axes limits
+        minAndMaxDeviations = [-2.5, 2.5]
+        ax.set_xlim(minAndMaxDeviations)
+        ax.set_ylim(minAndMaxDeviations)
+        # set plot general characteristics
+        ax.set_xlabel("Feature 1")
+        ax.set_ylabel("Feature 2")
+        ax.grid(color='k', linestyle=':', linewidth=1)
+
+
+    def showClusteringInfo(self, labelsPerUCluster, clusters, x, y):
+        # show final clustering info
+        dic = self.clustersElCounter(labelsPerUCluster)
+        dicLength = len(dic)
+        if dicLength == 1:
+            msg = "There is only 1 final cluster and "
         else:
-            # dense uC has previous state --> dense uC has evolutioned
-            DMCwPrevState.append(denseUc)
-    return (DMCwPrevState, newDMC)
-
-
-def updateUcsPrevState(self, uCs, DMC):
-    for uC in uCs:
-        if uC not in DMC:
-            # uC prev state doesn't matter; if a dense uC turned out to be an outlier, its position is no longer important
-            uC.previousState = []
+            msg = "There are " + len(dic).__repr__() + " final clusters and "
+        if -1 in labelsPerUCluster:
+            msg += "one of them represents outliers (the black one)."
         else:
-            # uC is dense; current state must be saved for viewing future evolution
-            uC.previousState = uC.centroid
+            msg += "no outliers."
+        printInMagenta(msg + "\n")
+        for key, value in dic.items():
+            printInMagenta("- Cluster n°" + key.__repr__() + " -> " + value.__repr__() + " microClusters" + "\n")
+        # show detailed info regarding lists of microClusters coordinates and labels
+        printInMagenta("* microClusters labels: " + '\n' + clusters.__repr__() + '\n')
+        printInMagenta("* microClusters 'x' coordinates: " + '\n' + x.__repr__() + '\n')
+        printInMagenta("* microClusters 'y' coordinates: " + '\n' + y.__repr__())
+
+        # returns a dictionary in which every position represents a cluster and every value is the amount of microClusters w that label
 
 
-def addStyleToSubplot(self, ax, title=''):
-    # set title
-    ax.set_title(title)
-    # set axes limits
-    minAndMaxDeviations = [-2.5, 2.5]
-    ax.set_xlim(minAndMaxDeviations)
-    ax.set_ylim(minAndMaxDeviations)
-    # set plot general characteristics
-    ax.set_xlabel("Feature 1")
-    ax.set_ylabel("Feature 2")
-    ax.grid(color='k', linestyle=':', linewidth=1)
+    def clustersElCounter(self, labelsPerUCluster):
+        dicKeys = set(labelsPerUCluster)
+        dic = {key: 0 for key in dicKeys}
+        for c in labelsPerUCluster:
+            dic[c] += 1
+        return dic
+
+        # returns True if microClusters are plottable (regarding amount of features)
 
 
-def showClusteringInfo(self, labelsPerUCluster, clusters, x, y):
-    # show final clustering info
-    dic = self.clustersElCounter(labelsPerUCluster)
-    dicLength = len(dic)
-    if dicLength == 1:
-        msg = "There is only 1 final cluster and "
-    else:
-        msg = "There are " + len(dic).__repr__() + " final clusters and "
-    if -1 in labelsPerUCluster:
-        msg += "one of them represents outliers (the black one)."
-    else:
-        msg += "no outliers."
-    printInMagenta(msg + "\n")
-    for key, value in dic.items():
-        printInMagenta("- Cluster n°" + key.__repr__() + " -> " + value.__repr__() + " uCs" + "\n")
-    # show detailed info regarding lists of uCs coordinates and labels
-    printInMagenta("* uCs labels: " + '\n' + clusters.__repr__() + '\n')
-    printInMagenta("* uCs 'x' coordinates: " + '\n' + x.__repr__() + '\n')
-    printInMagenta("* uCs 'y' coordinates: " + '\n' + y.__repr__())
-
-    # returns a dictionary in which every position represents a cluster and every value is the amount of uCs w that label
-
-
-def clustersElCounter(self, labelsPerUCluster):
-    dicKeys = set(labelsPerUCluster)
-    dic = {key: 0 for key in dicKeys}
-    for c in labelsPerUCluster:
-        dic[c] += 1
-    return dic
-
-    # returns True if uCs are plottable (regarding amount of features)
-
-
-def plottableUcs(self, uCs):
-    if len(uCs) == 0:
-        # there are't any u clusters to plot
-        return False
-    firstEl = uCs[0]
-    if len(firstEl.CF.LS) != 2:
-        print("UNABLE TO DRAW CLUSTERS: IT'S NOT A 2D DATASET")
-        return False
-    # uCs are plottable
-    return True
+    def plottableMicroClusters(self, microClusters):
+        if len(microClusters) == 0:
+            # there are't any u clusters to plot
+            return False
+        firstEl = microClusters[0]
+        if len(firstEl.CF.LS) != 2:
+            print("UNABLE TO DRAW CLUSTERS: IT'S NOT A 2D DATASET")
+            return False
+        # microClusters are plottable
+        return True
