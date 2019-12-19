@@ -91,7 +91,7 @@ class MicroCluster:
     # includes an element into the u cluster
     # updates CF vector
     def addElement(self, lambd, point=None):
-        dt = self.currTimestamp.timestamp - self.CF.tl + 10
+        dt = self.currTimestamp.timestamp - self.CF.tl
         decayComponent = 2 ** (-lambd * dt)
         self.updateTl()
         self.updateN(point, decayComponent)
