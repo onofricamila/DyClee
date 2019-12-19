@@ -14,7 +14,7 @@ matplotlib.use('Qt5Agg')
 
 
 class Dyclee:
-    def __init__(self, relativeSize=0.2, speed = 25, uncommonDimensions = 0, lambd = 0.8, periodicRemovalAt = 50, periodicUpdateAt = 50):
+    def __init__(self, relativeSize=0.1, speed = 25, uncommonDimensions = 0, lambd = 1, periodicRemovalAt = 50, periodicUpdateAt = 25):
         self.relativeSize = relativeSize
         self.processingSpeed = speed
         self.lambd = lambd
