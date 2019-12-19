@@ -15,10 +15,10 @@ class MicroCluster:
         self.hyperboxSizePerFeature = self.getHyperboxSizePerFeature()
         self.CF = self.initializeCF(point)
         self.label = -1 #"unclass"
-        self.centroid = self.getCentroid()
         self.previousState = []
     
-    
+
+
     def __repr__(self):
         return 'Micro Cluster'
 
@@ -30,8 +30,8 @@ class MicroCluster:
        LS = point
        # this vector will only have point elements squared
        SS = [a*b for a,b in zip(point, point)]
-       now = datetime.datetime.now().time()
-       D = self.getD()
+       now = self.currTimestamp.timestamp
+       D = self._calculateD()
        # CF creation
        cf = CF(n=1, LS=LS, SS=SS, tl=now, ts=now, D=D)
        return cf
@@ -90,12 +90,13 @@ class MicroCluster:
     
     # includes an element into the u cluster
     # updates CF vector
-    def addElement(self, point):
+    def addElement(self, lambd, point=None):
+        dt = self.currTimestamp.timestamp - self.CF.tl + 10
+        decayComponent = 2 ** (-lambd * dt)
         self.updateTl()
-        self.updateN()
-        self.updateLS(point)
-        self.updateSS(point)
-        self.updateCentroid()
+        self.updateN(point, decayComponent)
+        self.updateLS(point, decayComponent)
+        self.updateSS(point, decayComponent)
 #        # needs to check if bounding boxes change and recalculate hyperbox size
 #        self.updateBoundingBoxesList(point)
 #        self.updateHyperboxSizePerFeature()
@@ -105,33 +106,40 @@ class MicroCluster:
         
         
     def updateTl(self):
-        now = datetime.datetime.now().time()
-        self.CF.tl = now
+        self.CF.tl = self.currTimestamp.timestamp
         
         
         
-    def updateN(self):
-        self.CF.n += 1
-        
+    def updateN(self, point, decayComponent):
+        N = self.CF.n * decayComponent
+        if point is not None:
+            N += 1
+        self.CF.n = N
+
         
     
-    def updateLS(self, point):
-        for i in range(len(point)):
-            self.CF.LS[i] = self.CF.LS[i] + point[i]  
+    def updateLS(self, point, decayComponent):
+        # forget
+        for i in range(len(self.CF.LS)):
+            self.CF.LS[i] = self.CF.LS[i] * decayComponent
+        # add element
+        if point is not None:
+            for i in range(len(point)):
+                self.CF.LS[i] = self.CF.LS[i] + point[i]
             
             
     
-    def updateSS(self, point):
-        for i in range(len(point)):
-            self.CF.SS[i] = self.CF.SS[i] + (point[i] **2)
+    def updateSS(self, point, decayComponent):
+        # forget
+        for i in range(len(self.CF.SS)):
+            self.CF.SS[i] = self.CF.SS[i] * decayComponent
+        # add element
+        if point is not None:
+            for i in range(len(point)):
+                self.CF.SS[i] = self.CF.SS[i] + (point[i] **2)
         
     
 
-    def updateCentroid(self):
-      self.centroid = self.getCentroid()
-      
-      
-        
     def updateBoundingBoxesList(self, point):
         for i in range(len(point)):
             mini = min(point[i], self.boundingBoxesList[i].minimun)
@@ -147,11 +155,11 @@ class MicroCluster:
         
         
     def updateD(self):
-      self.CF.D = self.getD(n = self.CF.n)
+      self.CF.D = self._calculateD(n = self.CF.n)
     
     
       
-    def getD(self, n=1): 
+    def _calculateD(self, n=1):
       V = np.prod(self.hyperboxSizePerFeature)
       return n / V
         
@@ -184,8 +192,8 @@ class MicroCluster:
       return currentUncommonDimensions <= uncommonDimensions
         
         
-        
-        
+    def applyDecayComponent(self, lambd):
+        self.addElement(lambd=lambd)
         
         
         

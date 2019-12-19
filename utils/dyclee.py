@@ -2,6 +2,7 @@
 from utils.helpers.custom_math_fxs import manhattanDistance
 from utils.micro_clusters.micro_cluster import MicroCluster
 from utils.timestamp import Timestamp
+from math import log10
 # S2
 import numpy as np
 import matplotlib.pyplot as plt
@@ -13,9 +14,12 @@ matplotlib.use('Qt5Agg')
 
 
 class Dyclee:
-    def __init__(self, relativeSize=1, speed = 100, uncommonDimensions = 0):
+    def __init__(self, relativeSize=0.2, speed = 25, uncommonDimensions = 0, lambd = 0.8, periodicRemovalAt = 50, periodicUpdateAt = 50):
         self.relativeSize = relativeSize
         self.processingSpeed = speed
+        self.lambd = lambd
+        self.tp = periodicRemovalAt
+        self.tu = periodicUpdateAt
         self.aList = []
         self.oList = []
         self.processedElements = 0
@@ -61,6 +65,11 @@ class Dyclee:
             self.currTimestamp.timestamp = self.timestamp
         # now, check what to do with the new point
         self.processPoint(point)
+        if self.timeToCheckMicroClustersTl():
+            self.checkMicroClustersTl()
+        # periodic cluster removal
+        if self.timePerformPeriodicClusterRemoval():
+            self.performPeriodicClusterRemoval()
 
 
     def getListOfFloatsFromIterable(self, newEl):
@@ -72,6 +81,14 @@ class Dyclee:
 
     def timeToIncTimestamp(self):
         return self.processedElements % self.processingSpeed == 0
+
+
+    def timePerformPeriodicClusterRemoval(self):
+        return self.processedElements % self.tp == 0
+
+
+    def timeToCheckMicroClustersTl(self):
+        return self.processedElements % self.tu == 0
 
 
     def processPoint(self, point):
@@ -87,9 +104,36 @@ class Dyclee:
         else:
             # find closest reachable u cluster
             closestMicroCluster = self.findClosestReachableMicroCluster(point, reachableMicroClusters)
-            closestMicroCluster.addElement(point)
+            closestMicroCluster.addElement(point=point, lambd=self.lambd)
         # at this point, self self.aList and self.oList are updated
 
+
+    def checkMicroClustersTl(self):
+        microClusters = self.aList + self.oList
+        for micCluster in microClusters:
+            if (self.timestamp - micCluster.CF.tl) > self.tu:
+                micCluster.applyDecayComponent(self.lambd)
+
+
+    def performPeriodicClusterRemoval(self):
+        # if the density of an outlier micro cluster drops below the low density threshold, it is eliminated
+        newOList = []
+        for oMicroCluster in self.oList:
+            if oMicroCluster.CF.D >= self.getDensityThershold():
+                newOList.append(oMicroCluster)
+        # at this point micro clusters that do not fulfil the density requirement were discarded
+        self.oList = newOList
+
+
+    def getDensityThershold(self):
+        self.calculateDensityMeanAndMedian()
+        return self.densityMean * 0.75
+
+
+    def applyDecayComponent(self):
+        for micCluster in self.aList + self.oList:
+            if self.timestamp - micCluster.CF.tl > self.tu:
+                micCluster.applyDecayComponent(self.lambd)
 
    # def calculateMeanAndSD(self, dataset):
     #     n = len(dataset)
@@ -149,7 +193,6 @@ class Dyclee:
 
 
     def getClusteringResult(self):
-        lists = self.aList + self.oList
         # update density mean and median values with current ones
         self.calculateDensityMeanAndMedian()
         # rearrange lists according to microClusters density, considering density mean and median limits
@@ -161,11 +204,12 @@ class Dyclee:
         # concatenate them: get both active and outlier microClusters together
         microClusters = self.aList + self.oList
         # plot current state and micro cluster evolution
-        self.plotClusters(microClusters, DMC)
+        if microClusters is not None:
+            self.plotClusters(microClusters, DMC)
         # update prev state once the evolution was plotted
         self.updateMicroClustersPrevState(microClusters, DMC)
         # send updated microClusters lists to s1 (needs to be done at this point to make prev state last; labels will last too)
-        # TODO: store clustering result -> rearrangedLists
+        # TODO: store clustering result -> microClusters
 
 
     def rearrangeLists(self,):
@@ -313,11 +357,11 @@ class Dyclee:
     def plotMicroClustersEvolution(self, ax2, DMC):
         (DMCwPrevState, newDMC) = self.formMicroClustersEvolutionLists(DMC)
         for denseMicroClusterWPrevSt in DMCwPrevState:
-            ax2.annotate("", xy=denseMicroClusterWPrevSt.previousState, xytext=denseMicroClusterWPrevSt.centroid,
+            ax2.annotate("", xy=denseMicroClusterWPrevSt.previousState, xytext=denseMicroClusterWPrevSt.getCentroid(),
                          arrowprops=dict(arrowstyle='<-'))
         # get newDMC centroids
         if len(newDMC) is not 0:
-            centroids = [microCluster.centroid for microCluster in newDMC]
+            centroids = [microCluster.getCentroid() for microCluster in newDMC]
             x, y = zip(*centroids)
             ax2.plot(x, y, ".", alpha=0.5, )
         # add general style to subplot n°2
@@ -336,9 +380,9 @@ class Dyclee:
         # for every micro cluster
         for microCluster in microClusters:
             # get coordinate x from microCluster centroid
-            realX = microCluster.centroid[0]
+            realX = microCluster.getCentroid()[0]
             # get coordinate y from microCluster centroid
-            realY = microCluster.centroid[1]
+            realY = microCluster.getCentroid()[1]
             # x n y are the bottom left coordinates for the rectangle
             # to obtain them we have to substract half the hyperbox size to both coordinates
             offsetX = microCluster.hyperboxSizePerFeature[0] / 2
@@ -362,7 +406,7 @@ class Dyclee:
         DMCwPrevState = []
         newDMC = []
         for denseMicroCluster in DMC:
-            if (len(denseMicroCluster.previousState) is 0) or (denseMicroCluster.centroid == denseMicroCluster.previousState):
+            if (len(denseMicroCluster.previousState) is 0) or (denseMicroCluster.getCentroid() == denseMicroCluster.previousState):
                 # dense microCluster hasn't previous state --> is a new dense microCluster
                 # dense microCluster prev state and current centroid match --> dense microCluster hasn't changed nor evolutioned; just mark its position
                 newDMC.append(denseMicroCluster)
@@ -379,7 +423,7 @@ class Dyclee:
                 microCluster.previousState = []
             else:
                 # microCluster is dense; current state must be saved for viewing future evolution
-                microCluster.previousState = microCluster.centroid
+                microCluster.previousState = microCluster.getCentroid()
 
 
     def addStyleToSubplot(self, ax, title=''):
