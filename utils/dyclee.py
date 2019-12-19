@@ -18,8 +18,8 @@ class Dyclee:
         self.relativeSize = relativeSize
         self.processingSpeed = speed
         self.lambd = lambd
-        self.tp = periodicRemovalAt
-        self.tu = periodicUpdateAt
+        self.oMicroClustersRemovalTime = periodicRemovalAt
+        self.microClustersTlCheckingTime = periodicUpdateAt
         self.aList = []
         self.oList = []
         self.processedElements = 0
@@ -53,6 +53,10 @@ class Dyclee:
     # def scaleDatasetElementFeature(self, fValue, fIndex):
     #     return (fValue - self.meanList[fIndex]) / self.SDList[fIndex]
 
+
+# S1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
     # returns a list of floats given an iterable object
     def trainOnElement(self, newEl):
         # get an object matching the desired format (to guarantee consistency)
@@ -68,7 +72,7 @@ class Dyclee:
         if self.timeToCheckMicroClustersTl():
             self.checkMicroClustersTl()
         # periodic cluster removal
-        if self.timePerformPeriodicClusterRemoval():
+        if self.timeToPerformPeriodicClusterRemoval():
             self.performPeriodicClusterRemoval()
 
 
@@ -83,12 +87,12 @@ class Dyclee:
         return self.processedElements % self.processingSpeed == 0
 
 
-    def timePerformPeriodicClusterRemoval(self):
-        return self.processedElements % self.tp == 0
+    def timeToPerformPeriodicClusterRemoval(self):
+        return self.processedElements % self.oMicroClustersRemovalTime == 0
 
 
     def timeToCheckMicroClustersTl(self):
-        return self.processedElements % self.tu == 0
+        return self.processedElements % self.microClustersTlCheckingTime == 0
 
 
     def processPoint(self, point):
@@ -111,17 +115,18 @@ class Dyclee:
     def checkMicroClustersTl(self):
         microClusters = self.aList + self.oList
         for micCluster in microClusters:
-            if (self.timestamp - micCluster.CF.tl) > self.tu:
+            if (self.timestamp - micCluster.CF.tl) > self.microClustersTlCheckingTime:
                 micCluster.applyDecayComponent(self.lambd)
 
 
     def performPeriodicClusterRemoval(self):
         # if the density of an outlier micro cluster drops below the low density threshold, it is eliminated
+        # we will only keep the micro clusters that fulfil the density requirements
         newOList = []
         for oMicroCluster in self.oList:
-            if oMicroCluster.CF.D >= self.getDensityThershold():
+            if oMicroCluster.getD() >= self.getDensityThershold():
                 newOList.append(oMicroCluster)
-        # at this point micro clusters that do not fulfil the density requirement were discarded
+        # at this point micro clusters which are below the density requirement were discarded
         self.oList = newOList
 
 
@@ -129,11 +134,6 @@ class Dyclee:
         self.calculateDensityMeanAndMedian()
         return self.densityMean * 0.75
 
-
-    def applyDecayComponent(self):
-        for micCluster in self.aList + self.oList:
-            if self.timestamp - micCluster.CF.tl > self.tu:
-                micCluster.applyDecayComponent(self.lambd)
 
    # def calculateMeanAndSD(self, dataset):
     #     n = len(dataset)
@@ -204,8 +204,7 @@ class Dyclee:
         # concatenate them: get both active and outlier microClusters together
         microClusters = self.aList + self.oList
         # plot current state and micro cluster evolution
-        if microClusters is not None:
-            self.plotClusters(microClusters, DMC)
+        self.plotClusters(microClusters, DMC)
         # update prev state once the evolution was plotted
         self.updateMicroClustersPrevState(microClusters, DMC)
         # send updated microClusters lists to s1 (needs to be done at this point to make prev state last; labels will last too)
@@ -238,27 +237,27 @@ class Dyclee:
 
 
     def calculateMeanFor(self, microClusters):
-        return np.mean([microCluster.CF.D for microCluster in microClusters])
+        return np.mean([microCluster.getD() for microCluster in microClusters])
 
 
     def calculateMedianFor(self, microClusters):
-        return np.median([microCluster.CF.D for microCluster in microClusters])
+        return np.median([microCluster.getD() for microCluster in microClusters])
 
 
     # returns true if a given u cluster is considered dense
     def isDense(self, microCluster):
-        return (microCluster.CF.D >= self.densityMean and microCluster.CF.D >= self.densityMedian)
+        return (microCluster.getD() >= self.densityMean and microCluster.getD() >= self.densityMedian)
 
 
     # returns true if a given u cluster is considered semi dense
     def isSemiDense(self, microCluster):
         # xor
-        return (microCluster.CF.D >= self.densityMean) != (microCluster.CF.D >= self.densityMedian)
+        return (microCluster.getD() >= self.densityMean) != (microCluster.getD() >= self.densityMedian)
 
 
     # returns true if a given u cluster is considered outlier
     def isOutlier(self, microCluster):
-        return (microCluster.CF.D < self.densityMean and microCluster.CF.D < self.densityMedian)
+        return (microCluster.getD() < self.densityMean and microCluster.getD() < self.densityMedian)
 
 
     # returns only dense u clusters from a set of u clusters
@@ -308,6 +307,9 @@ class Dyclee:
 
 
     def plotClusters(self, microClusters, DMC):
+        if not self.plottableMicroClusters(microClusters):
+            return
+        # let's plot!
         f, (ax1, ax2, ax3) = plt.subplots(1, 3, sharey=True)  # creates a figure with one row and two columns
         self.plotCurrentClustering(ax1, microClusters)
         self.plotMicroClustersEvolution(ax2, DMC)
@@ -333,9 +335,6 @@ class Dyclee:
 
 
     def plotCurrentClustering(self, ax1, microClusters):
-        if not self.plottableMicroClusters(microClusters):
-            return
-        # let's plot!
         # first set markers size to represent different densities
         s = self.getMarkersSizeList(microClusters)
         # then get a list with u cluster labels
@@ -459,9 +458,8 @@ class Dyclee:
         printInMagenta("* microClusters 'x' coordinates: " + '\n' + x.__repr__() + '\n')
         printInMagenta("* microClusters 'y' coordinates: " + '\n' + y.__repr__())
 
-        # returns a dictionary in which every position represents a cluster and every value is the amount of microClusters w that label
 
-
+    # returns a dictionary in which every position represents a cluster and every value is the amount of microClusters w that label
     def clustersElCounter(self, labelsPerUCluster):
         dicKeys = set(labelsPerUCluster)
         dic = {key: 0 for key in dicKeys}
@@ -469,9 +467,8 @@ class Dyclee:
             dic[c] += 1
         return dic
 
-        # returns True if microClusters are plottable (regarding amount of features)
 
-
+    # returns True if microClusters are plottable (regarding amount of features)
     def plottableMicroClusters(self, microClusters):
         if len(microClusters) == 0:
             # there are't any u clusters to plot

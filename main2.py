@@ -3,7 +3,7 @@ from datasets.customCircunferencesDataset import customCircunferencesDataset
 from utils.dyclee import Dyclee
 from sklearn.preprocessing import StandardScaler
 
-dc = Dyclee()
+dc = Dyclee(relativeSize=0.1, speed = 25, uncommonDimensions = 0, lambd = 1, periodicRemovalAt = 50, periodicUpdateAt = 25)
 
 ac = 0 # processed samples
 

@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 class CF:
     
-    def __init__(self, n, LS, SS, tl, ts, D):
+    def __init__(self, n, LS, SS, tl, ts):
         # number of elements
         self.n = n
         # vector containing the linear sum of each feature over the n objects
@@ -13,8 +13,6 @@ class CF:
         self.tl = tl
         # time when the μ cluster was created
         self.ts = ts
-        # the μ cluster density
-        self.D = D
 
 
     def __repr__(self):
