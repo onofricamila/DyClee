@@ -209,6 +209,7 @@ class Dyclee:
         self.updateMicroClustersPrevState(microClusters, DMC)
         # send updated microClusters lists to s1 (needs to be done at this point to make prev state last; labels will last too)
         # TODO: store clustering result -> microClusters
+        return microClusters
 
 
     def rearrangeLists(self,):

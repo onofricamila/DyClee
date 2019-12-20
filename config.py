@@ -3,7 +3,7 @@
 from datasets.simpleDatasets import dsChoosingClosestReachableUc, dsForming2uCs, dsFromUcToNoise, dsPilot
 from datasets.sklearnDatasets import noisyCirclesDataset, noisyMoonsDataset, blobsDataset
 from datasets.customCircunferencesDataset import customCircunferencesDataset
-from utils.helpers.customPrintingFxs import printInGreen
+from utils.helpers.custom_printing_fxs import printInGreen
 
 # config
 
