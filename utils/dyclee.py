@@ -202,7 +202,8 @@ class Dyclee:
         # concatenate them: get both active and outlier microClusters together
         microClusters = self.aList + self.oList
         # extract dense microClusters from active list
-        DMC = self.findDenseMicroClusters()
+       # DMC = self.findDenseMicroClusters()
+        DMC = self.aList
         # plot current state and micro cluster evolution
         self.plotClusters(microClusters, DMC)
         # update prev state once the evolution was plotted
