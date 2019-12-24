@@ -15,12 +15,13 @@ matplotlib.use('Qt5Agg')
 
 class Dyclee:
     def __init__(self, relativeSize=0.1, speed = 25, uncommonDimensions = 0, lambd = 1, periodicRemovalAt = 50,
-                 periodicUpdateAt = 25, findNotDirectlyConnButCloseMicroClusters = False, distToAllStdevProportion4Painting = 1):
+                 periodicUpdateAt = 25, microClustersDtThreshold = 5, findNotDirectlyConnButCloseMicroClusters = False, distToAllStdevProportion4Painting = 1):
         self.relativeSize = relativeSize
         self.processingSpeed = speed
         self.lambd = lambd
         self.oMicroClustersRemovalTime = periodicRemovalAt
         self.microClustersTlCheckingTime = periodicUpdateAt
+        self.microClustersDtThreshold = microClustersDtThreshold
         self.distToAllStdevProportion4Painting = distToAllStdevProportion4Painting
         self.findNotDirectlyConnButCloseMicroClusters = findNotDirectlyConnButCloseMicroClusters
         self.aList = []
@@ -118,7 +119,7 @@ class Dyclee:
     def checkMicroClustersTl(self):
         microClusters = self.aList + self.oList
         for micCluster in microClusters:
-            if (self.timestamp - micCluster.CF.tl) > self.microClustersTlCheckingTime:
+            if (self.timestamp - micCluster.CF.tl) > self.microClustersDtThreshold:
                 micCluster.applyDecayComponent(self.lambd)
 
 

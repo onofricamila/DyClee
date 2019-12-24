@@ -6,16 +6,21 @@ from sklearn.preprocessing import StandardScaler
 from utils.persistor import resetStorage, storeAlgoConfig, storeResult
 import numpy as np
 
-relativeSize=0.06
+relativeSize=0.03
 speed = 25
 uncommonDimensions = 0
-lambd = 0 # bc if it has a value over 0, when a micro cluster is updated tl will be checked and the diff with current time will matter
-periodicRemovalAt = 500000 # exaggerated to not to remove outliers
-periodicUpdateAt = 2500000 # exaggerated to not to apply forgetting component to micro clusters that have not been updated in a while
+lambd = 0.5 # bc if it has a value over 0, when a micro cluster is updated tl will be checked and the diff with current time will matter
+periodicRemovalAt = 500000 # 500000 # exaggerated to not to remove outliers
+periodicUpdateAt = 99 # 2500000 # exaggerated to not to apply forgetting component to micro clusters that have not been updated in a while
+microClustersDtThreshold = 5
+findNotDirectlyConnButCloseMicroClusters = True
+distToAllStdevProportion4Painting = 1
+
 
 dc = Dyclee(relativeSize=relativeSize, speed = speed, uncommonDimensions = uncommonDimensions, lambd = lambd,
             periodicRemovalAt = periodicRemovalAt, periodicUpdateAt = periodicUpdateAt,
-            findNotDirectlyConnButCloseMicroClusters = True, distToAllStdevProportion4Painting = 1)
+            microClustersDtThreshold = microClustersDtThreshold, findNotDirectlyConnButCloseMicroClusters = findNotDirectlyConnButCloseMicroClusters,
+            distToAllStdevProportion4Painting = distToAllStdevProportion4Painting)
 
 # ac = 0 # processed samples
 
