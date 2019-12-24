@@ -14,7 +14,8 @@ periodicRemovalAt = 500000 # exaggerated to not to remove outliers
 periodicUpdateAt = 2500000 # exaggerated to not to apply forgetting component to micro clusters that have not been updated in a while
 
 dc = Dyclee(relativeSize=relativeSize, speed = speed, uncommonDimensions = uncommonDimensions, lambd = lambd,
-            periodicRemovalAt = periodicRemovalAt, periodicUpdateAt = periodicUpdateAt)
+            periodicRemovalAt = periodicRemovalAt, periodicUpdateAt = periodicUpdateAt,
+            findNotDirectlyConnButCloseMicroClusters = True, distToAllStdevProportion4Painting = 1)
 
 # ac = 0 # processed samples
 

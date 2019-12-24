@@ -14,12 +14,15 @@ matplotlib.use('Qt5Agg')
 
 
 class Dyclee:
-    def __init__(self, relativeSize=0.1, speed = 25, uncommonDimensions = 0, lambd = 1, periodicRemovalAt = 50, periodicUpdateAt = 25):
+    def __init__(self, relativeSize=0.1, speed = 25, uncommonDimensions = 0, lambd = 1, periodicRemovalAt = 50,
+                 periodicUpdateAt = 25, findNotDirectlyConnButCloseMicroClusters = False, distToAllStdevProportion4Painting = 1):
         self.relativeSize = relativeSize
         self.processingSpeed = speed
         self.lambd = lambd
         self.oMicroClustersRemovalTime = periodicRemovalAt
         self.microClustersTlCheckingTime = periodicUpdateAt
+        self.distToAllStdevProportion4Painting = distToAllStdevProportion4Painting
+        self.findNotDirectlyConnButCloseMicroClusters = findNotDirectlyConnButCloseMicroClusters
         self.aList = []
         self.oList = []
         self.processedElements = 0
@@ -278,14 +281,34 @@ class Dyclee:
         return sum/len(microClusters), dists
 
 
-    def findDirectlyConnectedMicroClustersFor(self, microCluster, microClusters):
+    def findSimilarMicroClustersFor(self, microCluster, microClusters):
+        directlyConn =  self.findDirectlyConnectedMicroClustersFor(microCluster, microClusters)
+        if not self.findNotDirectlyConnButCloseMicroClusters:
+            return directlyConn
+        else:
+            notDirectlyConnButClose = self.findCloseMicroClustersFor(microCluster, microClusters)
+            return directlyConn + notDirectlyConnButClose
+
+
+    def findCloseMicroClustersFor(self, microCluster, microClusters):
+        stddevProportion = self.distToAllStdevProportion4Painting
+        # for encompassing more micro clusters
         avgDistToAllMicroClusters, distances = self.getAvgDistToMicroClustersFor(microCluster, microClusters)
         stdev = stddev(distances, avgDistToAllMicroClusters)
-        limit = avgDistToAllMicroClusters - (stdev * 1)
+        limit = avgDistToAllMicroClusters - (stdev * stddevProportion)
+        # the set of close micro clusters which will be used to expand a macro one
         res = []
         for mc in microClusters:
-            # FIXME: it's ok the second condition? (avg distance to all aList mc)
-            if microCluster.isDirectlyConnectedWith(mc, self.uncommonDimensions) or microCluster.distanceTo(mc) < limit:
+            mcIsClose = microCluster.distanceTo(mc) < limit
+            if not microCluster.isDirectlyConnectedWith(mc, self.uncommonDimensions) and mcIsClose:
+                res.append(mc)
+        return res
+
+
+    def findDirectlyConnectedMicroClustersFor(self, microCluster, microClusters):
+        res = []
+        for mc in microClusters:
+            if microCluster.isDirectlyConnectedWith(mc, self.uncommonDimensions):
                 res.append(mc)
         return res
 
@@ -303,7 +326,7 @@ class Dyclee:
                 alreadySeen.append(denseMicroCluster)
                 currentClusterId += 1
                 denseMicroCluster.label = currentClusterId
-                connectedMicroClusters = self.findDirectlyConnectedMicroClustersFor(denseMicroCluster, self.aList)
+                connectedMicroClusters = self.findSimilarMicroClustersFor(denseMicroCluster, self.aList)
                 self.growCluster(currentClusterId, alreadySeen, connectedMicroClusters, self.aList)
 
 
@@ -317,7 +340,7 @@ class Dyclee:
                 alreadySeen.append(conMicroCluster)
                 # FIXME: the following if is redundant bc DMC is equals to the aList
                 if self.isDense(conMicroCluster) or self.isSemiDense(conMicroCluster):
-                    newConnectedMicroClusters = self.findDirectlyConnectedMicroClustersFor(conMicroCluster, microClusters)
+                    newConnectedMicroClusters = self.findSimilarMicroClustersFor(conMicroCluster, microClusters)
                     for newNeighbour in newConnectedMicroClusters:
                         connectedMicroClusters.append(newNeighbour)
             i += 1
