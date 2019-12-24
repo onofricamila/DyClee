@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import datetime
+
+from utils.helpers.custom_math_fxs import manhattanDistance
 from utils.micro_clusters.CF import CF
 from utils.micro_clusters.bounding_box import BoundingBox
 import numpy as np
@@ -197,7 +199,10 @@ class MicroCluster:
         self.updateSS(decayComponent)
         
         
-        
+    def distanceTo(self, microCluster):
+        return manhattanDistance(self.getCentroid(), microCluster.getCentroid())
+
+
         
         
         

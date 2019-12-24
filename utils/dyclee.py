@@ -268,11 +268,20 @@ class Dyclee:
         return [microCluster for microCluster in self.aList if self.isDense(microCluster)]
 
 
+    def getAvgDistToMicroClustersFor(self, microCluster, microClusters):
+        sum = 0
+        for mc in microClusters:
+            sum += microCluster.distanceTo(mc)
+        return sum/len(microClusters)
+
+
     def findDirectlyConnectedMicroClustersFor(self, microCluster, microClusters):
+        avgDistToAllMicroClusters = self.getAvgDistToMicroClustersFor(microCluster, microClusters)
         res = []
-        for u in microClusters:
-            if microCluster.isDirectlyConnectedWith(u, self.uncommonDimensions):
-                res.append(u)
+        for mc in microClusters:
+            # FIXME: it's ok the second condition? (avg distance to all aList mc)
+            if microCluster.isDirectlyConnectedWith(mc, self.uncommonDimensions) or microCluster.distanceTo(mc) < avgDistToAllMicroClusters:
+                res.append(mc)
         return res
 
 
