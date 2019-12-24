@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from utils.persistor import resetStorage, storeAlgoConfig, storeResult
 import numpy as np
 
-relativeSize=0.085
+relativeSize=0.06
 speed = 25
 uncommonDimensions = 0
 lambd = 0 # bc if it has a value over 0, when a micro cluster is updated tl will be checked and the diff with current time will matter
