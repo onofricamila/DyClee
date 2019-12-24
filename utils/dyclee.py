@@ -136,7 +136,10 @@ class Dyclee:
 
     def getDensityThershold(self):
         self.calculateDensityMeanAndMedian()
-        return self.densityMean * 0.75
+        dMean = self.densityMean
+        densities = [mc.getD() for mc in self.aList + self.oList]
+        densityStddev = stddev(densities, dMean)
+        return dMean + (2 * densityStddev)
 
 
    # def calculateMeanAndSD(self, dataset):

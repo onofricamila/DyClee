@@ -9,7 +9,7 @@ import numpy as np
 relativeSize=0.03
 speed = 25
 uncommonDimensions = 0
-lambd = 0.7 # bc if it has a value over 0, when a micro cluster is updated tl will be checked and the diff with current time will matter
+lambd = 0.7 # 0 # bc if it has a value over 0, when a micro cluster is updated tl will be checked and the diff with current time will matter
 periodicRemovalAt = 201 # 500000 # exaggerated to not to remove outliers
 periodicUpdateAt = 99 # 2500000 # exaggerated to not to apply forgetting component to micro clusters that have not been updated in a while
 microClustersDtThreshold = 5
