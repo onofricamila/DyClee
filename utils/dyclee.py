@@ -1,5 +1,5 @@
 # S1
-from utils.helpers.custom_math_fxs import manhattanDistance
+from utils.helpers.custom_math_fxs import manhattanDistance, stddev
 from utils.micro_clusters.micro_cluster import MicroCluster
 from utils.timestamp import Timestamp
 from math import log10
@@ -270,17 +270,22 @@ class Dyclee:
 
     def getAvgDistToMicroClustersFor(self, microCluster, microClusters):
         sum = 0
+        dists = []
         for mc in microClusters:
-            sum += microCluster.distanceTo(mc)
-        return sum/len(microClusters)
+            dist = microCluster.distanceTo(mc)
+            sum += dist
+            dists.append(dist)
+        return sum/len(microClusters), dists
 
 
     def findDirectlyConnectedMicroClustersFor(self, microCluster, microClusters):
-        avgDistToAllMicroClusters = self.getAvgDistToMicroClustersFor(microCluster, microClusters)
+        avgDistToAllMicroClusters, distances = self.getAvgDistToMicroClustersFor(microCluster, microClusters)
+        stdev = stddev(distances, avgDistToAllMicroClusters)
+        limit = avgDistToAllMicroClusters - (stdev * 1)
         res = []
         for mc in microClusters:
             # FIXME: it's ok the second condition? (avg distance to all aList mc)
-            if microCluster.isDirectlyConnectedWith(mc, self.uncommonDimensions) or microCluster.distanceTo(mc) < avgDistToAllMicroClusters:
+            if microCluster.isDirectlyConnectedWith(mc, self.uncommonDimensions) or microCluster.distanceTo(mc) < limit:
                 res.append(mc)
         return res
 
