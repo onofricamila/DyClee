@@ -6,7 +6,7 @@ from sklearn.preprocessing import StandardScaler
 from utils.persistor import resetStorage, storeAlgoConfig, storeResult
 import numpy as np
 
-relativeSize=0.1
+relativeSize=0.06
 speed = 25
 uncommonDimensions = 0
 lambd = 1

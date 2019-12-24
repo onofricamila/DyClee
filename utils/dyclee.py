@@ -197,12 +197,12 @@ class Dyclee:
         self.calculateDensityMeanAndMedian()
         # rearrange lists according to microClusters density, considering density mean and median limits
         self.rearrangeLists()
-        # extract dense microClusters from active list
-        DMC = self.findDenseMicroClusters()
         # form final clusters
-        self.formClusters(DMC)
+        self.formClusters()
         # concatenate them: get both active and outlier microClusters together
         microClusters = self.aList + self.oList
+        # extract dense microClusters from active list
+        DMC = self.findDenseMicroClusters()
         # plot current state and micro cluster evolution
         self.plotClusters(microClusters, DMC)
         # update prev state once the evolution was plotted
@@ -275,7 +275,7 @@ class Dyclee:
         return res
 
 
-    def formClusters(self, DMC):
+    def formClusters(self):
         # init currentClusterId
         currentClusterId = 0
         # reset microClusters labels as -1
@@ -283,7 +283,7 @@ class Dyclee:
         self.resetLabelsAsUnclass(self.oList)
         # start clustering
         alreadySeen = []
-        for denseMicroCluster in DMC:
+        for denseMicroCluster in self.aList:
             if denseMicroCluster not in alreadySeen:
                 alreadySeen.append(denseMicroCluster)
                 currentClusterId += 1
@@ -300,7 +300,8 @@ class Dyclee:
             if (conMicroCluster not in alreadySeen):
                 conMicroCluster.label = currentClusterId
                 alreadySeen.append(conMicroCluster)
-                if self.isDense(conMicroCluster):
+                # FIXME: the following if is redundant bc DMC is equals to the aList
+                if self.isDense(conMicroCluster) or self.isSemiDense(conMicroCluster):
                     newConnectedMicroClusters = self.findDirectlyConnectedMicroClustersFor(conMicroCluster, microClusters)
                     for newNeighbour in newConnectedMicroClusters:
                         connectedMicroClusters.append(newNeighbour)
