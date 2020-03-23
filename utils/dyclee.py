@@ -385,16 +385,16 @@ class Dyclee:
         # first set markers size to represent different densities
         s = self.getMarkersSizeList(microClusters)
         # then get a list with u cluster labels
-        labelsPerUCluster = [microCluster.label for microCluster in microClusters]
+        labels = [microCluster.label for microCluster in microClusters]
         # clusters will be a sequence of numbers (cluster number or -1) for each point in the dataset
-        clusters = np.array(labelsPerUCluster)
+        labelsAsNpArray = np.array(labels)
         # get microClusters centroids
         centroids = [microCluster.getCentroid() for microCluster in microClusters]
         x, y = zip(*centroids)
         # show info to user
-        self.showClusteringInfo(labelsPerUCluster=labelsPerUCluster, clusters=clusters, x=x, y=y)
+        self.showClusteringInfo(labelsPerUCluster=labels, clusters=labelsAsNpArray, x=x, y=y)
         # scatter'
-        ax1.scatter(x, y, c=clusters, cmap="nipy_spectral", marker='s', alpha=0.8, s=s)
+        ax1.scatter(x, y, c=labelsAsNpArray, cmap="nipy_spectral", marker='s', alpha=0.8, s=s)
         # add general style to subplot n°1
         self.addStyleToSubplot(ax1,
                                title='CURRENT STATE\nlrg square = dense microcluster \nmed square = semidense microcluster\nsml square = outlier microcluster')
@@ -403,6 +403,7 @@ class Dyclee:
     def plotMicroClustersEvolution(self, ax2, DMC):
         (DMCwPrevState, newDMC) = self.formMicroClustersEvolutionLists(DMC)
         for denseMicroClusterWPrevSt in DMCwPrevState:
+            # an arrow will be drawn to represent the evolution in the centroid location for a dense micro cluster
             ax2.annotate("", xy=denseMicroClusterWPrevSt.previousState, xytext=denseMicroClusterWPrevSt.getCentroid(),
                          arrowprops=dict(arrowstyle='<-'))
         # get newDMC centroids
@@ -418,9 +419,9 @@ class Dyclee:
         # choose palette
         ns = plt.get_cmap('nipy_spectral')
         # get labels
-        labelsPerUCluster = [microCluster.label for microCluster in microClusters]
+        labels = [microCluster.label for microCluster in microClusters]
         # skip repeated leabels
-        s = set(labelsPerUCluster)
+        s = set(labels)
         # especify normalization to get the correct colors
         norm = clrs.Normalize(vmin=min(s), vmax=max(s))
         # for every micro cluster
