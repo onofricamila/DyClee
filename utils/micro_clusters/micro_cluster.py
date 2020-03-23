@@ -72,7 +72,7 @@ class MicroCluster:
                 maxDiff = diff
                 featureIndex = i
         # if for the max diff feature the element doesn't match the cluster, return false
-        if maxDiff >= (self.limit(featureIndex)):
+        if maxDiff >= (self.hyperboxSizePerFeature[i] / 2):
             return False
         # the element fits the u cluster
         return True
@@ -168,12 +168,7 @@ class MicroCluster:
     def hasUnclassLabel(self):
       return (self.label is -1)
     
-    
-    
-    def limit(self, i):
-      return self.hyperboxSizePerFeature[i] / 2
-    
-    
+
     
     # retunrs true if the microCluster is directly connected to another microCluster
     def isDirectlyConnectedWith(self, microCluster, uncommonDimensions):
@@ -186,19 +181,20 @@ class MicroCluster:
           # difference between the u cluster centroids for that feature
           aux = abs(myCentroid[i] - microClusterCentroid[i])
           # if for a given feature the element doesn't match the cluster, return false
-          limit = self.limit(i)
-          if aux >= (limit*2):
+          if aux >= self.hyperboxSizePerFeature[i]:
               currentUncommonDimensions += 1
       return currentUncommonDimensions <= uncommonDimensions
         
-        
+
+
     def applyDecayComponent(self, lambd):
         decayComponent = self.decayComponent(lambd)
         self.updateN(decayComponent)
         self.updateLS(decayComponent)
         self.updateSS(decayComponent)
         
-        
+
+
     def distanceTo(self, microCluster):
         return manhattanDistance(self.getCentroid(), microCluster.getCentroid())
 
