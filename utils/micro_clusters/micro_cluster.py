@@ -17,7 +17,7 @@ class MicroCluster:
         self.hyperboxSizePerFeature = self.getHyperboxSizePerFeature()
         self.CF = self.initializeCF(point)
         self.label = -1 #"unclass"
-        self.previousState = []
+        self.previousCentroid = []
     
 
 

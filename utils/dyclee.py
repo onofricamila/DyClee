@@ -212,12 +212,12 @@ class Dyclee:
         # concatenate them: get both active and outlier microClusters together
         microClusters = self.aList + self.oList
         # extract dense microClusters from active list
-       # DMC = self.findDenseMicroClusters()
+        # DMC = self.findDenseMicroClusters()
         DMC = self.aList
         # plot current state and micro cluster evolution
         self.plotClusters(microClusters, DMC)
         # update prev state once the evolution was plotted
-        self.updateMicroClustersPrevState(microClusters, DMC)
+        self.updateMicroClustersPrevCentroid(microClusters, DMC)
         # send updated microClusters lists to s1 (needs to be done at this point to make prev state last; labels will last too)
         # TODO: store clustering result -> microClusters
         return microClusters
@@ -462,14 +462,14 @@ class Dyclee:
         return (DMCwPrevState, newDMC)
 
 
-    def updateMicroClustersPrevState(self, microClusters, DMC):
+    def updateMicroClustersPrevCentroid(self, microClusters, DMC):
         for microCluster in microClusters:
             if microCluster not in DMC:
-                # microCluster prev state doesn't matter; if a dense microCluster turned out to be an outlier, its position is no longer important
-                microCluster.previousState = []
+                # microCluster prev state doesn't matter; if a dense microCluster ended up being an outlier, its position is no longer important
+                microCluster.previousCentroid = []
             else:
                 # microCluster is dense; current state must be saved for viewing future evolution
-                microCluster.previousState = microCluster.getCentroid()
+                microCluster.previousCentroid = microCluster.getCentroid()
 
 
     def addStyleToSubplot(self, ax, title=''):
@@ -519,10 +519,11 @@ class Dyclee:
     def plottableMicroClusters(self, microClusters):
         if len(microClusters) == 0:
             # there are't any u clusters to plot
+            print("UNABLE TO PLOT CLUSTERS: there are no micro clusters")
             return False
         firstEl = microClusters[0]
         if len(firstEl.CF.LS) != 2:
-            print("UNABLE TO DRAW CLUSTERS: IT'S NOT A 2D DATASET")
+            print("UNABLE TO PLOT CLUSTERS: it's not a 2D data set")
             return False
         # microClusters are plottable
         return True
