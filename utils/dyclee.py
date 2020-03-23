@@ -404,7 +404,7 @@ class Dyclee:
         (DMCwPrevState, newDMC) = self.formMicroClustersEvolutionLists(DMC)
         for denseMicroClusterWPrevSt in DMCwPrevState:
             # an arrow will be drawn to represent the evolution in the centroid location for a dense micro cluster
-            ax2.annotate("", xy=denseMicroClusterWPrevSt.previousState, xytext=denseMicroClusterWPrevSt.getCentroid(),
+            ax2.annotate("", xy=denseMicroClusterWPrevSt.previousCentroid, xytext=denseMicroClusterWPrevSt.getCentroid(),
                          arrowprops=dict(arrowstyle='<-'))
         # get newDMC centroids
         if len(newDMC) is not 0:
@@ -453,7 +453,7 @@ class Dyclee:
         DMCwPrevState = []
         newDMC = []
         for denseMicroCluster in DMC:
-            if (len(denseMicroCluster.previousState) is 0) or (denseMicroCluster.getCentroid() == denseMicroCluster.previousState):
+            if (len(denseMicroCluster.previousCentroid) is 0) or (denseMicroCluster.getCentroid() == denseMicroCluster.previousCentroid):
                 # dense microCluster hasn't previous state --> is a new dense microCluster
                 # dense microCluster prev state and current centroid match --> dense microCluster hasn't changed nor evolutioned; just mark its position
                 newDMC.append(denseMicroCluster)
