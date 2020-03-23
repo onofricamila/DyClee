@@ -21,9 +21,9 @@ def createDirectoryIfNotExists(folder):
 
 def storeResult(snapshot):
     createDirectoryIfNotExists(folder)
-    time = snapshot.get("time")
+    processedElements = snapshot.get("processedElements")
     result = snapshot.get("result")
-    targetFile = folder + str(time) + '.csv'
+    targetFile = folder + str(processedElements) + '.csv'
     np.savetxt(targetFile, result, delimiter=',',)
 
 
