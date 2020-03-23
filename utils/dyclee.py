@@ -14,9 +14,10 @@ matplotlib.use('Qt5Agg')
 
 
 class Dyclee:
-    def __init__(self, relativeSize=0.1, speed = 25, uncommonDimensions = 0, lambd = 1, periodicRemovalAt = 50,
+    def __init__(self, relativeSize=0.1, speed = 25, uncommonDimensions = 0, lambd = 0, periodicRemovalAt = 50,
                  periodicUpdateAt = 25, microClustersDtThreshold = 5, findNotDirectlyConnButCloseMicroClusters = False,
                  distToAllStdevProportion4Painting = 1):
+        # hyper parameters
         self.relativeSize = relativeSize
         self.processingSpeed = speed
         self.lambd = lambd
@@ -25,6 +26,8 @@ class Dyclee:
         self.microClustersDtThreshold = microClustersDtThreshold
         self.distToAllStdevProportion4Painting = distToAllStdevProportion4Painting
         self.findNotDirectlyConnButCloseMicroClusters = findNotDirectlyConnButCloseMicroClusters
+        self.uncommonDimensions = uncommonDimensions
+        # internal vis
         self.aList = []
         self.oList = []
         self.processedElements = 0
@@ -32,7 +35,6 @@ class Dyclee:
         self.currTimestamp = Timestamp() # initialized at 0
         self.densityMean = 0
         self.densityMedian = 0
-        self.uncommonDimensions = uncommonDimensions
         # for normalization; to be calculated when the data set is received
         self.meanValuePerFeature = []
         self.SDPerFeature = []
