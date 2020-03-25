@@ -1,35 +1,73 @@
-#!/usr/bin/env python3
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-from utils.stages.stage1 import Stage1
-from utils.stages.stage2 import Stage2
-from multiprocessing import Process, Queue
-from config import chosenDataset, rs, tG, uncdim
+from datasets.sklearnDatasets import noisyCirclesDataset, noisyMoonsDataset, blobsDataset
+from datasets.customCircunferencesDataset import customCircunferencesDataset
+from utils.dataset_fetcher import getTimeSeriesDatasetFromFolder
+from utils.dyclee import Dyclee
+from sklearn.preprocessing import StandardScaler
+from utils.persistor import resetStorage, storeAlgoConfig, storeResult
+import numpy as np
 
-# s1 to s2 communication queue
-s1ToS2ComQueue = Queue()  # s1 will write to s2 there
-
-# s2 to s1 communication queue
-s2ToS1ComQueue = Queue()  # s2 will write to s1 there
-
-# chosen dataset
-dataset = chosenDataset
-
-# stages
-s1 = Stage1(s1ToS2ComQueue, s2ToS1ComQueue, relativeSize=rs, tGlobal=tG) # default relative size = 1
-s2 = Stage2(s1ToS2ComQueue, s2ToS1ComQueue, uncommonDimensions=uncdim) # default uncommon dimensions = 0
-
-# start s1
-s1p = Process(target=s1.start, args=(dataset,))
-s1p.daemon = True
-s1p.start()     # launch the stage1 process
-
-# start s2
-s2p = Process(target=s2.start, args=())
-s2p.daemon = True
-s2p.start()     # launch the stage2 process
-    
-s1p.join()   # wait till the stage1 process finishes
-s2p.join()   # wait till the stage2 process finishes
+# ALGORITHM INITIALIZATION
+relativeSize=0.02
+speed = 50
+uncommonDimensions = 0
+lambd = 0.7 # if it has a value over 0, when a micro cluster is updated, tl will be checked and the diff with current time will matter
+periodicUpdateAt = 100 # 99 # 500000 # exaggerated to not to apply forgetting component to micro clusters that have not been updated in a while
+microClustersDtThreshold = 5
+periodicRemovalAt = 200 # 201 # 500000 # exaggerated to not to remove outliers
+findNotDirectlyConnButCloseMicroClusters = True
+distToAllStdevProportion4Painting = 0.8
 
 
+dyclee = Dyclee(relativeSize=relativeSize, speed = speed, uncommonDimensions = uncommonDimensions, lambd = lambd,
+                periodicRemovalAt = periodicRemovalAt, periodicUpdateAt = periodicUpdateAt,
+                microClustersDtThreshold = microClustersDtThreshold, findNotDirectlyConnButCloseMicroClusters = findNotDirectlyConnButCloseMicroClusters,
+                distToAllStdevProportion4Painting = distToAllStdevProportion4Painting)
+
+# store algo config
+algoConfig = {
+    "relativeSize": relativeSize,
+    "speed": speed,
+    "uncommonDimensions": uncommonDimensions,
+    "lambd": lambd,
+    "periodicRemovalAt": periodicRemovalAt,
+    "periodicUpdateAt": periodicUpdateAt,
+}
+storeAlgoConfig(algoConfig)
+
+
+# NON TIME SERIES DATA SETS CLUSTERING ---------------------------------------------------------------------
+
+# ac = 0 # processed samples
+#
+# scaler = StandardScaler()
+# dataset = noisyMoonsDataset
+# tGlobal = len(dataset)
+#
+# for d in scaler.fit_transform(dataset):
+#     ac += 1
+#     dyclee.trainOnElement(d)
+#     if ac % tGlobal == 0:
+#         dyclee.getClusteringResult()
+        
+
+# TIME SERIES DATA SET CLUSTERING -------------------------------------------------------------------------
+
+def prepareResultFrom(currMicroClusters):
+    res = []
+    for mc in currMicroClusters:
+        centroid = mc.getCentroid()
+        label = mc.label
+        row = [centroid[0], centroid[1], label]
+        res.append(row)
+    return np.array(res)
+
+tGlobal = 200
+ac = 0 # represents amount of processed elements
+
+for point in getTimeSeriesDatasetFromFolder():
+    ac += 1
+    dyclee.trainOnElement(point)
+    if ac % tGlobal == 0:
+        currMicroClusters = dyclee.getClusteringResult()
+        res = prepareResultFrom(currMicroClusters)
+        storeResult({"processedElements": ac, "result": res})

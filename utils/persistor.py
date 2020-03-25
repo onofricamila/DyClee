@@ -2,7 +2,7 @@ import json
 
 import numpy as np
 import os
-from config2 import getClusteringResultsPath, getDycleeName, getTimeSeriesToyDatasetName
+from config import getClusteringResultsPath, getDycleeName, getTimeSeriesToyDatasetName
 import shutil
 
 folder = getClusteringResultsPath() + getTimeSeriesToyDatasetName() + '/' + getDycleeName() + '/'
