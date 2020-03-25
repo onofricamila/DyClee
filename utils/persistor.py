@@ -19,15 +19,25 @@ def createDirectoryIfNotExists(folder):
         os.makedirs(folder)
 
 
-def storeResult(snapshot):
+def storeTimeSeriesResult(snapshot, folder):
     createDirectoryIfNotExists(folder)
     processedElements = snapshot.get("processedElements")
     result = snapshot.get("result")
     targetFile = folder + str(processedElements) + '.csv'
+    _storeResult(result, targetFile)
+
+
+def storeNonTimeSeriesResult(result, folder):
+    createDirectoryIfNotExists(folder)
+    targetFile = folder + 'result' + '.csv'
+    _storeResult(result, targetFile)
+
+
+def _storeResult(result, targetFile):
     np.savetxt(targetFile, result, delimiter=',',)
 
 
-def storeAlgoConfig(dict):
+def storeAlgoConfig(dict, folder):
     createDirectoryIfNotExists(folder)
     file = folder + 'algoConfig.json'
     with open(file, 'w') as outfile:

@@ -57,6 +57,14 @@ def getTimeSeriesDatasetsPath():
     return _getElementFromDict(key="timeSeriesDatasetsPath", _getter=_getPaths)
 
 
+def getNonTimeSeriesDatasetsPath():
+    return _getElementFromDict(key="nonTimeSeriesDatasetsPath", _getter=_getPaths)
+
+
+def getClusteringResultsPath():
+    return _getElementFromDict(key="clusteringResultsPath", _getter=_getPaths)
+
+
 def getDycleeName():
     return _getElementFromDict(key="dyclee", _getter=_getAlgoNames)
 
