@@ -24,7 +24,7 @@ class Dyclee:
         self.oMicroClustersRemovalTime = periodicRemovalAt
         self.microClustersTlCheckingTime = periodicUpdateAt
         self.microClustersDtThreshold = microClustersDtThreshold
-        self.distToAllStdevProportion4Painting = distToAllStdevProportion4Painting
+        self.distToAllStdevProportion4Painting = distToAllStdevProportion4Painting # if findNotDirectlyConnButCloseMicroClusters is False, this is not used
         self.findNotDirectlyConnButCloseMicroClusters = findNotDirectlyConnButCloseMicroClusters
         self.uncommonDimensions = uncommonDimensions
         # internal vis
@@ -138,11 +138,8 @@ class Dyclee:
 
 
     def getDensityThershold(self):
-        self.calculateDensityMeanAndMedian()
-        dMean = self.densityMean
-        densities = [mc.getD() for mc in self.aList + self.oList]
-        densityStddev = stddev(densities, dMean)
-        return dMean + (2 * densityStddev)
+        dMean = self.calculateMeanFor(self.oList)
+        return dMean
 
 
    # def calculateMeanAndSD(self, dataset):
@@ -309,6 +306,13 @@ class Dyclee:
             mcIsClose = microCluster.distanceTo(mc) < limit
             if not microCluster.isDirectlyConnectedWith(mc, self.uncommonDimensions) and mcIsClose:
                 res.append(mc)
+            # TO DEBUG
+            else:
+                print("avg dist", avgDistToAllMicroClusters)
+                print("stdev", stdev)
+                print("limit", limit)
+                print("yo", microCluster.getCentroid(), "el", mc.getCentroid())
+                print("\n")
         return res
 
 

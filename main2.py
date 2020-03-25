@@ -8,14 +8,14 @@ import numpy as np
 
 # ALGORITHM INITIALIZATION
 relativeSize=0.03
-speed = 25
+speed = 50
 uncommonDimensions = 0
 lambd = 0.7 # if it has a value over 0, when a micro cluster is updated, tl will be checked and the diff with current time will matter
-periodicRemovalAt = 201 # 500000 # exaggerated to not to remove outliers
-periodicUpdateAt = 99 # 2500000 # exaggerated to not to apply forgetting component to micro clusters that have not been updated in a while
+periodicRemovalAt = 200 # 201 # 500000 # exaggerated to not to remove outliers
+periodicUpdateAt = 100 # 99 # 2500000 # exaggerated to not to apply forgetting component to micro clusters that have not been updated in a while
 microClustersDtThreshold = 5
 findNotDirectlyConnButCloseMicroClusters = True
-distToAllStdevProportion4Painting = 1
+distToAllStdevProportion4Painting = 0.8
 
 
 dyclee = Dyclee(relativeSize=relativeSize, speed = speed, uncommonDimensions = uncommonDimensions, lambd = lambd,
@@ -38,25 +38,17 @@ storeAlgoConfig(algoConfig)
 # NON TIME SERIES DATA SETS CLUSTERING ---------------------------------------------------------------------
 
 # ac = 0 # processed samples
-
-# for the sklearn datasets
+#
 # scaler = StandardScaler()
 # dataset = noisyMoonsDataset
 # tGlobal = len(dataset)
-
+#
 # for d in scaler.fit_transform(dataset):
 #     ac += 1
-#     dc.trainOnElement(d)
+#     dyclee.trainOnElement(d)
 #     if ac % tGlobal == 0:
-#         dc.getClusteringResult()
-
-# tGlobal = 200
-# for d in customCircunferencesDataset:
-#     ac += 1
-#     dc.trainOnElement(d)
-#     if ac % tGlobal == 0:
-#         dc.getClusteringResult()
-
+#         dyclee.getClusteringResult()
+        
 
 # TIME SERIES DATA SET CLUSTERING -------------------------------------------------------------------------
 
@@ -69,7 +61,6 @@ def prepareResultFrom(currMicroClusters):
         res.append(row)
     return np.array(res)
 
-batch = []
 tGlobal = 200
 ac = 0 # represents amount of processed elements
 
