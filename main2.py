@@ -11,9 +11,9 @@ relativeSize=0.03
 speed = 50
 uncommonDimensions = 0
 lambd = 0.7 # if it has a value over 0, when a micro cluster is updated, tl will be checked and the diff with current time will matter
-periodicRemovalAt = 200 # 201 # 500000 # exaggerated to not to remove outliers
-periodicUpdateAt = 100 # 99 # 2500000 # exaggerated to not to apply forgetting component to micro clusters that have not been updated in a while
+periodicUpdateAt = 100 # 99 # 500000 # exaggerated to not to apply forgetting component to micro clusters that have not been updated in a while
 microClustersDtThreshold = 5
+periodicRemovalAt = 200 # 201 # 500000 # exaggerated to not to remove outliers
 findNotDirectlyConnButCloseMicroClusters = True
 distToAllStdevProportion4Painting = 0.8
 
