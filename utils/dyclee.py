@@ -133,6 +133,9 @@ class Dyclee:
         for oMicroCluster in self.oList:
             if oMicroCluster.getD() >= self.getDensityThershold():
                 newOList.append(oMicroCluster)
+            # do not penalize emerging concepts! A micro cluster must not be 'dense' but, if it is growing, let it grow!
+            elif (self.timestamp - oMicroCluster.CF.tl) < self.microClustersDtThreshold:
+                newOList.append(oMicroCluster) # we keep the micro cluster!
         # at this point micro clusters which are below the density requirement were discarded
         self.oList = newOList
 
