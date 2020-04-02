@@ -14,7 +14,7 @@ matplotlib.use('Qt5Agg')
 
 
 class Dyclee:
-    def __init__(self, relativeSize = 0.6, speed = float("inf"), uncommonDimensions = 0, lambd = 0, periodicRemovalAt = float("inf"),
+    def __init__(self, dataContext, relativeSize = 0.6, speed = float("inf"), uncommonDimensions = 0, lambd = 0, periodicRemovalAt = float("inf"),
                  periodicUpdateAt = float("inf"), timeWindow = 5, findNotDirectlyConnButCloseMicroClusters = True,
                  closenessThreshold = 1.5):
         # hyper parameters
@@ -27,6 +27,9 @@ class Dyclee:
         self.periodicRemovalAt = periodicRemovalAt
         self.findNotDirectlyConnButCloseMicroClusters = findNotDirectlyConnButCloseMicroClusters
         self.closenessThreshold = closenessThreshold
+        self.dataContext = dataContext # must be a bounding box instance
+        # define hyperboxSizePerFeature
+        self.hyperboxSizePerFeature = self.getHyperboxSizePerFeature()
         # internal vis
         self.aList = []
         self.oList = []
@@ -47,10 +50,27 @@ class Dyclee:
             "timeWindow": self.timeWindow,
             "periodicRemovalAt": self.periodicRemovalAt,
             "closenessThreshold": self.closenessThreshold,
+            "dataContext": self.dataContextAsStr(),
         }
 
 
-# S1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    def getHyperboxSizePerFeature(self):
+        hyperboxSizePerFeature = []
+        for context in self.dataContext:
+            aux = context.maximun - context.minimun
+            hyperboxSizePerFeature.append(self.relativeSize * abs(aux))
+        return hyperboxSizePerFeature
+
+
+
+    def dataContextAsStr(self):
+        aux=""
+        for context in self.dataContext:
+            aux += str(context.minimun) + "<" + str(context.maximun) + " | "
+        return aux
+
+
+    # S1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
     # returns a list of floats given an iterable object
@@ -99,7 +119,7 @@ class Dyclee:
             # empty list -> create u cluster from element
             # the microCluster will have the parametrized relative size, and the Timestamp object to being able to access the
             # current timestamp any atime
-            microCluster = MicroCluster(self.relativeSize, self.currTimestamp, point)
+            microCluster = MicroCluster(self.hyperboxSizePerFeature, self.currTimestamp, point)
             self.oList.append(microCluster)
         else:
             # find closest reachable u cluster

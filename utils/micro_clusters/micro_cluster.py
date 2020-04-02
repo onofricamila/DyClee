@@ -4,17 +4,14 @@ import datetime
 
 from utils.helpers.custom_math_fxs import manhattanDistance
 from utils.micro_clusters.CF import CF
-from utils.micro_clusters.bounding_box import BoundingBox
 import numpy as np
 
 
 class MicroCluster:
     
-    def __init__(self, relativeSize, currTimestamp, point):
-        self.relativeSize = relativeSize
-        self.currTimestamp = currTimestamp # object
-        self.boundingBoxesList = self.initBoundingBoxesList(point)
-        self.hyperboxSizePerFeature = self.getHyperboxSizePerFeature()
+    def __init__(self, hyperboxSizePerFeature, currTimestamp, point):
+        self.currTimestamp = currTimestamp # timestamp object
+        self.hyperboxSizePerFeature = hyperboxSizePerFeature
         self.CF = self.initializeCF(point)
         self.label = -1 #"unclass"
         self.previousCentroid = []
@@ -36,28 +33,8 @@ class MicroCluster:
        # CF creation
        cf = CF(n=1, LS=LS, SS=SS, tl=now, ts=now)
        return cf
-    
-    
-    
-    # initializes boundingBox with point values 
-    def initBoundingBoxesList(self, point):
-        boundingBoxesList = []
-        for i in range(len(point)):
-            boundingBox = BoundingBox(minimun=-2 , maximun=2)
-            boundingBoxesList.append(boundingBox)
-        return boundingBoxesList
-    
-    
-    
-    # returns a list containing the size per feature. Indexes match those from point
-    def getHyperboxSizePerFeature(self):
-        hyperboxSizePerFeature = []
-        for bb in self.boundingBoxesList:
-            aux = bb.maximun - bb.minimun
-            hyperboxSizePerFeature.append(self.relativeSize * abs(aux))
-        return hyperboxSizePerFeature
-    
-    
+
+
     
     # retunrs true if the uc is reachable from a given element
     def isReachableFrom(self, point):
@@ -96,10 +73,6 @@ class MicroCluster:
         self.updateN(decayComponent, point)
         self.updateLS(decayComponent, point)
         self.updateSS(decayComponent, point)
-#        # needs to check if bounding boxes change and recalculate hyperbox size
-#        self.updateBoundingBoxesList(point)
-#        self.updateHyperboxSizePerFeature()
-        # then update u cluster density
         self.updateTl()
 
 
@@ -142,23 +115,9 @@ class MicroCluster:
         if point is not None:
             for i in range(len(point)):
                 self.CF.SS[i] = self.CF.SS[i] + (point[i] **2)
-        
-    
-
-    def updateBoundingBoxesList(self, point):
-        for i in range(len(point)):
-            mini = min(point[i], self.boundingBoxesList[i].minimun)
-            maxi = max(point[i], self.boundingBoxesList[i].maximun)
-            boundingBox = BoundingBox(minimun=mini , maximun=maxi)
-            self.boundingBoxesList[i] = boundingBox
 
         
-        
-    def updateHyperboxSizePerFeature(self):
-        self.hyperboxSizePerFeature = self.getHyperboxSizePerFeature()
-        
-        
-        
+
     def getD(self):
       V = np.prod(self.hyperboxSizePerFeature)
       return self.CF.n / V
