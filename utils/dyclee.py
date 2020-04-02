@@ -35,9 +35,6 @@ class Dyclee:
         self.currTimestamp = Timestamp() # initialized at 0
         self.densityMean = 0
         self.densityMedian = 0
-        # for normalization; to be calculated when the data set is received
-        self.meanValuePerFeature = []
-        self.SDPerFeature = []
 
    
     def getConfig(self):
@@ -51,27 +48,6 @@ class Dyclee:
             "periodicRemovalAt": self.periodicRemovalAt,
             "closenessThreshold": self.closenessThreshold,
         }
-        
-        
-   # def scaleDataset(self, dataset):
-    #     res = []
-    #     # for each element
-    #     for i in range(len(dataset)):
-    #         scaledEl = self.scaleDatasetElement(dataset[i])
-    #         res.append(scaledEl)
-    #     return res
-    #
-    # def scaleDatasetElement(self, el):
-    #     scaledEl = []
-    #     # for each dimension
-    #     for fIndex in range(len(el)):
-    #         fValue = el[fIndex]
-    #         scaledFeature = self.scaleDatasetElementFeature(fValue, fIndex)
-    #         scaledEl.append(scaledFeature)
-    #     return scaledEl
-    #
-    # def scaleDatasetElementFeature(self, fValue, fIndex):
-    #     return (fValue - self.meanList[fIndex]) / self.SDList[fIndex]
 
 
 # S1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!

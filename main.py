@@ -31,7 +31,7 @@ non_time_series_datasets = getDatasetsFromFolder(getNonTimeSeriesDatasetsPath())
 for datIndx in range(len(non_time_series_datasets)):
     # new dyclee for each data set
     dyclee = Dyclee(relativeSize=relativeSize, uncommonDimensions=uncommonDimensions,
-                    closenessThreslhold=closenessThreshold)
+                    closenessThreshold=closenessThreshold)
     # start
     X = non_time_series_datasets[datIndx]['dataset']
     dName = non_time_series_datasets[datIndx]['name']
