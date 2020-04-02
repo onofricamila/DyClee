@@ -15,7 +15,7 @@ matplotlib.use('Qt5Agg')
 
 class Dyclee:
     def __init__(self, relativeSize=0.1, speed = 25, uncommonDimensions = 0, lambd = 0, periodicRemovalAt = 50,
-                 periodicUpdateAt = 25, microClustersDtThreshold = 5, findNotDirectlyConnButCloseMicroClusters = False,
+                 periodicUpdateAt = 25, timeWindow = 5, findNotDirectlyConnButCloseMicroClusters = False,
                  distToAllStdevProportion4Painting = 1):
         # hyper parameters
         self.relativeSize = relativeSize
@@ -23,7 +23,7 @@ class Dyclee:
         self.lambd = lambd
         self.oMicroClustersRemovalTime = periodicRemovalAt
         self.microClustersTlCheckingTime = periodicUpdateAt
-        self.microClustersDtThreshold = microClustersDtThreshold
+        self.timeWindow = timeWindow
         self.distToAllStdevProportion4Painting = distToAllStdevProportion4Painting # if findNotDirectlyConnButCloseMicroClusters is False, this is not used
         self.findNotDirectlyConnButCloseMicroClusters = findNotDirectlyConnButCloseMicroClusters
         self.uncommonDimensions = uncommonDimensions
@@ -95,11 +95,11 @@ class Dyclee:
 
 
     def timeToPerformPeriodicClusterRemoval(self):
-        return self.processedElements % self.oMicroClustersRemovalTime == 0
+        return self.processedElements % (self.oMicroClustersRemovalTime * self.processingSpeed) == 0
 
 
     def timeToCheckMicroClustersTl(self):
-        return self.processedElements % self.microClustersTlCheckingTime == 0
+        return self.processedElements % (self.microClustersTlCheckingTime * self.processingSpeed) == 0
 
 
     def processPoint(self, point):
@@ -122,7 +122,7 @@ class Dyclee:
     def checkMicroClustersTl(self):
         microClusters = self.aList + self.oList
         for micCluster in microClusters:
-            if (self.timestamp - micCluster.CF.tl) > self.microClustersDtThreshold:
+            if (self.timestamp - micCluster.CF.tl) > self.timeWindow:
                 micCluster.applyDecayComponent(self.lambd)
 
 
@@ -134,7 +134,7 @@ class Dyclee:
             if oMicroCluster.getD() >= self.getDensityThershold():
                 newOList.append(oMicroCluster)
             # do not penalize emerging concepts! A micro cluster must not be 'dense' but, if it is growing, let it grow!
-            elif (self.timestamp - oMicroCluster.CF.tl) < self.microClustersDtThreshold:
+            elif (self.timestamp - oMicroCluster.CF.tl) < self.timeWindow:
                 newOList.append(oMicroCluster) # we keep the micro cluster!
         # at this point micro clusters which are below the density requirement were discarded
         self.oList = newOList

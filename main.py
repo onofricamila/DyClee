@@ -25,7 +25,7 @@ def prepareResultFrom(currMicroClusters):
 # uncommonDimensions = 0
 # lambd = 0 # if it has a value over 0, when a micro cluster is updated, tl will be checked and the diff with current time will matter
 # periodicUpdateAt = float("inf") # exaggerated to not to apply forgetting component to micro clusters that have not been updated in a while
-# microClustersDtThreshold = 5
+# timeWindow = 5
 # periodicRemovalAt = float("inf") # exaggerated to not to remove outliers
 # findNotDirectlyConnButCloseMicroClusters = True
 # distToAllStdevProportion4Painting = 1.5
@@ -44,7 +44,7 @@ def prepareResultFrom(currMicroClusters):
 #     # new dyclee for each data set
 #     dyclee = Dyclee(relativeSize=relativeSize, speed=speed, uncommonDimensions=uncommonDimensions, lambd=lambd,
 #                     periodicRemovalAt=periodicRemovalAt, periodicUpdateAt=periodicUpdateAt,
-#                     microClustersDtThreshold=microClustersDtThreshold,
+#                     timeWindow=timeWindow,
 #                     findNotDirectlyConnButCloseMicroClusters=findNotDirectlyConnButCloseMicroClusters,
 #                     distToAllStdevProportion4Painting=distToAllStdevProportion4Painting)
 #     # start
@@ -74,16 +74,16 @@ relativeSize=0.02
 speed = 50
 uncommonDimensions = 0
 lambd = 0.7 # if it has a value over 0, when a micro cluster is updated, tl will be checked and the diff with current time will matter
-periodicUpdateAt = 100 # 99 # 500000 # exaggerated to not to apply forgetting component to micro clusters that have not been updated in a while
-microClustersDtThreshold = 4
-periodicRemovalAt = 200 # 201 # 500000 # exaggerated to not to remove outliers
+periodicUpdateAt = 2 # 99 # 500000 # exaggerated to not to apply forgetting component to micro clusters that have not been updated in a while
+timeWindow = 4
+periodicRemovalAt = 4 # 201 # 500000 # exaggerated to not to remove outliers
 findNotDirectlyConnButCloseMicroClusters = True
 distToAllStdevProportion4Painting = 0.8
 
 
 dyclee = Dyclee(relativeSize=relativeSize, speed = speed, uncommonDimensions = uncommonDimensions, lambd = lambd,
                 periodicRemovalAt = periodicRemovalAt, periodicUpdateAt = periodicUpdateAt,
-                microClustersDtThreshold = microClustersDtThreshold, findNotDirectlyConnButCloseMicroClusters = findNotDirectlyConnButCloseMicroClusters,
+                timeWindow = timeWindow, findNotDirectlyConnButCloseMicroClusters = findNotDirectlyConnButCloseMicroClusters,
                 distToAllStdevProportion4Painting = distToAllStdevProportion4Painting)
 
 # algo config
@@ -92,7 +92,7 @@ algoConfig = {
     "speed": speed,
     "lambd": lambd,
     "periodicUpdateAt": periodicUpdateAt,
-    "microClustersDtThreshold": microClustersDtThreshold,
+    "timeWindow": timeWindow,
     "periodicRemovalAt": periodicRemovalAt,
     "distToAllStdevProportion4Painting": distToAllStdevProportion4Painting,
 }
