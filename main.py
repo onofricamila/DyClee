@@ -1,13 +1,9 @@
-from datasets.sklearnDatasets import noisyCirclesDataset, noisyMoonsDataset, blobsDataset
-from datasets.customCircunferencesDataset import customCircunferencesDataset
 from utils.dataset_fetcher import getTimeSeriesDatasetFromFolder
 from utils.dyclee import Dyclee
-from sklearn.preprocessing import StandardScaler
-from utils.persistor import resetStorage, storeAlgoConfig, storeNonTimeSeriesResult, storeTimeSeriesResult
-from utils.datasets_fetcher import getDatasetsFromFolder
-from config import getNonTimeSeriesDatasetsPath, getClusteringResultsPath, getDycleeName, getTimeSeriesToyDatasetName
+from utils.persistor import storeAlgoConfig, storeTimeSeriesResult
+from config import getClusteringResultsPath, getDycleeName, getTimeSeriesToyDatasetName
 import numpy as np
-from utils.micro_clusters.bounding_box import BoundingBox
+from utils.bounding_box import BoundingBox
 
 def prepareResultFrom(currMicroClusters):
     res = []
