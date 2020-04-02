@@ -14,19 +14,19 @@ matplotlib.use('Qt5Agg')
 
 
 class Dyclee:
-    def __init__(self, relativeSize=0.1, speed = 25, uncommonDimensions = 0, lambd = 0, periodicRemovalAt = 50,
-                 periodicUpdateAt = 25, timeWindow = 5, findNotDirectlyConnButCloseMicroClusters = False,
-                 distToAllStdevProportion4Painting = 1):
+    def __init__(self, relativeSize = 0.6, speed = float("inf"), uncommonDimensions = 0, lambd = 0, periodicRemovalAt = float("inf"),
+                 periodicUpdateAt = float("inf"), timeWindow = 5, findNotDirectlyConnButCloseMicroClusters = True,
+                 closenessThreshold = 1.5):
         # hyper parameters
         self.relativeSize = relativeSize
+        self.uncommonDimensions = uncommonDimensions
         self.processingSpeed = speed
         self.lambd = lambd
-        self.oMicroClustersRemovalTime = periodicRemovalAt
-        self.microClustersTlCheckingTime = periodicUpdateAt
+        self.periodicUpdateAt = periodicUpdateAt
         self.timeWindow = timeWindow
-        self.distToAllStdevProportion4Painting = distToAllStdevProportion4Painting # if findNotDirectlyConnButCloseMicroClusters is False, this is not used
+        self.periodicRemovalAt = periodicRemovalAt
         self.findNotDirectlyConnButCloseMicroClusters = findNotDirectlyConnButCloseMicroClusters
-        self.uncommonDimensions = uncommonDimensions
+        self.closenessThreshold = closenessThreshold
         # internal vis
         self.aList = []
         self.oList = []
@@ -39,7 +39,20 @@ class Dyclee:
         self.meanValuePerFeature = []
         self.SDPerFeature = []
 
-
+   
+    def getConfig(self):
+        return {
+            "relativeSize": self.relativeSize,
+            "uncommonDimensions" : self.uncommonDimensions,
+            "speed": self.processingSpeed,
+            "lambd": self.lambd,
+            "periodicUpdateAt": self.periodicUpdateAt,
+            "timeWindow": self.timeWindow,
+            "periodicRemovalAt": self.periodicRemovalAt,
+            "closenessThreshold": self.closenessThreshold,
+        }
+        
+        
    # def scaleDataset(self, dataset):
     #     res = []
     #     # for each element
@@ -95,11 +108,11 @@ class Dyclee:
 
 
     def timeToPerformPeriodicClusterRemoval(self):
-        return self.processedElements % (self.oMicroClustersRemovalTime * self.processingSpeed) == 0
+        return self.processedElements % (self.periodicRemovalAt * self.processingSpeed) == 0
 
 
     def timeToCheckMicroClustersTl(self):
-        return self.processedElements % (self.microClustersTlCheckingTime * self.processingSpeed) == 0
+        return self.processedElements % (self.periodicUpdateAt * self.processingSpeed) == 0
 
 
     def processPoint(self, point):
@@ -298,7 +311,7 @@ class Dyclee:
 
 
     def findCloseMicroClustersFor(self, microCluster, microClusters):
-        stddevProportion = self.distToAllStdevProportion4Painting
+        stddevProportion = self.closenessThreshold
         # for encompassing more micro clusters
         avgDistToAllMicroClusters, distances = self.getAvgDistToMicroClustersFor(microCluster, microClusters)
         stdev = stddev(distances, avgDistToAllMicroClusters)
