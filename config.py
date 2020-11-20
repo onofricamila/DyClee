@@ -3,6 +3,7 @@ import json
 paths = None
 algoNames = None
 timeSeriesToyDatasetName = None
+realDatasetName = None
 
 def _getPaths():
     return paths
@@ -16,11 +17,16 @@ def _getTimeSeriesToyDatasetName():
     return timeSeriesToyDatasetName
 
 
+def _getRealDatasetName():
+    return realDatasetName
+
+
 def _fetchConfig():
     # we use the global key word to being able to change the values of the variables declared outside the function
     global paths
     global algoNames
     global timeSeriesToyDatasetName
+    global realDatasetName
 
     configFilePath = "/home/camila/Desktop/TESIS/DATA/config.json"
     with open(configFilePath) as f:
@@ -29,6 +35,7 @@ def _fetchConfig():
     paths = data.get("paths")
     algoNames = data.get("algoNames")
     timeSeriesToyDatasetName = data.get("timeSeriesToyDatasetName")
+    realDatasetName = data.get("realDatasetName")
 
 
 def _fetchElementIfNull(_getter):
@@ -51,6 +58,10 @@ def getClusteringResultsPath():
 
 def getTimeSeriesToyDatasetName():
     return _fetchElementIfNull(_getTimeSeriesToyDatasetName)
+
+
+def getRealDatasetName():
+    return _fetchElementIfNull(_getRealDatasetName)
 
 
 def getTimeSeriesDatasetsPath():

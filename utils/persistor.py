@@ -5,10 +5,8 @@ import os
 from config import getClusteringResultsPath, getDycleeName, getTimeSeriesToyDatasetName
 import shutil
 
-folder = getClusteringResultsPath() + getTimeSeriesToyDatasetName() + '/' + getDycleeName() + '/'
 
-
-def resetStorage():
+def resetStorage(folder):
     if os.path.exists(folder):
         shutil.rmtree(folder)
 

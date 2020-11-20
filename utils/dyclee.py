@@ -373,10 +373,10 @@ class Dyclee:
         if not self.plottableMicroClusters(microClusters):
             return
         # let's plot!
-        f, (ax1, ax2, ax3) = plt.subplots(1, 3, sharey=True)  # creates a figure with one row and two columns
+        f, (ax1) = plt.subplots(1, 1, sharey=True)  # creates a figure with one row and two columns
         self.plotCurrentClustering(ax1, microClusters)
-        self.plotMicroClustersEvolution(ax2, DMC)
-        self.plotMicroClustersSize(ax3, microClusters)
+      #  self.plotMicroClustersEvolution(ax2, DMC)
+      #  self.plotMicroClustersSize(ax3, microClusters)
         # show both subplots
         f.canvas.manager.window.showMaximized()
         plt.show()
@@ -493,9 +493,12 @@ class Dyclee:
         # set title
         ax.set_title(title)
         # set axes limits
-        minAndMaxDeviations = [-2.5, 2.5]
-        ax.set_xlim(minAndMaxDeviations)
-        ax.set_ylim(minAndMaxDeviations)
+        xDataContext = self.dataContext[0]
+        yDataContext = self.dataContext[1]
+        minAndMaxX = [54, 64 ]# [xDataContext.minimun, xDataContext.maximun]
+        minAndMaxY = [10, 20] # [yDataContext.minimun, yDataContext.maximun]
+        ax.set_xlim(minAndMaxX)
+        ax.set_ylim(minAndMaxY)
         # set plot general characteristics
         ax.set_xlabel("Feature 1")
         ax.set_ylabel("Feature 2")
