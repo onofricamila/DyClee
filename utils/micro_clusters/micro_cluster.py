@@ -49,7 +49,7 @@ class MicroCluster:
                 maxDiff = diff
                 featureIndex = i
         # if for the max diff feature the element doesn't match the cluster, return false
-        if maxDiff >= (self.hyperboxSizePerFeature[i] / 2):
+        if maxDiff >= (self.hyperboxSizePerFeature[featureIndex] / 2): # FIXME: decia 'i'
             return False
         # the element fits the u cluster
         return True

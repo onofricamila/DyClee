@@ -2,12 +2,8 @@
 
 from sklearn.preprocessing import StandardScaler
 from utils.non_time_series_datasets_fetcher import getDatasetsFromFolder
-from utils.time_series_dataset_fetcher import getTimeSeriesDatasetFromFolder
 from utils.dyclee import Dyclee
-from utils.persistor import storeAlgoConfig, storeTimeSeriesResult, storeNonTimeSeriesResult, resetStorage
-from config import getClusteringResultsPath, getDycleeName, getTimeSeriesToyDatasetName, getNonTimeSeriesDatasetsPath, \
-    getRealDatasetName, getTimeSeriesDatasetsPath
-import numpy as np
+from config import getClusteringResultsPath, getDycleeName, getNonTimeSeriesDatasetsPath
 from utils.bounding_box import BoundingBox
 from utils.prepare_result import prepareResultFrom
 
@@ -42,8 +38,8 @@ for datIndx in range(len(non_time_series_datasets)):
     currMicroClusters = dyclee.getClusteringResult() # we wanna show the clustering at the end, only once
     res = prepareResultFrom(currMicroClusters)
     folder = baseFolder + getDycleeName() + '/'
-    storeNonTimeSeriesResult(res, folder)
+  #  storeNonTimeSeriesResult(res, folder)
     # store algo config
     algoConfig = dyclee.getConfig()
-    storeAlgoConfig(algoConfig, folder)
+  #  storeAlgoConfig(algoConfig, folder)
 

@@ -70,7 +70,7 @@ class Dyclee:
         return aux
 
 
-    # S1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    # Stage (1) !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
     # returns a list of floats given an iterable object
@@ -118,7 +118,7 @@ class Dyclee:
         if not reachableMicroClusters:
             # empty list -> create u cluster from element
             # the microCluster will have the parametrized relative size, and the Timestamp object to being able to access the
-            # current timestamp any atime
+            # current timestamp any time
             microCluster = MicroCluster(self.hyperboxSizePerFeature, self.currTimestamp, point)
             self.oList.append(microCluster)
         else:
@@ -208,7 +208,7 @@ class Dyclee:
 
 
 
-# S2 !!!!!!!!!!!!!!!!!!!!!!!!!!!!
+# Stage (2) !!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
     def getClusteringResult(self):
@@ -228,7 +228,6 @@ class Dyclee:
         # update prev state once the evolution was plotted
         self.updateMicroClustersPrevCentroid(microClusters, DMC)
         # send updated microClusters lists to s1 (needs to be done at this point to make prev state last; labels will last too)
-        # TODO: store clustering result -> microClusters
         return microClusters
 
 
@@ -373,10 +372,10 @@ class Dyclee:
         if not self.plottableMicroClusters(microClusters):
             return
         # let's plot!
-        f, (ax1) = plt.subplots(1, 1, sharey=True)  # creates a figure with one row and two columns
+        f, (ax1,ax2,ax3,) = plt.subplots(1, 3, sharey=True)  # creates a figure with one row and two columns
         self.plotCurrentClustering(ax1, microClusters)
-      #  self.plotMicroClustersEvolution(ax2, DMC)
-      #  self.plotMicroClustersSize(ax3, microClusters)
+        self.plotMicroClustersEvolution(ax2, DMC)
+        self.plotMicroClustersSize(ax3, microClusters)
         # show both subplots
         f.canvas.manager.window.showMaximized()
         plt.show()
@@ -495,8 +494,8 @@ class Dyclee:
         # set axes limits
         xDataContext = self.dataContext[0]
         yDataContext = self.dataContext[1]
-        minAndMaxX = [54, 64 ]# [xDataContext.minimun, xDataContext.maximun]
-        minAndMaxY = [10, 20] # [yDataContext.minimun, yDataContext.maximun]
+        minAndMaxX = [xDataContext.minimun, xDataContext.maximun] # [54, 64]
+        minAndMaxY = [yDataContext.minimun, yDataContext.maximun] # [10, 20]
         ax.set_xlim(minAndMaxX)
         ax.set_ylim(minAndMaxY)
         # set plot general characteristics
