@@ -1,4 +1,6 @@
-# TODO: bye plotting methods?
+# TODO: bye plotting methods? OJO: microclusters evolution solo se puede mostrar desde aca
+# TODO: lo solucioné importando copy ... no se si da dejarlo así
+import copy
 # S1
 from utils.helpers.custom_math_fxs import manhattanDistance, stddev
 from utils.micro_clusters.micro_cluster import MicroCluster
@@ -227,9 +229,10 @@ class Dyclee:
         # plot current state and micro cluster evolution
         # self.plotClusters(microClusters, DMC) # FIXME: uncomment if you want all 3 plots to be displayed
         # update prev state once the evolution was plotted
+        copied = [copy.deepcopy(x) for x in microClusters]
         self.updateMicroClustersPrevCentroid(microClusters, DMC)
         # send updated microClusters lists to s1 (needs to be done at this point to make prev state last; labels will last too)
-        return microClusters
+        return copied # FIXME: return microclusters
 
 
     def rearrangeLists(self,):
