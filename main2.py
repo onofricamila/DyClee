@@ -1,5 +1,5 @@
 # TIME SERIES DATA SET CLUSTERING -------------------------------------------------------------------------
-
+from utils.plotter import Plotter
 from utils.time_series_dataset_fetcher import getTimeSeriesDatasetFromFolder
 from utils.dyclee import Dyclee
 from config import getClusteringResultsPath, getDycleeName, getTimeSeriesToyDatasetName
@@ -34,7 +34,10 @@ for point in getTimeSeriesDatasetFromFolder():
     if ac % tGlobal == 0:
         currMicroClusters = dyclee.getClusteringResult()
         res = prepareResultFrom(currMicroClusters)
-        # storeTimeSeriesResult({"processedElements": ac, "result": res}, folder)
+        # storeTimeSeriesResult({"processedElements": ac, "result": res}, folder) # FIXME: uncomment!
+        # FIXME: plotting outside dyclee
+        p = Plotter(currMicroClusters, dataContext)
+        p.plotClusters()
 algoConfig = dyclee.getConfig()
-# storeAlgoConfig(algoConfig, folder)
+# storeAlgoConfig(algoConfig, folder) # FIXME: uncomment!
 

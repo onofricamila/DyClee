@@ -5,6 +5,7 @@ from utils.persistor import resetStorage
 from config import getClusteringResultsPath, getDycleeName, getRealDatasetName, getTimeSeriesDatasetsPath
 import numpy as np
 from utils.bounding_box import BoundingBox
+from utils.plotter import Plotter
 from utils.prepare_result import prepareResultFrom
 
 # initialization
@@ -40,6 +41,9 @@ for point in dataset:
     if ac % tGlobal == 0:
         currMicroClusters = dyclee.getClusteringResult()
         res = prepareResultFrom(currMicroClusters)
-        # storeTimeSeriesResult({"processedElements": ac, "result": res}, folder)
+        # storeTimeSeriesResult({"processedElements": ac, "result": res}, folder) # FIXME: uncomment!
+        # FIXME: plotting outside dyclee
+        p = Plotter(currMicroClusters, dataContext)
+        p.plotClusters()
 algoConfig = dyclee.getConfig()
-# storeAlgoConfig(algoConfig, folder)
+# storeAlgoConfig(algoConfig, folder) # FIXME: uncomment!

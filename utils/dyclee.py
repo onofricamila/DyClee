@@ -1,3 +1,4 @@
+# TODO: bye plotting methods?
 # S1
 from utils.helpers.custom_math_fxs import manhattanDistance, stddev
 from utils.micro_clusters.micro_cluster import MicroCluster
@@ -224,7 +225,7 @@ class Dyclee:
         # DMC = self.findDenseMicroClusters()
         DMC = self.aList
         # plot current state and micro cluster evolution
-        self.plotClusters(microClusters, DMC)
+        # self.plotClusters(microClusters, DMC) # FIXME: uncomment if you want all 3 plots to be displayed
         # update prev state once the evolution was plotted
         self.updateMicroClustersPrevCentroid(microClusters, DMC)
         # send updated microClusters lists to s1 (needs to be done at this point to make prev state last; labels will last too)

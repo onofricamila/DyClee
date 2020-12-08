@@ -6,6 +6,8 @@ from utils.dyclee import Dyclee
 from config import getClusteringResultsPath, getDycleeName, getNonTimeSeriesDatasetsPath
 from utils.bounding_box import BoundingBox
 from utils.prepare_result import prepareResultFrom
+from utils.plotter import Plotter
+import matplotlib.pyplot as plt
 
 # params
 relativeSize=0.06
@@ -38,8 +40,14 @@ for datIndx in range(len(non_time_series_datasets)):
     currMicroClusters = dyclee.getClusteringResult() # we wanna show the clustering at the end, only once
     res = prepareResultFrom(currMicroClusters)
     folder = baseFolder + getDycleeName() + '/'
-  #  storeNonTimeSeriesResult(res, folder)
+  #  storeNonTimeSeriesResult(res, folder) # FIXME: uncomment!
     # store algo config
     algoConfig = dyclee.getConfig()
-  #  storeAlgoConfig(algoConfig, folder)
+  #  storeAlgoConfig(algoConfig, folder) # FIXME: uncomment!
+    # FIXME: plotting outside dyclee
+    p = Plotter(currMicroClusters, dataContext)
+    # p.plotClusters() # FIXME: uncomment if you want all 3 plots to be displayed - and comment the whole following block
+    ax = plt.gca() # we try the one with the mc size
+    p.plotMicroClustersSize(ax)
+    plt.show()
 
