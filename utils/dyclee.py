@@ -180,10 +180,10 @@ class Dyclee:
 
     # returns a list of reachable u clusters for a given element
     def findReachableMicroClusters(self, point):
-        reachableMicroClusters = self.getReachableMicroClustersFrom(self.aList, point)
-        if not reachableMicroClusters:
-            # empty list -> check oList
-            reachableMicroClusters = self.getReachableMicroClustersFrom(self.oList, point)
+        reachableMicroClusters = self.getReachableMicroClustersFrom(self.aList + self.oList, point) # FIXME: agregué a olist
+        # if not reachableMicroClusters:
+            # empty list -> check oList FIXME: vemos si cambia en algo no panalizar a outliers
+            # reachableMicroClusters = self.getReachableMicroClustersFrom(self.oList, point)
         return reachableMicroClusters
 
 
@@ -347,13 +347,15 @@ class Dyclee:
         self.resetLabelsAsUnclass(self.oList)
         # start clustering
         alreadySeen = []
-        for denseMicroCluster in self.aList:
+        aList = sorted(self.aList) # FIXME: ordeno los mc por un criterio para ver si se pueden mantener los colores
+        # FIXME: no sobreescribo self.alist, uso una variable temp (ver llamada a find simi y grow cluster)
+        for denseMicroCluster in aList:
             if denseMicroCluster not in alreadySeen:
                 alreadySeen.append(denseMicroCluster)
                 currentClusterId += 1
                 denseMicroCluster.label = currentClusterId
-                connectedMicroClusters = self.findSimilarMicroClustersFor(denseMicroCluster, self.aList)
-                self.growCluster(currentClusterId, alreadySeen, connectedMicroClusters, self.aList)
+                connectedMicroClusters = self.findSimilarMicroClustersFor(denseMicroCluster, aList)
+                self.growCluster(currentClusterId, alreadySeen, connectedMicroClusters, aList)
 
 
     # for loop finished -> clusters were formed

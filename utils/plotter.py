@@ -175,7 +175,7 @@ class Plotter:
         xDataContext = self.dataContext[0]
         yDataContext = self.dataContext[1]
         minAndMaxX = [xDataContext.minimun, xDataContext.maximun]  # [54, 64]
-        minAndMaxY = [yDataContext.minimun, yDataContext.maximun]  # [10, 20]
+        minAndMaxY = [yDataContext.minimun - 1, yDataContext.maximun]  # [10, 20]
         ax.set_xlim(minAndMaxX)
         ax.set_ylim(minAndMaxY)
         # set plot general characteristics

@@ -61,8 +61,11 @@ class MicroCluster:
         centroid = []
         # for each feature
         for i in range(len(self.CF.LS)):
-          centroid.append(self.CF.LS[i] / self.CF.n)
-        return centroid
+            try:
+                centroid.append(self.CF.LS[i] / self.CF.n)
+            except (ZeroDivisionError):
+                centroid.append(float('inf')) # FIXME: está bien que haga esto? Es para que no se tenga en cuenta al formar los clusters, si
+        return centroid                         # total después con el update se sabe es outlier
     
     
     
@@ -158,8 +161,8 @@ class MicroCluster:
         return manhattanDistance(self.getCentroid(), microCluster.getCentroid())
 
 
-        
-        
+    def __lt__(self, other):
+        return (self.getCentroid()[0], self.getCentroid()[1]) < (other.getCentroid()[0], other.getCentroid()[1]) # FIXME: ordeno microclusters por longitude?
         
         
         
