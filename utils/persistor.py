@@ -4,11 +4,17 @@ import numpy as np
 import os
 from config import getClusteringResultsPath, getDycleeName, getTimeSeriesToyDatasetName
 import shutil
-
+import glob
 
 def resetStorage(folder):
     if os.path.exists(folder):
         shutil.rmtree(folder)
+
+
+def resetFolderContent(folder):
+    files = glob.glob(folder + '/*')
+    for f in files:
+        os.remove(f)
 
 
 def createDirectoryIfNotExists(folder):

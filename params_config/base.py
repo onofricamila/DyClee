@@ -1,0 +1,1 @@
+path_template = "sweden/{}_mc/"

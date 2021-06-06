@@ -3,6 +3,10 @@ import matplotlib.pyplot as plt
 import matplotlib.colors as clrs
 from utils.helpers.custom_printing_fxs import printInMagenta
 import matplotlib
+from mpl_toolkits.basemap import Basemap
+
+from matplotlib.patches import Polygon
+
 # set matplotlib backend to Qt5Agg to make figure window maximizer work
 matplotlib.use('Qt5Agg')
 
@@ -139,7 +143,7 @@ class Plotter:
             rect = plt.Rectangle((x, y), width, height, color=c, alpha=0.5)
             ax3.add_patch(rect)
             # plot the rectangle center (microCluster centroid)
-            ax3.plot(realX, realY, ".", color=c, alpha=0.3)
+            ax3.plot(realX, realY, ".", color=c, alpha=0.5)
         self.addStyleToSubplot(ax3, title='MICRO CLUSTERS REAL SIZE')
 
 

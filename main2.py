@@ -1,8 +1,8 @@
-# TIME SERIES DATA SET CLUSTERING -------------------------------------------------------------------------
+# TIME SERIES TOY DATA SET CLUSTERING -------------------------------------------------------------------------
 from utils.plotter import Plotter
 from utils.time_series_dataset_fetcher import getTimeSeriesDatasetFromFolder
 from utils.dyclee import Dyclee
-from config import getClusteringResultsPath, getDycleeName, getTimeSeriesToyDatasetName
+from params_config import getClusteringResultsPath, getDycleeName, getTimeSeriesToyDatasetName
 from utils.bounding_box import BoundingBox
 from utils.prepare_result import prepareResultFrom
 
@@ -24,7 +24,7 @@ dyclee = Dyclee(dataContext = dataContext, relativeSize = relativeSize, speed = 
                 periodicRemovalAt = periodicRemovalAt, periodicUpdateAt = periodicUpdateAt,
                 timeWindow = timeWindow, closenessThreshold = closenessThreshold)
 
-tGlobal = 200
+tGlobal = 200 # FIXME: could read this from config
 ac = 0 # represents amount of processed elements
 folder = getClusteringResultsPath() + getTimeSeriesToyDatasetName() + '/' + getDycleeName() + '/'
 
@@ -35,9 +35,9 @@ for point in getTimeSeriesDatasetFromFolder():
         currMicroClusters = dyclee.getClusteringResult()
         res = prepareResultFrom(currMicroClusters)
         # storeTimeSeriesResult({"processedElements": ac, "result": res}, folder) # FIXME: uncomment!
-        # FIXME: plotting outside dyclee
+        # IMPORTANT: plotting outside dyclee
         p = Plotter(currMicroClusters, dataContext)
-        p.plotClusters()
+        p.plotClusters() # plots all 3 subplots
 algoConfig = dyclee.getConfig()
 # storeAlgoConfig(algoConfig, folder) # FIXME: uncomment!
 

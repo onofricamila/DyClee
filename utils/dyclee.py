@@ -67,9 +67,9 @@ class Dyclee:
 
 
     def dataContextAsStr(self):
-        aux=""
+        aux=" |"
         for context in self.dataContext:
-            aux += str(context.minimun) + "<" + str(context.maximun) + " | "
+            aux += str(context.minimun) + "-" + str(context.maximun) + " | "
         return aux
 
 
@@ -180,10 +180,10 @@ class Dyclee:
 
     # returns a list of reachable u clusters for a given element
     def findReachableMicroClusters(self, point):
-        reachableMicroClusters = self.getReachableMicroClustersFrom(self.aList + self.oList, point) # FIXME: agregué a olist
-        # if not reachableMicroClusters:
-            # empty list -> check oList FIXME: vemos si cambia en algo no panalizar a outliers
-            # reachableMicroClusters = self.getReachableMicroClustersFrom(self.oList, point)
+        reachableMicroClusters = self.getReachableMicroClustersFrom(self.aList, point) # FIXME: agreguar a olist y comentar abajo? (para no penalizar outliers)
+        if not reachableMicroClusters:
+            # empty list -> check oList FIXME: vemos si cambia en algo no penalizar a outliers
+             reachableMicroClusters = self.getReachableMicroClustersFrom(self.oList, point)
         return reachableMicroClusters
 
 

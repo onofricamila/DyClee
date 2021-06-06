@@ -3,7 +3,7 @@
 from sklearn.preprocessing import StandardScaler
 from utils.non_time_series_datasets_fetcher import getDatasetsFromFolder
 from utils.dyclee import Dyclee
-from config import getClusteringResultsPath, getDycleeName, getNonTimeSeriesDatasetsPath
+from params_config import getClusteringResultsPath, getDycleeName, getNonTimeSeriesDatasetsPath
 from utils.bounding_box import BoundingBox
 from utils.prepare_result import prepareResultFrom
 from utils.plotter import Plotter
@@ -44,7 +44,7 @@ for datIndx in range(len(non_time_series_datasets)):
     # store algo config
     algoConfig = dyclee.getConfig()
   #  storeAlgoConfig(algoConfig, folder) # FIXME: uncomment!
-    # FIXME: plotting outside dyclee
+    # IMPORTANT: plotting outside dyclee
     p = Plotter(currMicroClusters, dataContext)
     # p.plotClusters() # FIXME: uncomment if you want all 3 plots to be displayed - and comment the whole following block
     ax = plt.gca() # we try the one with the mc size
